@@ -1,4 +1,5 @@
 .DS_Store
+public/flower/*
 server/module
 server/vendor/*
 !server/vendor/bo

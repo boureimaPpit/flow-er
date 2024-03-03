@@ -1,0 +1,104 @@
+{
+    "guard": {
+        "vcard/search": { "roles": ["sales_manager"]}
+    },
+
+    "vcard/model": {
+        "entites": {},
+        "properties": {
+            "id": {},
+            "status": {},
+            "n_first": {},
+            "n_last": {},
+            "email": {},
+            "tel_cell": {}
+        }
+    },
+
+    "vcard/property/status": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "new": { "default": "New", "fr_FR": "Nouveau" },
+            "active": { "default": "Active", "fr_FR": "Actif" }
+        },
+        "labels": {
+            "default": "Status",
+            "fr_FR": "Statut"
+        }
+    },
+
+    "vcard/property/n_first": {
+        "definition": "inline",
+        "type": "input",
+        "labels": {
+            "default": "First name",
+            "fr_FR": "Prénom"
+        }
+    },
+
+    "vcard/property/n_last": {
+        "definition": "inline",
+        "type": "input",
+        "labels": {
+            "default": "Last name",
+            "fr_FR": "Nom"
+        }
+    },
+
+    "vcard/property/email": {
+        "definition": "inline",
+        "type": "email",
+        "labels": {
+            "default": "Email",
+            "fr_FR": "Email"
+        }
+    },
+
+    "vcard/property/tel_cell": {
+        "definition": "inline",
+        "type": "phone",
+        "labels": {
+            "default": "Cellular",
+            "fr_FR": "Téléphone portable"
+        }
+    },
+
+    "vcard/search/default": {
+        "properties": {
+            "status": { "multiple": true },
+            "email": {},
+            "n_last": {},
+            "n_first": {},
+            "tel_cell": {}
+        }
+    },
+
+    "vcard/list/default": {
+        "properties": {
+            "status": {},
+            "email": {},
+            "n_last": {}
+        }
+    },
+
+    "vcard/detail/default": {
+        "tabs": {
+            "contact_1": {
+                "definition": "inline",
+                "route": "/bo/update/vcard",
+                "labels": {"en_US": "V-card", "fr_FR": "Elève"}
+            }
+        }
+    },
+
+	"vcard/global/default": {
+		"actions": {
+			"export": {
+				"route": "generic/export/vcard",
+				"labels": { "default": "Export", "fr_FR": "Exporter" },
+				"glyph": "fa-cloud-download-alt"
+            }
+        }
+    }
+}

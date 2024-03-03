@@ -1,0 +1,19 @@
+{
+    "guard": {
+        "vcard/index": { "roles": ["sales_manager"]}
+    },
+
+    "model": {
+        "entities": {
+            "vcard": { "table": "vcard", "foreignKey": "contact_1_id", "foreignEntity": "account" }
+        },
+        "properties": {
+            "id": { "entity": "account", "column": "id", "type": "int" },
+            "email": { "entity": "vcard", "column": "email", "type": "email" }
+        }
+    },
+
+    "footer": [
+		{ "html": {"default": "<span class=\"text-muted\"><b>© 2024 <a href=\"https://opensource.org/license/bsd-3-clause/\" target=\"_blank\">Flow-ER</a></b></span>"}}
+	]
+}

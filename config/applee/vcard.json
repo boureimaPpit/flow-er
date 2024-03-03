@@ -1,0 +1,13 @@
+{
+    "vcard/property/status": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "new": { "default": "Nouveau" },
+            "active": { "default": "Client" }
+        },
+        "labels": {
+            "default": "Statut"
+        }
+    }
+}

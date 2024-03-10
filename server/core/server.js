@@ -2,6 +2,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const moment = require("moment")
 const compression = require("compression")
+const cookieParser = require("cookie-parser")
 
 const startServer = async (context, config, logger) => {
     if (!context || !config || ! config.server || !logger) {
@@ -13,6 +14,7 @@ const startServer = async (context, config, logger) => {
     const app = express()
 
     app.use(compression())
+    app.use(cookieParser())
     app.use("/", express.static("./public/"))
 
     app.disable("x-powered-by")
@@ -38,6 +40,7 @@ const registerMiddlewares = async (context, config, logger, app) => {
     for (let key of Object.keys(middlewares)) {
         const middleware = require(middlewares[key].dir)
         if (typeof middleware.register === "function") {
+            app.use(`${middlewares[key].prefix}cli/`, express.static(`./server/vendor${middlewares[key].prefix}client/`))
             await middleware.register({context, config: middlewares[key], logger, app})
         }
         else {

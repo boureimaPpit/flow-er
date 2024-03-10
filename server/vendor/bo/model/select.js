@@ -40,8 +40,8 @@ const select = (table, columns, where, order = [], limit = null, model = []) => 
 
     request += `${Object.values(joins).join("\n")}\n`
 
-    request += `WHERE ${qTable}.${qi("instance_id")} = ${instanceId}\n`
-    request += `AND ${qTable}.${qi("status")} != 'deleted'\n`
+    request += `WHERE ${qTable}.${qi("status")} != 'deleted'\n`
+    if (model.properties.instance_id) request += `AND ${qTable}.${qi("instance_id")} = ${instanceId}\n`
 
     for (let propertyId of Object.keys(where)) {
         let value = where[propertyId]
@@ -125,24 +125,24 @@ const select = (table, columns, where, order = [], limit = null, model = []) => 
 				}
 			}
 		}*/
-
-        if (order) {
-            request += "ORDER BY "
-            const orderArray = []
-            for (let orderSpecifier of Object.keys(order)) {
-                const direction = order[orderSpecifier]
-                const qEntity = qi(model.properties[orderSpecifier].entity)
-                const qColumn = qi(model.properties[orderSpecifier].column)
-                orderArray.push(`${qEntity}.${qColumn} ${direction}`)
-            }
-            request += orderArray.join(", ")
-            request += "\n"
-        }
-
-        if (limit) request += `LIMIT ${limit}\n`
-
-        return request
     }
+
+    if (order != null) {
+        request += "ORDER BY "
+        const orderArray = []
+        for (let orderSpecifier of Object.keys(order)) {
+            const direction = order[orderSpecifier]
+            const qEntity = qi(model.properties[orderSpecifier].entity)
+            const qColumn = qi(model.properties[orderSpecifier].column)
+            orderArray.push(`${qEntity}.${qColumn} ${direction}`)
+        }
+        request += orderArray.join(", ")
+        request += "\n"
+    }
+
+    if (limit) request += `LIMIT ${limit}\n`
+
+    return request
 }
 
 module.exports = {

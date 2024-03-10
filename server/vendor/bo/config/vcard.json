@@ -68,7 +68,7 @@
         "properties": {
             "status": { "multiple": true },
             "email": {},
-            "n_last": {},
+            "n_last": { "completion": true },
             "n_first": {},
             "tel_cell": {}
         }
@@ -87,7 +87,7 @@
             "contact_1": {
                 "definition": "inline",
                 "route": "/bo/update/vcard",
-                "labels": {"en_US": "V-card", "fr_FR": "Elève"}
+                "labels": {"en_US": "V-card", "fr_FR": "Carte de visite"}
             }
         }
     },

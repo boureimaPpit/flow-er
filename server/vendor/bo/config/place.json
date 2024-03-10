@@ -1,0 +1,66 @@
+{
+    "place/model": {
+        "entities": {},
+        "properties": {
+            "id": { "entity": "place", "column": "id" },
+            "status": { "entity": "place", "column": "status" },
+            "name": { "entity": "place", "column": "name" }
+        }
+    },
+
+    "place/property/status": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "new": { "default": "New", "fr_FR": "Nouveau" },
+            "active": { "default": "Active", "fr_FR": "Actif" }
+        },
+        "labels": {
+            "default": "Status",
+            "fr_FR": "Statut"
+        }
+    },
+
+    "place/property/name": {
+        "definition": "inline",
+        "type": "input",
+        "labels": {
+            "default": "Name",
+            "fr_FR": "Nom"
+        }
+    },
+
+    "place/search/default": {
+        "properties": {
+            "status": { "multiple": true },
+            "name": {}
+        }
+    },
+
+    "place/list/default": {
+        "properties": {
+            "status": {},
+            "name": {}
+        }
+    },
+
+    "place/detail/default": {
+        "tabs": {
+            "contact_1": {
+                "definition": "inline",
+                "route": "/bo/update/place",
+                "labels": {"en_US": "Place", "fr_FR": "Établissement"}
+            }
+        }
+    },
+
+	"place/global/default": {
+		"actions": {
+			"export": {
+				"route": "generic/export/place",
+				"labels": { "default": "Export", "fr_FR": "Exporter" },
+				"glyph": "fa-cloud-download-alt"
+            }
+        }
+    }
+}

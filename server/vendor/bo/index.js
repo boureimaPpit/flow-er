@@ -1,5 +1,3 @@
-const compression = require("compression")
-const cookieParser = require("cookie-parser")
 //const { createApiClient } = require("../../core/tools/api-client");
 const { noCacheMiddleware, notFoundMiddleware, handleCorsMiddleware } = require("../../core/api-utils")
 const { registerBo } = require("./controller/index")
@@ -7,8 +5,6 @@ const { registerBoUnitTest } = require("./unitTest")
 
 const register = async ({ context, config, logger, app }) => {
 
-    app.use(compression())
-    app.use(cookieParser())
     app.use(`${config.prefix}/*`, noCacheMiddleware)
     app.use(`${config.prefix}/*`, handleCorsMiddleware)
 

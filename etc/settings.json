@@ -13,7 +13,6 @@
             "bo": {
                 "dir": "../server/vendor/bo",
                 "prefix": "/bo/",
-                "rootDir" : "../public",
                 "db" : {
                     "host": "localhost",
                     "port": 8889,
@@ -21,7 +20,11 @@
                     "password": "root",
                     "database": "ppit4"    
                 }
+            },
+            "applee": {
+                "dir": "../server/module/applee",
+                "prefix": "/applee/"
             }
-       }
+        }
     }
 }

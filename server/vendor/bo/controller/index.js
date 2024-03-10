@@ -1,8 +1,8 @@
+const express = require("express")
 const { executeService, assert } = require("../../../core/api-utils")
 const { renderIndex } = require("../view/index")
-const { renderSearch } = require("../view/search")
 const { createDbClient } = require("../../utils/db-client");
-const { select } = require("../model/select");
+const { search } = require("./search");
 const { list } = require("./list");
 const { detail } = require("./detail");
 const { update } = require("./update");
@@ -10,6 +10,8 @@ const { update } = require("./update");
 const registerBo = async ({ context, config, logger, app }) => {
     const db = await createDbClient(config.db);
     const execute = executeService(config, logger)
+    app.get(`${config.prefix}config`, execute(() => { return JSON.stringify(context.config) }))
+    app.get(`${config.prefix}language`, execute(() => { return JSON.stringify(context.translations) }))
     app.get(`${config.prefix}index/:entity`, execute(index, context, db))
     app.get(`${config.prefix}search/:entity`, execute(search, context, db))
     app.get(`${config.prefix}list/:entity`, execute(list, context, db))
@@ -19,24 +21,9 @@ const registerBo = async ({ context, config, logger, app }) => {
 
 const index = ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
-    const tab = (req.query.tab) ? req.query.tab : "default"
+    const view = (req.query.view) ? req.query.view : "default"
     const data = { where: "", order: "+name", limit: 1000 }
-    
-    const request = select("account", ["id", "email"], { email: "a.b@test.com" }, { email: "ASC" }, 100, context.config.model)
-
-    db.query(
-        request,
-        function (err, result) {
-            if (err) throw err
-        }
-    )
-    return renderIndex(context, entity, tab, data)
-}
-
-const search = ({ req }, context, db) => {
-    const entity = assert.notEmpty(req.params, "entity")
-    const tab = (req.query.tab) ? req.query.tab : "default"
-    return renderSearch(context, entity, tab)
+    return renderIndex(context, entity, view, data)
 }
 
 module.exports = {

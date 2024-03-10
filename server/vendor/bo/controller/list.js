@@ -1,18 +1,15 @@
 const { assert } = require("../../../core/api-utils")
+const { select } = require("../model/select");
 const { renderList } = require("../view/list")
 
-const list = ({ req }, context, db) => {
+const list = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
-    const tab = (req.query.tab) ? req.query.tab : "default"
+    const view = (req.query.view) ? req.query.view : "default"
     const orderParam = (req.query.order) ? req.query.order : ""
     const limit = (req.query.limit) ? req.query.limit : 1000
-    const data = [{
-        "id": 1,
-        "status": "new",
-        "email": "a.b@test.com",
-        "n_last": "TEST"
-    }]
-    return renderList(context, entity, tab, data, orderParam, limit)
+    const columns = Object.keys(context.config[`${entity}/list/${view}`].properties)
+    const data = await db(select(entity, columns, {}, /*{ n_last: "ASC" }*/null, null, context.config[`${entity}/model`]))
+    return renderList(context, entity, view, data, orderParam, limit)
 }
 
 module.exports = {

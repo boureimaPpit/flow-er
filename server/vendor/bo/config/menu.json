@@ -1,0 +1,47 @@
+{
+    	
+    "applications": {
+		"applee": {
+			"labels": { "default": "Applee" },
+			"default": "default",
+			"defaultRole": "sales_manager"
+        },
+		"flow-er": {
+			"labels": { "default": "Flow-ER" },
+			"default": "default",
+			"defaultRole": "sales_manager"
+        }
+    },
+
+    "menu/applee": {
+        "tabs": ["tab/default", "tab/schedule", "tab/invoicing"],
+        "defaultTab": "tab/default",
+        "labels": { "default": "Applee", "fr_FR": "Applee" }
+    },
+
+    "menu/flow-er": {
+        "tabs": ["tab/default", "tab/schedule", "tab/invoicing"],
+        "defaultTab": "tab/default",
+        "labels": { "default": "Applee", "fr_FR": "Applee" }
+    },
+
+    "tab/default": {
+        "menu": "menu/applee",
+        "route": "/bo/index/account",
+        "labels": { "default": "Leads", "fr_FR": "Prospects" }
+    },
+
+    "tab/schedule": {
+        "menu": "menu/applee",
+        "route": "/bo/index/schedule",
+        "urlParams": "tab=schedule",
+        "labels": { "default": "Schedule", "fr_FR": "Planning" }
+    },
+
+    "tab/invoicing": {
+        "menu": "menu/applee",
+        "route": "/bo/index/invoicing",
+        "urlParams": "tab=invoicing",
+        "labels": { "default": "Invoicing", "fr_FR": "Facturation" }
+    }
+}

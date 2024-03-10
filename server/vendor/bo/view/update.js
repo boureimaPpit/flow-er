@@ -1,8 +1,8 @@
 const moment = require("moment")
 
-const renderUpdate = (context, entity, tab, id, row, isDeletable, formJwt) => {
+const renderUpdate = (context, entity, view, id, row, isDeletable, formJwt) => {
 
-    const searchConfig = context.config[`${entity}/search/${tab}`]
+    const searchConfig = context.config[`${entity}/search/${view}`]
     const properties = {}
     for (let propertyId of Object.keys(searchConfig.properties)) {
         const options = searchConfig.properties[propertyId]

@@ -1,3 +1,73 @@
+
+const renderSearch = (context, entity, view, properties, data) => {
+    
+    return `<div class="row mb-3">
+        <div class="col-md-12">
+            <!-- Filters -->
+            <form class="form-inline">
+                <div class="row">
+
+                    ${renderFilters(context, entity, view, properties, data)}
+        
+                    <div class="col-md-3">    
+                        <div class="input-group input-group-sm mb-2 mr-sm-2">
+                            <button type="button" class="btn btn-default" disabled title="<?php echo $this->translate('Refresh the list', 'ppit-core', $context->getLocale()) ?>" id="refreshButton">
+                            <i class="fa fa-sync-alt text-center"></i>
+                            </button>
+                            <button type="button" class="btn btn-default input-group-text" disabled title="<?php echo $this->translate('Erase', 'ppit-core', $context->getLocale()) ?>" id="eraseButton">
+                            <i class="fa fa-times text-center"></i>
+                            </button>
+                
+                            ${renderButtons(context, entity, view)}
+                
+                        </div>
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+    </div>`
+}
+
+const renderFilters = (context, entity, view, properties, data) => {
+    let filters = []
+    for (let propertyId of Object.keys(properties)) {
+        const property = properties[propertyId]
+        const options = (property.options) ? property.options : []
+        const propertyType = (options.type) ? options.type : property.type
+
+        let input;
+        
+        if (["date", "time", "datetime"].includes(propertyType)) {
+            input = renderFilterDateTime(context, propertyId, property)
+        }
+
+        else if (["age"].includes(propertyType)) {
+            input = renderFilterAge(context, propertyId, property)
+        }
+
+        else if (["select", "multiselect", "tags"].includes(propertyType)) {
+            input = renderFilterSelect(context, propertyId, property, options)
+        }        
+
+        else if (["source"].includes(propertyType)) {
+            input = renderFilterSource(context, propertyId, property, options)
+        }        
+
+        else if (["number"].includes(propertyType)) {
+            input = renderFilterNumber(context, propertyId, property, options)
+        }        
+
+        else {
+            input = renderFilterInput(context, propertyId, property, options, data)
+        }        
+
+        filters.push(`<div class="col-md-3">${input}</div>`)
+    }
+
+    return filters.join("\n")
+}
+
 const renderFilterDateTime = (context, propertyId, property) => {
 
     return `<div class="input-group input-group-sm mb-2 mr-sm-2">
@@ -70,11 +140,17 @@ const renderFilterSelect = (context, propertyId, property, options) => {
         </div>
         <select class="form-control searchInput searchInputSelect ${(multiple) ? "selectpicker searchSelectpicker" : ""} ${(options.restrictionParent) ? `restrictionParent restrictionParent-${propertyId}` : ""}" id="search-${propertyId}" ${(multiple) ? "data-none-selected-text multiple" : ""}>
             ${(multiple) ? `<option value="empty">-- ${context.translate("Not provided")} --</option>` : ""}
-            ${(!multiple && options.empty) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
+            ${(!multiple) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
             ${renderModalities(modalities)}
         </select>
     </div>`
 }
+
+const renderFilterSource = (context, propertyId, property) => {
+
+    return `<div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
+    </div>`
+} 
 
 const renderFilterNumber = (context, propertyId, property) => {
 
@@ -88,62 +164,28 @@ const renderFilterNumber = (context, propertyId, property) => {
     </div>`
 }
 
-const renderFilterInput = (context, propertyId, property, options) => {
+const renderFilterInput = (context, propertyId, property, options, data) => {
+    const datalist = []
+    if (options.completion) {
+        for (let value of data[propertyId]) {
+            datalist.push(`<option value="${value}" />`)
+        }
+    }
     return `<div class="input-group input-group-sm mb-2 mr-sm-2">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
         <div class="input-group-prepend">
             <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
         </div>
-        <input class="form-control" list="datalistOptions" id="exampleDataList">
-        <datalist id="datalistOptions">
-            <option value="San Francisco">
-            <option value="New York">
-            <option value="Seattle">
-            <option value="Los Angeles">
-            <option value="Chicago">
-        </datalist>
+        <input class="form-control searchInput searchInputText" ${(options.completion) ? `list="searchDatalist-${propertyId}"` : "" } id="search-${propertyId}">
+        ${(options.completion) ? `<datalist id="searchDatalist-${propertyId}">
+            ${datalist.join("\n")}
+        </datalist>` : ""}
     </div>`
 }
 
-const renderFilters = (context, entity, tab, properties) => {
-    
-    let filters = []
-    for (let propertyId of Object.keys(properties)) {
-        const property = properties[propertyId]
-        const options = (property.options) ? property.options : []
-        const propertyType = (options.type) ? options.type : property.type
-
-        let input;
-        
-        if (["date", "time", "datetime"].includes(propertyType)) {
-            input = renderFilterDateTime(context, propertyId, property)
-        }
-
-        else if (["age"].includes(propertyType)) {
-            input = renderFilterAge(context, propertyId, property)
-        }
-
-        else if (["select", "multiselect", "tags"].includes(propertyType)) {
-            input = renderFilterSelect(context, propertyId, property, options)
-        }        
-
-        else if (["number"].includes(propertyType)) {
-            input = renderFilterNumber(context, propertyId, property, options)
-        }        
-
-        else {
-            input = renderFilterInput(context, propertyId, property, options)
-        }        
-
-        filters.push(`<div class="col-md-3">${input}</div>`)
-    }
-
-    return filters.join("\n")
-}
-
-const renderButtons = (context, entity, tab) => {
+const renderButtons = (context, entity, view) => {
     let buttons = []
-    const actions = context.config[`${entity}/global/${tab}`]["actions"]
+    const actions = context.config[`${entity}/global/${view}`]["actions"]
     for (let actionId of Object.keys(actions)) {
         const action = actions[actionId]
         buttons.push(`<input type="hidden" class="globalRoute" id="globalRoute-${actionId}" value="${action.route}" />
@@ -155,47 +197,6 @@ const renderButtons = (context, entity, tab) => {
             </button>`)
     }
     return buttons.join("\n")
-}
-
-const renderSearch = (context, entity, tab) => {
-
-    const searchConfig = context.config[`${entity}/search/${tab}`]
-    const properties = {}
-    for (let propertyId of Object.keys(searchConfig.properties)) {
-        const options = searchConfig.properties[propertyId]
-        const property = context.config[`${entity}/property/${propertyId}`]
-        if (property.definition != "inline") property = context.config[property.definition]
-        properties[propertyId] = property
-        properties[propertyId].options = options 
-        if (properties[propertyId].options.modalities) listModalities.push({ propertyId: properties[propertyId].options.modalities }) 
-    }
-    
-    return `<div class="row mb-3">
-        <div class="col-md-12">
-            <!-- Filters -->
-            <form class="form-inline">
-                <div class="row">
-
-                    ${renderFilters(context, entity, tab, properties)}
-        
-                    <div class="col-md-3">    
-                        <div class="input-group input-group-sm mb-2 mr-sm-2">
-                            <button type="button" class="btn btn-default" disabled title="<?php echo $this->translate('Refresh the list', 'ppit-core', $context->getLocale()) ?>" id="refreshButton">
-                            <i class="fa fa-sync-alt text-center"></i>
-                            </button>
-                            <button type="button" class="btn btn-default input-group-text" disabled title="<?php echo $this->translate('Erase', 'ppit-core', $context->getLocale()) ?>" id="eraseButton">
-                            <i class="fa fa-times text-center"></i>
-                            </button>
-                
-                            ${renderButtons(context, entity, tab)}
-                
-                        </div>
-                    </div>
-                    
-                </div>
-            </form>
-        </div>
-    </div>`
 }
 
 module.exports = {

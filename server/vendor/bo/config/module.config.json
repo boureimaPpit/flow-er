@@ -1,16 +1,13 @@
 {
-    "guard": {
-        "vcard/index": { "roles": ["sales_manager"]}
+    "headerParams": {
+        "logo": "flow-er.png",
+        "logoHeight": "40"
     },
 
-    "model": {
-        "entities": {
-            "vcard": { "table": "vcard", "foreignKey": "contact_1_id", "foreignEntity": "account" }
-        },
-        "properties": {
-            "id": { "entity": "account", "column": "id", "type": "int" },
-            "email": { "entity": "vcard", "column": "email", "type": "email" }
-        }
+    "guard": {
+        "/bo/index/account": { "roles": ["sales_manager"]},
+        "/bo/index/schedule": { "roles": ["sales_manager"]},
+        "/bo/index/invoicing": { "roles": ["sales_manager"]}
     },
 
     "footer": [

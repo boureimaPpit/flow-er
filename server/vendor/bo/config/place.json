@@ -4,7 +4,8 @@
         "properties": {
             "id": { "entity": "place", "column": "id" },
             "status": { "entity": "place", "column": "status" },
-            "name": { "entity": "place", "column": "name" }
+            "name": { "entity": "place", "column": "name" },
+            "region": { "entity": "place", "column": "region" }
         }
     },
 
@@ -12,8 +13,8 @@
         "definition": "inline",
         "type": "select",
         "modalities": {
-            "new": { "default": "New", "fr_FR": "Nouveau" },
-            "active": { "default": "Active", "fr_FR": "Actif" }
+            "new": { "default": "Active", "fr_FR": "Actif" },
+            "archived": { "default": "Archived", "fr_FR": "Archivé" }
         },
         "labels": {
             "default": "Status",
@@ -30,9 +31,24 @@
         }
     },
 
+    "place/property/region": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "grand_est": { "default": "Grand Est" },
+            "hauts_de_france": { "default": "Hauts de France" },
+            "idf": { "default": "Île de France" }
+        },
+        "labels": {
+            "default": "Region",
+            "fr_FR": "Région"
+        }
+    },
+
     "place/search/default": {
         "properties": {
             "status": { "multiple": true },
+            "region": {},
             "name": {}
         }
     },
@@ -40,6 +56,7 @@
     "place/list/default": {
         "properties": {
             "status": {},
+            "region": {},
             "name": {}
         }
     },
@@ -61,6 +78,15 @@
 				"labels": { "default": "Export", "fr_FR": "Exporter" },
 				"glyph": "fa-cloud-download-alt"
             }
+        }
+    },
+
+    "place/v1/default": {
+        "properties": {
+            "id": {},
+            "status": {},
+            "region": {},
+            "name": {}
         }
     }
 }

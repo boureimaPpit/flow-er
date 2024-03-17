@@ -1,8 +1,8 @@
 
-const renderHead = () => {
+const renderHead = (context, entity, view) => {
     return `
     <head>
-      <title><?php echo $context->localize($tab['labels']) ?></title>
+      <title>${context.localize(context.config[`tab/${view}`].labels)}</title>
       <meta charset="utf-8">
       <meta name="robots" content="noindex, nofollow">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

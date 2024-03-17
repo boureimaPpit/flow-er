@@ -10,7 +10,8 @@
         },
         "properties": {
             "id": { "entity": "account", "column": "id", "type": "int" },
-            "status": { "entity": "account", "column": "status" },
+            "status": { "entity": "account", "column": "status", "audit": true },
+            "place_region": { "entity": "place", "column": "region" },
             "place_id": { "entity": "place", "column": "id" },
             "place_name": { "entity": "place", "column": "name" },
             "n_first": { "entity": "vcard", "column": "n_first" },
@@ -41,9 +42,28 @@
         }
     },
 
+    "account/property/place_region": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "grand_est": { "default": "Grand Est" },
+            "hauts_de_france": { "default": "Hauts de France" },
+            "idf": { "default": "Île de France" }
+        },
+        "labels": {
+            "default": "Region",
+            "fr_FR": "Région"
+        }
+    },
+
     "account/property/place_id": {
         "definition": "inline",
         "type": "source",
+        "entity": "place",
+        "key": "id",
+        "format": ["%s (%s)", "name,region"],
+        "where": "status:active",
+        "order": "name",
         "labels": {
             "default": "Place",
             "fr_FR": "Établissement"
@@ -95,20 +115,39 @@
         }
     },
 
+    "account/property/tag": {
+        "definition": "inline",
+        "type": "tag",
+        "entity": "tag",
+        "vector": "vector",
+        "key": "id",
+        "format": ["%s", "name"],
+        "where": "status:new",
+        "order": "name",
+        "labels": {
+            "default": "Tag"
+        }
+    },
+
     "account/search/default": {
         "properties": {
             "status": { "multiple": true },
+            "place_region": { "multiple": true },
             "place_id": { "multiple": true },
             "email": {},
             "n_last": { "completion": true },
             "n_first": {},
-            "tel_cell": {}
+            "tel_cell": {},
+            "tag": { "multiple": true }
         }
     },
 
     "account/list/default": {
+        "where": "status:new",
+        "order": "n_last",
         "properties": {
             "status": {},
+            "place_region": {},
             "place_name": {},
             "n_last": {},
             "email": {},

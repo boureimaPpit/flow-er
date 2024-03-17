@@ -14,7 +14,7 @@ const renderEntries = (context, view) => {
         const menuTab = context.config[menuTabId]
         if (context.isAllowed(menuTab.route)) {
             const query = menuTab.urlParams
-            const active = (menuTab == tab)
+            const active = (menuTabId == `tab/${view}`)
 
             html.push(`<li class="nav-item">
 				<a class="nav-link ${(active) ? "active" : ""} ${(menuTab.disabled) ? "btn disabled" : ""}" href="${`${menuTab.route}${(query) ? `?${query}` : ""}`}" id="${menuTabId}-anchor">

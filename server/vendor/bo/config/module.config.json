@@ -6,8 +6,10 @@
 
     "guard": {
         "/bo/index/account": { "roles": ["sales_manager"]},
-        "/bo/index/schedule": { "roles": ["sales_manager"]},
-        "/bo/index/invoicing": { "roles": ["sales_manager"]}
+        "/bo/index/place": { "roles": ["sales_manager"]},
+        "/bo/index/tag": { "roles": ["sales_manager"]},
+
+        "/bo/v1/place": { "roles": ["sales_manager"]}
     },
 
     "footer": [

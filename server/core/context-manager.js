@@ -9,36 +9,37 @@ const loadContext = (settings, logger) => {
         return
     }
 
-    const roles = ["sales_manager"]
-    const locale = "fr_FR"
-    const translations = loadTranslations(middlewares, locale)
+    const user = {
+        instanceCaption: "flow-er.fr",
+        formattedName: "LARTILLOT, Bruno",
+        roles: ["sales_manager"],
+        locale: "fr_FR"    
+    }
+
+    const translations = loadTranslations(middlewares, user.locale)
     const config = loadAppConfig(middlewares)
 
     const context = {
 
-        instanceCaption: "flow-er.fr",
-        formattedName: "LARTILLOT, Bruno",
-        roles: roles,
-        locale: locale,
-
+        user: user,
         config: config,
         translations: translations,
 
         localize: (str) => {
-            if (str[locale]) return str[locale]
+            if (str[user.locale]) return str[user.locale]
             else return str.default
         },
 
         translate: (str) => {
-            if (translations[locale][str]) {
-                return translations[locale][str]
+            if (translations[user.locale][str]) {
+                return translations[user.locale][str]
             }
             else return str
         },
 
         isAllowed: (route) => {
             if (config.guard[route]) {
-                for (let role of roles) {
+                for (let role of user.roles) {
                     if (config.guard[route].roles.includes(role)) return true
                 }
                 return false

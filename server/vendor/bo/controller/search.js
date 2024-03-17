@@ -19,8 +19,6 @@ const search = async ({ req }, context, db) => {
         if (properties[propertyId].options.modalities) listModalities.push({ propertyId: properties[propertyId].options.modalities }) 
     }
 
-    data.account =  await db(select("account", ["n_last"], {}, { n_last: "ASC" }, null, context.config["account/model"]))
-
     data.n_last =  await db(select("account", ["n_last"], {}, { n_last: "ASC" }, null, context.config["account/model"]))
     const keys = {}
     for (let row of data.n_last) { 

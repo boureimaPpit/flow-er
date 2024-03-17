@@ -5,22 +5,11 @@
 			"labels": { "default": "Applee" },
 			"default": "default",
 			"defaultRole": "sales_manager"
-        },
-		"flow-er": {
-			"labels": { "default": "Flow-ER" },
-			"default": "default",
-			"defaultRole": "sales_manager"
         }
     },
 
     "menu/applee": {
-        "tabs": ["tab/default", "tab/schedule", "tab/invoicing"],
-        "defaultTab": "tab/default",
-        "labels": { "default": "Applee", "fr_FR": "Applee" }
-    },
-
-    "menu/flow-er": {
-        "tabs": ["tab/default", "tab/schedule", "tab/invoicing"],
+        "tabs": ["tab/default", "tab/place", "tab/tag"],
         "defaultTab": "tab/default",
         "labels": { "default": "Applee", "fr_FR": "Applee" }
     },
@@ -31,17 +20,17 @@
         "labels": { "default": "Leads", "fr_FR": "Prospects" }
     },
 
-    "tab/schedule": {
+    "tab/place": {
         "menu": "menu/applee",
-        "route": "/bo/index/schedule",
-        "urlParams": "tab=schedule",
-        "labels": { "default": "Schedule", "fr_FR": "Planning" }
+        "route": "/bo/index/place",
+        "urlParams": "view=place",
+        "labels": { "default": "Places", "fr_FR": "Établissements" }
     },
 
-    "tab/invoicing": {
+    "tab/tag": {
         "menu": "menu/applee",
-        "route": "/bo/index/invoicing",
-        "urlParams": "tab=invoicing",
-        "labels": { "default": "Invoicing", "fr_FR": "Facturation" }
+        "route": "/bo/index/tag",
+        "urlParams": "view=tag",
+        "labels": { "default": "Tags", "fr_FR": "Tags" }
     }
 }

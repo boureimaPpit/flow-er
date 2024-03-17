@@ -54,6 +54,10 @@ const renderFilters = (context, entity, view, properties, data) => {
             input = renderFilterSource(context, propertyId, property, options)
         }        
 
+        else if (["tag"].includes(propertyType)) {
+            input = renderFilterTag(context, propertyId, property, options)
+        }        
+
         else if (["number"].includes(propertyType)) {
             input = renderFilterNumber(context, propertyId, property, options)
         }        
@@ -95,11 +99,6 @@ const renderFilterAge = (context, propertyId, property) => {
 const renderFilterSelect = (context, propertyId, property, options) => {
 
     let restriction = null
-    if (property.perimeter) {
-        perimeter = context.getPerimeter(property.perimeter.type, property.perimeter.predicate)
-        if (perimeter) restriction = perimeter
-    }
-
     const modalities = []
     if (property.modalities) {
         for (let modalityId of Object.keys(property.modalities)) {
@@ -147,6 +146,12 @@ const renderFilterSelect = (context, propertyId, property, options) => {
 }
 
 const renderFilterSource = (context, propertyId, property) => {
+
+    return `<div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
+    </div>`
+} 
+
+const renderFilterTag = (context, propertyId, property) => {
 
     return `<div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
     </div>`

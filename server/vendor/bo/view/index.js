@@ -9,7 +9,7 @@ const renderIndex = (context, entity, view, data) => {
     <html lang="fr" data-bs-theme="dark">
     
     <!-- Head -->
-    ${renderHead()}
+    ${renderHead(context, entity, view)}
     
     <body>
     
@@ -26,7 +26,7 @@ const renderIndex = (context, entity, view, data) => {
 
       <div class="card-body">
 
-        <input type="hidden" id="instanceCaption" value="${context.instanceCaption}" />
+        <input type="hidden" id="instanceCaption" value="${context.user.instanceCaption}" />
 
     <!-- Indicators section-->
     
@@ -44,7 +44,7 @@ const renderIndex = (context, entity, view, data) => {
         <input type="hidden" id="listRoute" value="/bo/list/${entity}" />
         <input type="hidden" id="listGroupRoute" value="generic/${entity}/groupUpdate?view=${view}" />
       
-        <input type="hidden" id="listWhereHidden" value="${data.where} />
+        <input type="hidden" id="listWhereHidden" value="${data.where}" />
         <input type="hidden" id="listOrderHidden" value="${data.order}" />
         <input type="hidden" id="listLimitHidden" value="${data.limit}" />
     
@@ -135,7 +135,7 @@ const renderIndex = (context, entity, view, data) => {
     </body>
 
     <!-- Scripts -->
-    ${renderCore(entity, view)}
+    ${renderCore(context, entity, view)}
 
     </html>`
 }

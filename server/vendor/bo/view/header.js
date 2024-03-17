@@ -8,8 +8,8 @@ const renderHeader = (context, entity, view) => {
 		<nav class="navbar navbar-expand-lg navbar-light" ${(context.config.headerParams && context.config.headerParams.backgroundColor) ? `style="background-color: ${context.config.headerParams.backgroundColor}"` : ""}>
 			<a class="navbar-brand" target="_blank" href="${(context.config.headerParams && context.config.headerParams.href) ? `${context.config.headerParams.href}` : "#"}" rel="follow">	
 				${(context.config.headerParams && context.config.headerParams.logo) 
-        ? `<img height="${context.config.headerParams.logoHeight}" src="/${`${context.instanceCaption }/logos/${context.config.headerParams.logo}`}" alt="${context.instanceCaption} logo" />`
-        : `<span>${context.instanceCaption}&nbsp;&nbsp;|</span>`}
+        ? `<img height="${context.config.headerParams.logoHeight}" src="/${`${context.user.instanceCaption }/logos/${context.config.headerParams.logo}`}" alt="${context.user.instanceCaption} logo" />`
+        : `<span>${context.user.instanceCaption}&nbsp;&nbsp;|</span>`}
 			</a>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@ const renderHeader = (context, entity, view) => {
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						&nbsp;&nbsp;<a class="navbar-brand" href="#" rel="follow">${context.formattedName}</a>
+						&nbsp;&nbsp;<a class="navbar-brand" href="#" rel="follow">${context.user.formattedName}</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link"  href="#" rel="follow">${context.translate("Home")}</a>

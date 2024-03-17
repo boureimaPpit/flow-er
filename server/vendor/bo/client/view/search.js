@@ -1,17 +1,7 @@
 
-const renderSearchFilterSelect = (context, entity, view, propertyId, data) => {
-
-    const property = context.config[`${entity}/property/${propertyId}`]
-    property.options = context.config[`${entity}/search/${view}`].properties[propertyId]
+const renderSearchSelect = (context, propertyId, property, modalities) => {
 
     let restriction = null
-    const modalities = []
-    for (let modality of data) {
-        const modalityId = modality.id, value = modality.name
-        if (!restriction || restriction.includes(modalityId)) {
-            modalities[modalityId] = value
-        }
-    }
 
     const multiple = (property.options.multiple) ? true : false
 
@@ -38,7 +28,7 @@ const renderSearchFilterSelect = (context, entity, view, propertyId, data) => {
     <div class="input-group-prepend">
         <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
     </div>
-    <select class="form-control searchInput searchInputSelect ${(multiple) ? "selectpicker searchSelectpicker" : ""} ${(property.options.restrictionParent) ? `restrictionParent restrictionParent-${propertyId}` : ""}" id="search-${propertyId}" ${(multiple) ? "data-none-selected-text multiple" : ""}>
+    <select class="form-control searchInput searchInputSelect ${(multiple) ? "selectpicker searchSelectpicker" : ""} ${(property.options.restrictionParent) ? `restrictionParent restrictionParent-${propertyId}` : ""}" id="search-${propertyId}" data-none-selected-text ${(multiple) ? "multiple" : ""}>
         ${(multiple) ? `<option value="empty">-- ${context.translate("Not provided")} --</option>` : ""}
         ${(!multiple) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
         ${renderModalities(modalities)}

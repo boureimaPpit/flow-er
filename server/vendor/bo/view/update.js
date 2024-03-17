@@ -31,17 +31,19 @@ const renderUpdate = (context, entity, view, id, row, isDeletable, formJwt) => {
             const year = currentDate.getFullYear(), month = String(currentDate.getMonth() + 1).padStart(2, "0"), day = String(currentDate.getDate()).padStart(2, "0")
             currentDate = `${year}-${month}-${day}`
 
-            let value = (row.propertyId) ? row.propertyId : null
+            let value = (row[propertyId]) ? row[propertyId] : ""
             if (options.value && !Array.isArray(options.value)) {
                 value = options.value
+                if (value && value.charAt(5) == "+") value = moment().add(value.substring(6), "days").format("YYYY-MM-DD")
+                else if (value && value.charAt(5) == "-") value = moment().subtract(value.substring(6), "days").format("YYYY-MM-DD")
+                else value = moment().format("YYYY-MM-DD")    
             }
             if (!id && options.initialValue) {
                 value = options.initialValue
+                if (value && value.charAt(5) == "+") value = moment().add(value.substring(6), "days").format("YYYY-MM-DD")
+                else if (value && value.charAt(5) == "-") value = moment().subtract(value.substring(6), "days").format("YYYY-MM-DD")
+                else value = moment().format("YYYY-MM-DD")    
             }
-  
-            if (value && value.charAt(5) == "+") value = moment().add(value.substring(6), 'days').format('YYYY-MM-DD')
-            else if (value && value.charAt(5) == "-") value = moment().subtract(value.substring(6), 'days').format('YYYY-MM-DD')
-            else value = moment().format('YYYY-MM-DD')    
         
             if (!id && readonly) continue
             if (id && immutable) readonly = true
@@ -93,7 +95,7 @@ const renderUpdate = (context, entity, view, id, row, isDeletable, formJwt) => {
     
             else if (propertyType == "phone") {
                 html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm"><${(mandatory) ? "* " : ""}${label}</label>
+                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updatePhone" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid phone")}</div>
@@ -101,7 +103,7 @@ const renderUpdate = (context, entity, view, id, row, isDeletable, formJwt) => {
                 </div>`)              
             }
         
-            else if (['date', 'datetime', 'closing_date'].includes(propertyType)) {
+            else if (["date", "datetime", "closing_date"].includes(propertyType)) {
                 html.push(`<div class="form-group row">
                     <label class="col-sm-5 col-form-label col-form-label-sm"><${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
@@ -201,7 +203,7 @@ const renderUpdate = (context, entity, view, id, row, isDeletable, formJwt) => {
                     <div class="col-sm-7 ${(property.source) ? "selectDynamic" : ""}" ${(property.source) ? `id="selectDynamic-${propertyId}"})` : ""}>
             
                     ${(property.modalities) ?
-        `<select class="${(multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
+        `<select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
                         <option />
                         ${function () {
         const html = []
@@ -246,15 +248,15 @@ const renderUpdate = (context, entity, view, id, row, isDeletable, formJwt) => {
                     <input type="hidden" id="updateLogRoute-${propertyId}" value="${property.source.route}?${property.source.query}" />
                     <div class="invalid-feedback text-danger" id="updateError-${propertyId}"></div>
                 </div>
-                ${($id) ? `<div class="card my-3 text-muted updateLog" id="updateLog-<?= $propertyId ?>"></div>` : ""}`)
+                ${($id) ? `<div class="card my-3 text-muted updateLog" id="updateLog-${propertyId}"></div>` : ""}`)
             }
 
             else {
                 html.push(`<div class="form-group row">
                 <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                 <div class="col-sm-7">
-                  <input class="form-control form-control-sm updateInput" id="<?= $propertyId ?>" value="<?= $value ?>" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
-                  <div class="invalid-feedback" id="inputError-<?= $propertyId ?>"></div>
+                  <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
+                  <div class="invalid-feedback" id="inputError-${propertyId}"></div>
                 </div>
               </div>`)
             }

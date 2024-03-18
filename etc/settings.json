@@ -11,7 +11,7 @@
         "listenPort" : "$PORT",
         "middlewares": {
             "bo": {
-                "dir": "../server/vendor/bo",
+                "dir": "../vendor/bo",
                 "prefix": "/bo/",
                 "db" : {
                     "host": "localhost",
@@ -21,8 +21,28 @@
                     "database": "ppit4"    
                 }
             },
+            "user": {
+                "dir": "../vendor/user",
+                "prefix": "/user/",
+                "accountActivationTokenExpirationTime" : 172800,
+                "resetPasswordTokenExpirationTime" : 172800,
+                "smtp" : {
+                    "smtpServer" : "$SMTP_SERVER",
+                    "smtpPort" : "$SMTP_PORT",
+                    "smtpSecure" : true,
+                    "smtpUser" : "$SMTP_USER",
+                    "smtpPassword" : "$SMTP_PASSWORD"    
+                },
+                "db" : {
+                    "host": "localhost",
+                    "port": 8889,
+                    "user": "root",    
+                    "password": "root",
+                    "database": "ppit4"    
+                }
+            },
             "applee": {
-                "dir": "../server/module/applee",
+                "dir": "../module/applee",
                 "prefix": "/applee/"
             }
         }

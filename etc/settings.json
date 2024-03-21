@@ -14,11 +14,11 @@
                 "dir": "../vendor/bo",
                 "prefix": "/bo/",
                 "db" : {
-                    "host": "localhost",
-                    "port": 8889,
-                    "user": "root",    
-                    "password": "root",
-                    "database": "ppit4"    
+                    "host": "$DB_HOST",
+                    "port": "$DB_PORT",
+                    "user": "$DB_USER",    
+                    "password": "$DB_PASSWORD",
+                    "database": "$DB_NAME"    
                 }
             },
             "user": {
@@ -34,11 +34,11 @@
                     "smtpPassword" : "$SMTP_PASSWORD"    
                 },
                 "db" : {
-                    "host": "localhost",
-                    "port": 8889,
-                    "user": "root",    
-                    "password": "root",
-                    "database": "ppit4"    
+                    "host": "$DB_HOST",
+                    "port": "$DB_PORT",
+                    "user": "$DB_USER",    
+                    "password": "$DB_PASSWORD",
+                    "database": "$DB_NAME"    
                 }
             },
             "applee": {

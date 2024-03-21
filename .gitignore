@@ -1,4 +1,5 @@
 .DS_Store
+.env
 public/flow-er
 server/module
 server/vendor/*

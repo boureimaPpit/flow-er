@@ -1,7 +1,7 @@
-const { checkPassword, getTokenPayload, checkToken, createToken, encryptPassword } = require("/core/tools/security")
-const { assert, throwUnauthorized } = require("/core/api-utils")
-const { select } = require("/vendor/bo/server/model/select")
-const { update } = require("/vendor/bo/server/model/update")
+const { checkPassword, getTokenPayload, checkToken, createToken, encryptPassword } = require("../../../../core/tools/security")
+const { assert, throwUnauthorized } = require("../../../../core/api-utils")
+const { select } = require("../../../bo/server/model/select")
+const { update } = require("../../../bo/server/model/update")
 const { renderCreateAccount } = require("../view/create-account")
 const { renderResetPassword } = require("../view/reset-password")
 
@@ -9,21 +9,23 @@ const checkCredentials = async ({ req }, context, db) => {
     const now = new Date()
     const [ email, password ] = assert.notEmpty(req.body, "email", "password")
 
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "email": email })))[0]
+    const model = context.config["user/model"]
+    const [result, fields] = (await db.execute(select(context, "user", ["id", "email", "password", "last_login", "last_updated", "login_failed"], { "email": email }, null, null, model)))
+    const user = result[0]
     if (!user) return throwUnauthorized()
-
     const data = {}
     const authorized = await checkPassword(password, user.password)
     if (!authorized) {
-        data.last_updated = now
-        data.login_failed++
+        data.last_updated = new Date().toISOString().slice(0, 19).replace("T", " ")
+        data.login_failed = user.login_failed + 1
     }
     else {
-        data.last_login = now
+        data.last_login = new Date().toISOString().slice(0, 19).replace("T", " ")
         data.login_failed = 0
     }
 
-    await db(update(context, "user", [id], data))
+    console.log(update(context, "user", [user.id], data, model))
+    await db.execute(update(context, "user", [user.id], data, model))
 
     if (!authorized) {
         return throwUnauthorized()
@@ -47,7 +49,9 @@ const checkActivationToken = async ({ req }, context, db) => {
     token = Buffer.from(token, "base64").toString()
 
     const { email } = getTokenPayload(token)
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "email": email })))[0]
+    const model = context.config["user/model"]
+    const [result, fields] = (await db.execute(select(context, "user", ["id", "email", "password", "last_login", "last_updated", "login_failed"], { "email": email }, null, null, model)))
+    const user = result[0]
     if (!user) return throwUnauthorized()
 
     const timestamp = user.lastUpdated.getTime()
@@ -71,7 +75,9 @@ const checkActivationToken = async ({ req }, context, db) => {
 const saveRefreshToken = async ({ req }, context, db) => {
     const [ user_id, refreshToken ] = assert.notEmpty(req.body, "user_id", "refreshToken")
     const payload = getTokenPayload(refreshToken)
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "user_id": user_id })))[0]
+    const model = context.config["user/model"]
+    const [result, fields] = (await db.execute(select(context, "user", ["id", "email", "password", "last_login", "last_updated", "login_failed"], { "id": id }, null, null, model)))
+    const user = result[0]
     if (user_id !== payload.user_id || !user) {
         return throwUnauthorized("illegal refresh token save attempt")
     }
@@ -82,7 +88,8 @@ const saveRefreshToken = async ({ req }, context, db) => {
 const checkRefreshToken = async ({ req }, context, db) => {
     const [ user_id, refreshToken ] = assert.notEmpty(req.body, "user_id", "refreshToken")
     const payload = getTokenPayload(refreshToken)
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "user_id": user_id })))[0]
+    const [result, fields] = (await db.execute(select(context, "user", ["id", "email", "password", "last_login", "last_updated", "login_failed"], { "id": id }, null, null, model)))
+    const user = result[0]
     if (user_id !== payload.user_id || !user || user.refresh_token !== refreshToken) {
         return throwUnauthorized("invalid refresh token")
     }
@@ -93,13 +100,15 @@ const checkRefreshToken = async ({ req }, context, db) => {
 const requestPasswordReset = async ({ req, config }, context, db, mailClient) => {
     let [origin, email] = assert.notEmpty(req.body, "origin", "email")
     email = email.toLowerCase()
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "email": email })))[0]
+    const model = context.config["user/model"]
+    const [result, fields] = (await db.execute(select(context, "user", ["id", "email", "password", "last_login", "last_updated", "login_failed"], { "email": email }, null, null, model)))
+    const user = result[0]
 
     if (user && user.status === "active") {
         const hashKey = `${user.password}-${user.last_updated.getTime()}`
         const token = createToken({ email }, hashKey, config.resetPasswordTokenExpirationTime)
         const data = {
-            resetPasswordLink: `${origin}${config.resetPasswordLink}/${Buffer(token).toString("base64")}`,
+            resetPasswordLink: `${origin}user/reinitialisation-mot-de-passe"/${Buffer(token).toString("base64")}`,
             registrationLink: context.config.user.instanceFQDN
         }
         const content = renderResetPassword(context, data)
@@ -122,7 +131,9 @@ const resetPassword = async ({ req }, context, db) => {
     const now = new Date()
     let [token, email, password] = assert.notEmpty(req.body, "token", "email", "password")
     token = Buffer.from(token, "base64").toString()
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "email": email })))[0]
+    const model = context.config["user/model"]
+    const [result, fields] = (await db.execute(select(context, "user", ["id", "email", "password", "last_login", "last_updated", "login_failed"], { "email": email }, null, null, model)))
+    const user = result[0]
     const hashKey = `${user.password}-${user.last_updated.getTime()}`
     const { status, payload } = await checkToken(token, hashKey)
 
@@ -149,27 +160,25 @@ const resetPassword = async ({ req }, context, db) => {
 const sendActivationLink = async ({ req, config }, context, db, mailClient) => {
     let [origin, email] = assert.notEmpty(req.body, "origin", "email")
     email = email.toLowerCase()
-    const user = (await db(select("user", ["user_id", "password", "last_login", "last_updated", "login_failed"], { "email": email })))[0]
-
+    const model = context.config["user/model"]
+    const [result, fields] = await db.execute(context, select("user", ["id", "status", "email", "password", "last_login", "last_updated", "login_failed"], { "email": email }, null, null, model))
+    const user = result[0]
     if (user && user.status === "pending") {
         const hashKey = `${user.password}-${user.last_updated.getTime()}`
         const token = createToken({ email }, hashKey, config.accountActivationTokenExpirationTime)
-        await mailClient.sendMail({
+        const data = {
+            activationLink: `${origin}user/activation/${Buffer(token).toString("base64")}`,
+            registrationLink: context.user.instanceFQDN
+        }
+        const content = renderCreateAccount(context, data)
+        console.log(content)
+        /*await mailClient.sendMail({
             type: "html",
             from: context.config["create-account"].replyAddress,
             to: email,
-            subject: context.localize("Bienvenue chez Flow-ER"),
+            subject: context.translate("Bienvenue chez Flow-ER"),
             content: content
-        })
-
-        const content = renderCreateAccount(context, data)
-        await mailClient.sendMail({
-            templateName: "create-account",
-            templateValues: {
-                activationLink: `${origin}${config.accountActivationLink}/${Buffer(token).toString("base64")}`
-            },
-            to: email
-        })
+        })*/
     }
     else {
         return throwUnauthorized("account already activated", "ALREADY_ACTIVATED")

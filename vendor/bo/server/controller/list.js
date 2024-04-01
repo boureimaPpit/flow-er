@@ -79,7 +79,7 @@ const getProperties = async (db, context, entity, view, propertyDefs, whereParam
             let tagOrder = {}
             if (property.order[0] == "-") tagOrder[property.order.substr(1)] = "DESC" 
             else tagOrder[property.order] = "ASC"
-            const rows = await db(select(property.entity, tagColumns, where, tagOrder, null, context.config[`${property.entity}/model`]))
+            const rows = await db(select(context, property.entity, tagColumns, where, tagOrder, null, context.config[`${property.entity}/model`]))
             property.tags = []
             for (let row of JSON.parse(JSON.stringify(rows))) {
                 row[property.vector] = row[property.vector].split(",").map((x) => { return parseInt(x) })
@@ -159,7 +159,7 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
     }    
 
     const model = context.config[`${entity}/model`]
-    const rows = await db(select(entity, columns, where, order, limit, model))
+    const rows = await db(select(context, entity, columns, where, order, limit, model))
 
     if (rows.length > 0) {
         for (let propertyId of properties) {

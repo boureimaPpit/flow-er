@@ -20,7 +20,7 @@ const test = (context) => {
             email: { entity: "vcard", column: "email", type: "email" }
         }
     }
-    console.log(select("account", ["id", "email"], { email: "a.b@test.com" }, { email: "ASC" }, 100, model))
+    console.log(select(context, "account", ["id", "email"], { email: "a.b@test.com" }, { email: "ASC" }, 100, model))
 }
 
 module.exports = {

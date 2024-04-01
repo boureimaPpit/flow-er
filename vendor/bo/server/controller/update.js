@@ -52,7 +52,7 @@ const update = async ({ req }, context, db) => {
             const sourceColumns = ["id"]
             for (let columnId of property.format[1].split(",")) sourceColumns.push(columnId)
             
-            const modalities = await db(select(sourceEntity, sourceColumns, sourceWhere, null, null, context.config[`${property.entity}/model`]))
+            const modalities = await db(select(context, sourceEntity, sourceColumns, sourceWhere, null, null, context.config[`${property.entity}/model`]))
             property.modalities = {}
             for (let modality of modalities) {
                 const args = []
@@ -76,7 +76,7 @@ const update = async ({ req }, context, db) => {
     let row
     if (id) {
         const columns = Object.keys(model.properties)
-        row = (await db(select(entity, columns, { "id": id }, null, null, model)))[0]
+        row = (await db(select(context,entity, columns, { "id": id }, null, null, model)))[0]
     }
 
     return renderUpdate(context, entity, view, id, properties, row, false, whereParam, "formJwt à construire")
@@ -98,7 +98,7 @@ const postUpdate = async ({ req }, context, db) => {
     let row
     if (id) {
         const columns = Object.keys(model.properties)
-        row = await db.execute(select(entity, columns, { "id": id }, null, null, model))
+        row = await db.execute(select(context, entity, columns, { "id": id }, null, null, model))
         console.log(row)
     }
     await db.beginTransaction()

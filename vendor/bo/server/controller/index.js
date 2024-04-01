@@ -18,7 +18,6 @@ const registerBo = async ({ context, config, logger, app }) => {
     app.use(upload.array())
     app.get(`${config.prefix}config`, execute(() => { return JSON.stringify(context.config) }))
     app.get(`${config.prefix}language`, execute(() => { return JSON.stringify(context.translations) }))
-    app.get(`${config.prefix}user`, execute(() => { return JSON.stringify(context.user) }))
     app.get(`${config.prefix}index/:entity`, execute(index, context, db))
     app.get(`${config.prefix}search/:entity`, execute(search, context, db))
     app.get(`${config.prefix}list/:entity`, execute(list, context, db))

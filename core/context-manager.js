@@ -12,8 +12,8 @@ const loadContext = (settings, logger) => {
     const user = {
         instance_id: 1,
         instanceCaption: "flow-er.fr",
-        instanceFQDN: "www.flow-er.fr",
-        user_id: 83,
+        instanceFQDN: "https://intranet.flow-er.fr",
+        id: 83,
         formattedName: "LARTILLOT, Bruno",
         roles: ["sales_manager"],
         locale: "fr_FR"    

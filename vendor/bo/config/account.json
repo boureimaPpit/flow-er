@@ -129,6 +129,17 @@
         }
     },
 
+    "account/count/default": [
+        {
+            "filters": {
+                "property_18": ["esi"],
+                "status": ["candidate"],
+                "max_property_8": "today-1"
+            }, 
+            "labels": { "default": "Candidats < J" }
+        }
+    ],
+
     "account/search/default": {
         "properties": {
             "status": { "multiple": true },

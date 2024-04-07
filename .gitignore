@@ -1,5 +1,6 @@
 .DS_Store
 .env
+config
 public/flow-er
 server/module
 server/vendor/*

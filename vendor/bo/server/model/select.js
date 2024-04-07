@@ -43,10 +43,10 @@ const select = (context, table, columns, where, order = [], limit = null, model 
     const predicates = []
     if (model.properties.status) predicates.push(`${qTable}.${qi("status")} != 'deleted'\n`)
     if (model.properties.instance_id) predicates.push(`${qTable}.${qi("instance_id")} = ${context.user.instance_id}\n`)
-
+    
     for (let propertyId of Object.keys(where)) {
         if (!["instance_id", "creation_time", "creation_user", "update_time", "update_user"].includes(propertyId)) {
-            if (model.properties[propertyId]) {
+            if (propertyId == "id" || model.properties[propertyId]) {
                 let value = where[propertyId]
                 const qEntity = qi(model.properties[propertyId].entity)
                 const qColumn = qi(model.properties[propertyId].column)
@@ -110,10 +110,9 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                 }
                 else {
                     value = qv(value)
-                    if (model.properties[propertyId].type && ["int", "float", "modality"].includes(model.properties[propertyId].type)) request += `AND ${qEntity}.${qColumn} = ${value}\n`
+                    if (model.properties[propertyId].type && ["int", "float", "modality"].includes(model.properties[propertyId].type)) predicates.push(`${qEntity}.${qColumn} = ${value}\n`)
                     else predicates.push(`${qEntity}.${qColumn} LIKE ${value}\n`)
                 }
-                if (predicates) request += `WHERE ${predicates.join("\nAND")}\n`
         
                 // Perimeter check
                 /*for (let propertyId of Object.keys(model.properties)) {
@@ -132,6 +131,7 @@ const select = (context, table, columns, where, order = [], limit = null, model 
             }
         }
     }
+    if (predicates) request += `WHERE ${predicates.join("\nAND")}\n`
 
     if (order != null) {
         request += "ORDER BY "

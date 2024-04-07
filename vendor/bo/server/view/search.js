@@ -190,16 +190,18 @@ const renderFilterInput = (context, propertyId, property, options, data) => {
 
 const renderButtons = (context, entity, view) => {
     let buttons = []
-    const actions = context.config[`${entity}/global/${view}`]["actions"]
-    for (let actionId of Object.keys(actions)) {
-        const action = actions[actionId]
-        buttons.push(`<input type="hidden" class="globalRoute" id="globalRoute-${actionId}" value="${action.route}" />
-            <button type="button" class="btn btn-default input-group-text globalButton" id="globalButton-${actionId}" title="${context.localize(action.labels)}">
-                <i class="fa <?php echo $action['glyph']; ?> text-center, ext-justify" style="font-size: 12px;">
-                    ${(action.glyphTitle) ? action.glyphTitle : ""}
-                </i>
-                ${(action.span) ? context.localize(action.span) : ""}
-            </button>`)
+    if (context.config[`${entity}/global/${view}`]) {
+        const actions = context.config[`${entity}/global/${view}`]["actions"]
+        for (let actionId of Object.keys(actions)) {
+            const action = actions[actionId]
+            buttons.push(`<input type="hidden" class="globalRoute" id="globalRoute-${actionId}" value="${action.route}" />
+                <button type="button" class="btn btn-default input-group-text globalButton" id="globalButton-${actionId}" title="${context.localize(action.labels)}">
+                    <i class="fa <?php echo $action['glyph']; ?> text-center, ext-justify" style="font-size: 12px;">
+                        ${(action.glyphTitle) ? action.glyphTitle : ""}
+                    </i>
+                    ${(action.span) ? context.localize(action.span) : ""}
+                </button>`)
+        }            
     }
     return buttons.join("\n")
 }

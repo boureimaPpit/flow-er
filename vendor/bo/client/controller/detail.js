@@ -26,7 +26,7 @@ const getSelect = (propertyId) => {
     xhttp.send()
 }
 
-const postTab = (tab, id) => {
+const postTab = (tab, id, searchParams) => {
     const form = document.getElementById("tabForm")
     if (form) {
         form.onsubmit = function(event) {
@@ -364,7 +364,7 @@ const getTab = (tab, id, message, searchParams) => {
                     getSelect(propertyId)
                 })
 
-                postTab(tab, id)
+                postTab(tab, id, searchParams)
 
                 $(".detailPanel").each(function () {
                     const panel = $(this).attr("id")

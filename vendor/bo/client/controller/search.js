@@ -170,7 +170,6 @@ const getSearchParams = () => {
 
     if (Object.keys(searchParams).length == 0) {
         const listWhereHidden = $("#listWhereHidden").val()
-        console.log(listWhereHidden)
         if (listWhereHidden) {
             for (const pair of $("#listWhereHidden").val().split("|")) {
                 const key = pair.split(":")[0], value = pair.split(":")[1]

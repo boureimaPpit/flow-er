@@ -23,6 +23,7 @@ const renderEntries = (context, view) => {
 			</li>`)
         }
     }
+    console.log(html)
     return html.join("\n")
 }
 

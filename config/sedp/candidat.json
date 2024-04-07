@@ -2,92 +2,85 @@
     "candidat/model": {
         "entities": {
             "place": { "table": "place", "foreignKey": "place_id", "foreignEntity": "candidat" },
-            "vcard": { "table": "vcard", "foreignKey": "contact_1_id", "foreignEntity": "candidat" }
+            "contact_1": { "table": "vcard", "foreignKey": "contact_1_id", "foreignEntity": "candidat" },
+            "contact_2": { "table": "vcard", "foreignKey": "contact_2_id", "foreignEntity": "candidat" },
+            "contact_3": { "table": "vcard", "foreignKey": "contact_3_id", "foreignEntity": "candidat" },
+            "contact_4": { "table": "vcard", "foreignKey": "contact_4_id", "foreignEntity": "candidat" },
+            "contact_5": { "table": "vcard", "foreignKey": "contact_5_id", "foreignEntity": "candidat" }
         },
         "properties": {
-            "id": { "entity": "account", "column": "id", "type": "int" },
-            "status": { "entity": "account", "column": "status  ", "type": "int" },
-            "place_id": { "entity": "account", "column": "id", "type": "int" },
-            "identifier": { "entity": "account", "column": "id", "type": "int" },
-            "name": { "entity": "account", "column": "id", "type": "int" },
-            "email_work": { "entity": "account", "column": "id", "type": "int" },
-            "photo_link_id": { "entity": "account", "column": "id", "type": "int" },
-            "basket": { "entity": "account", "column": "id", "type": "int" },
-            "contact_1_id": { "entity": "account", "column": "id", "type": "int" },
-            "n_title": { "entity": "contact_1", "column": "id", "type": "int" },
-            "n_first": { "entity": "contact_1", "column": "id", "type": "int" },
-            "n_last": { "entity": "contact_1", "column": "id", "type": "int" },
-            "n_fn": { "entity": "contact_1", "column": "id", "type": "int" },
-            "email": { "entity": "contact_1", "column": "id", "type": "int" },
-            "tel_work": { "entity": "contact_1", "column": "id", "type": "int" },
-            "tel_cell": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_street": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_extended": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_post_office_box": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_zip": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_city": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_state": { "entity": "contact_1", "column": "id", "type": "int" },
-            "adr_country": { "entity": "contact_1", "column": "id", "type": "int" },
-            "address": { "entity": "contact_1", "column": "id", "type": "int" },
-            "birth_date": { "entity": "contact_1", "column": "id", "type": "int" },
-            "gender": { "entity": "contact_1", "column": "id", "type": "int" },
-            "nationality": { "entity": "contact_1", "column": "id", "type": "int" },
-            "n_title_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "n_first_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "n_last_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "n_fn_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "email_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "tel_work_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "tel_cell_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "address_2": { "entity": "contact_2", "column": "id", "type": "int" },
-            "n_title_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "n_first_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "n_last_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "n_fn_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "email_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "tel_work_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "tel_cell_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "address_3": { "entity": "contact_3", "column": "id", "type": "int" },
-            "n_title_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "n_first_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "n_last_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "n_fn_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "email_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "tel_work_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "tel_cell_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "address_4": { "entity": "contact_4", "column": "id", "type": "int" },
-            "n_title_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "n_first_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "n_last_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "n_fn_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "email_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "tel_work_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "tel_cell_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "address_5": { "entity": "contact_5", "column": "id", "type": "int" },
-            "date_inscription": { "entity": "account", "column": "id", "type": "int" },
-            "date_annulation": { "entity": "account", "column": "id", "type": "int" },
-            "opening_date": { "entity": "account", "column": "id", "type": "int" },
-            "closing_date": { "entity": "account", "column": "id", "type": "int" },
-            "callback_date": { "entity": "account", "column": "id", "type": "int" },
-            "first_activation_date": { "entity": "account", "column": "id", "type": "int" },
-            "next_meeting_date": { "entity": "account", "column": "id", "type": "int" },
-            "next_meeting_confirmed": { "entity": "account", "column": "id", "type": "int" },
-            "priority": { "entity": "account", "column": "id", "type": "int" },
-            "origine": { "entity": "account", "column": "id", "type": "int" },
-            "default_means_of_payment": { "entity": "account", "column": "id", "type": "int" },
-            "transfer_order_id": { "entity": "account", "column": "id", "type": "int" },
-            "transfer_order_date": { "entity": "account", "column": "id", "type": "int" },
-            "bank_identifier": { "entity": "account", "column": "id", "type": "int" },
-            "discipline": { "definition": "student/property/discipline" },
-            "situation": { "entity": "account", "column": "id", "type": "int" },
-            "internat": { "entity": "account", "column": "id", "type": "int" },
-            "date_rdv_admission": { "entity": "account", "column": "id", "type": "int" },
-            "level": { "definition": "student/property/level" },
-            "niveau_sportif": { "entity": "account", "column": "id", "type": "int" },
-            "previous_level": { "entity": "account", "column": "id", "type": "int" },
-            "school_year": { "definition": "student/property/school_year" },        
-            "journey": { "entity": "account", "column": "id", "type": "int" },
-            "options": { "entity": "account", "column": "id", "type": "int" },
+            "id": { "entity": "candidat", "column": "id", "type": "primary" },
+            "status": { "entity": "candidat", "column": "status" },
+            "stage": { "entity": "candidat", "column": "stage" },
+            "school": { "entity": "candidat", "column": "school" },
+            "place_id": { "entity": "candidat", "column": "place_id", "type": "int" },
+            "place_name": { "entity": "place", "column": "name" },
+            "school_year": { "entity": "candidat", "column": "school_year" },
+            "level": { "entity": "candidat", "column": "level" },
+            "boarding_school": { "entity": "candidat", "column": "boarding_school" },
+            "identifier": { "entity": "candidat", "column": "identifier" },
+            "name": { "entity": "candidat", "column": "name" },
+            "email_work": { "entity": "candidat", "column": "email_work" },
+            "contact_1_id": { "entity": "candidat", "column": "contact_1_id", "type": "int" },
+            "n_title": { "entity": "contact_1", "column": "n_title" },
+            "n_first": { "entity": "contact_1", "column": "n_first" },
+            "n_last": { "entity": "contact_1", "column": "n_last" },
+            "n_fn": { "entity": "contact_1", "column": "n_fn" },
+            "email": { "entity": "contact_1", "column": "email" },
+            "tel_cell": { "entity": "contact_1", "column": "tel_cell" },
+            "adr_street": { "entity": "contact_1", "column": "adr_street" },
+            "adr_extended": { "entity": "contact_1", "column": "adr_extended" },
+            "adr_post_office_box": { "entity": "contact_1", "column": "adr_post_office_box" },
+            "adr_zip": { "entity": "contact_1", "column": "adr_zip" },
+            "adr_city": { "entity": "contact_1", "column": "adr_city" },
+            "adr_state": { "entity": "contact_1", "column": "adr_state" },
+            "adr_country": { "entity": "contact_1", "column": "adr_country" },
+            "birth_date": { "entity": "contact_1", "column": "birth_date", "type": "date" },
+            "gender": { "entity": "contact_1", "column": "gender", "type": "int" },
+            "nationality": { "entity": "contact_1", "column": "nationality", "type": "tinyint" },
+            "contact_2_id": { "entity": "candidat", "column": "contact_2_id", "type": "int" },
+            "contact_2_role": { "entity": "candidat", "column": "role" },
+            "n_title_2": { "entity": "contact_2", "column": "n_title" },
+            "n_first_2": { "entity": "contact_2", "column": "n_first" },
+            "n_last_2": { "entity": "contact_2", "column": "n_last" },
+            "n_fn_2": { "entity": "contact_2", "column": "n_fn" },
+            "email_2": { "entity": "contact_2", "column": "email" },
+            "tel_2_cell": { "entity": "contact_2", "column": "tel_cell" },
+            "contact_3_id": { "entity": "candidat", "column": "contact_3_id", "type": "int" },
+            "contact_3_role": { "entity": "candidat", "column": "role" },
+            "n_title_3": { "entity": "contact_3", "column": "n_title" },
+            "n_first_3": { "entity": "contact_3", "column": "n_first" },
+            "n_last_3": { "entity": "contact_3", "column": "n_last" },
+            "n_fn_3": { "entity": "contact_3", "column": "n_fn" },
+            "email_3": { "entity": "contact_3", "column": "email" },
+            "tel_3_cell": { "entity": "contact_3", "column": "tel_cell" },
+            "family_situation": { "entity": "candidat", "column": "family_situation", "type": "tinyint" },
+            "school_situation": { "entity": "candidat", "column": "school_situation", "type": "tinyint" },
+            "current_level": { "entity": "candidat", "column": "current_level" },
+            "journey": { "entity": "candidat", "column": "journey" },
+            "opening_date": { "entity": "candidat", "column": "opening_date", "type": "date" },
+            "callback_date": { "entity": "candidat", "column": "callback_date", "type": "date" },
+            "next_meeting_date": { "entity": "candidat", "column": "next_meeting_date", "type": "date" },
+            "subscription_date": { "entity": "candidat", "column": "subscription_date", "type": "date" },
+            "cancellation_date": { "entity": "candidat", "column": "cancellation_date", "type": "date" },
+            "origine": { "entity": "candidat", "column": "origine" },
+            "amount": { "entity": "candidat", "column": "amount", "type": "float" },
+            "default_means_of_payment": { "entity": "candidat", "column": "default_means_of_payment" },
+            "transfer_order_id": { "entity": "candidat", "column": "transfer_order_id" },
+            "transfer_order_date": { "entity": "candidat", "column": "transfer_order_date", "type": "date" },
+            "bank_identifier": { "entity": "candidat", "column": "bank_identifier" },
+
+            "creation_time": { "entity": "candidat", "column": "creation_time", "type": "datetime" },
+            "creation_user": { "entity": "candidat", "column": "creation_user", "type": "int" },
+            "update_time": { "entity": "candidat", "column": "update_time", "type": "datetime" },
+            "update_user": { "entity": "candidat", "column": "update_user", "type": "int" },
+
+            "wish_school_year": { "entity": "tag" },        
+            "wish_school": { "entity": "tag" },        
+            "wish_place": { "entity": "tag" },
+            "wish_level": { "entity": "tag" },
+            "wish_sport": { "entity": "tag" },
+            "wish_boarding_school": { "entity": "tag" }
         }
     },
 
@@ -115,16 +108,102 @@
         "mandatory": true
     },
 
-    "candidat/property/place_id": {
-		"definition": "inline",
-		"type": "select",
+    "candidat/property/school": { 
+        "definition": "inline",
+        "type": "select",
 		"modalities": {
-			"2pit": { "fr_FR": "P-PIT", "default": "2PIT" },
+			"basketball": { "default": "Basketball", "fr_FR": "Basketball" },
+			"football": { "default": "Football", "fr_FR": "Football" },
+			"tennis": { "default": "Tennis", "fr_FR": "Tennis" },
+			"equitation": { "default": "Horse riding", "fr_FR": "Équitation" }
 		},
 		"labels": {
-			"default": "Place",
-			"fr_FR": "Établissement"
+			"default": "Sport",
+			"fr_FR": "Sport"
 		}
+    },
+
+    "candidat/property/place_id": {
+		"definition": "inline",
+		"type": "source",
+        "entity": "place",
+        "where": "status:new",
+        "order": "name",
+        "format": ["%s", "name"],
+		"labels": {
+			"default": "Place",
+			"fr_FR": "Campus"
+		}
+    },
+
+    "candidat/property/place_name": {
+		"definition": "inline",
+		"type": "input",
+		"labels": {
+			"default": "Place",
+			"fr_FR": "Campus"
+		}
+    },
+
+    "candidat/property/school_year": { 
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "2021-2022": { "default": "2021-2022" },
+            "2022-2023": { "default": "2022-2023" },
+            "2023-2024": { "default": "2023-2024" },
+            "2024-2025": { "default": "2024-2025" },
+            "2025-2026": { "default": "2025-2026" },
+            "2026-2027": { "default": "2026-2027" },
+            "2027-2028": { "default": "2027-2028" }
+        },
+		"labels": {
+			"default": "School year",
+			"fr_FR": "Année scolaire"
+		}
+    },
+
+    "candidat/property/level": { 
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "6": { "fr_FR": "6ème" },
+            "5": { "fr_FR": "5ème" },
+            "4": { "fr_FR": "4ème" },
+            "3": { "fr_FR": "3ème" },
+            "2": { "fr_FR": "2nde" },
+            "2_pro": { "fr_FR": "2nde professionnelle" },
+            "1_generale": { "fr_FR": "1ère générale" },
+            "1_stmg": { "fr_FR": "1ère STMG" },
+            "1_pro": { "fr_FR": "1ère professionnelle" },
+            "t_generale": { "fr_FR": "Terminale générale" },
+            "t_stmg": { "fr_FR": "Terminale STMG" },
+            "t_pro": { "fr_FR": "Terminale professionnelle" },
+            "bac_1": { "fr_FR": "Bac +1" },
+            "bts_mco_1": { "fr_FR": "BTS MCO 1" },
+            "bts_mco_2": { "fr_FR": "BTS MCO 2" }
+        },
+        "labels": {
+            "default": "Integration level",
+            "fr_FR": "Classe à intégrer"
+        }
+    },
+
+    "candidat/property/boarding_school": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "externe": { "default": "Externe" },
+            "demi": { "default": "Demi-pensionnaire" },
+            "interne": { "default": "Internat" },
+            "weekend": { "default": "Internat + WE" },
+            "dimanche": { "default": "Internat + dimanche" },
+            "annuel": { "default": "Internat annuel" }
+        },
+        "labels": {
+            "default": "Boarding-school",
+            "fr_FR": "Régime"
+        }
     },
 
     "candidat/property/identifier": {
@@ -152,29 +231,6 @@
             "default": "School e-mail",
             "fr_FR": "Email école"
         }
-    },
-
-    "candidat/property/photo_link_id": {
-		"definition": "inline",
-		"type": "photo",
-		"labels": {
-			"default": "",
-			"fr_FR": ""
-		}
-    },
-
-    "candidat/property/basket": {
-		"definition": "inline",
-		"type": "select",
-		"modalities": {
-			"p1": { "default": "P1", "fr_FR": "P1" },
-			"p2": { "default": "P2", "fr_FR": "P2" },
-			"p3": { "default": "P3", "fr_FR": "P3" }
-		},
-		"labels": {
-			"default": "Priority",
-			"fr_FR": "Priorité"
-		}
     },
     
     "candidat/property/contact_1_id": {
@@ -231,14 +287,6 @@
         }
     },
 
-    "candidat/property/tel_work": {
-        "definition": "inline",
-        "type": "phone",
-        "labels": {
-            "default": "Phone",
-            "fr_FR": "Téléphone"
-        }
-    },
 
     "candidat/property/tel_cell": {
         "definition": "inline",
@@ -305,19 +353,14 @@
 
     "candidat/property/adr_country": {
         "definition": "inline",
-        "type": "input",
+        "type": "select",
+        "modalities": {
+            "ue": { "default": "Union européenne" },
+            "hors_ue": { "default": "Hors union européenne" }
+        },
         "labels": {
             "default": "Country",
-            "fr_FR": "Pays"
-        }
-    },
-
-    "candidat/property/address": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Address",
-            "fr_FR": "Adresse"
+            "fr_FR": "Zone de résidence"
         }
     },
 
@@ -334,8 +377,9 @@
 		"definition": "inline",
 		"type": "select",
 		"modalities": {
-			"f": { "default": "Female", "fr_FR": "Femme" },
-			"m": { "default": "Male", "fr_FR": "Homme" }
+			"1": { "default": "Male", "fr_FR": "Homme" },
+			"2": { "default": "Female", "fr_FR": "Femme" },
+			"3": { "default": "Other", "fr_FR": "Autre" }
 		},
 		"labels": {
 			"default": "Gender",
@@ -347,12 +391,27 @@
         "definition": "inline",
         "type": "select",
         "modalities": {
-            "fr": { "default": "Française" },
-            "default": { "default": "Etrangère" }
+            "1": { "default": "Française" },
+            "2": { "default": "Union européenne" },
+            "3": { "default": "Hors union européenne" }
         },
         "labels": {
             "default": "Nationality",
             "fr_FR": "Nationalité"
+        }
+    },
+    
+    "candidat/property/contact_2_role": {
+        "definition": "inline",
+        "type": "select",
+        "modalities": {
+            "pere": { "default": "Père" },
+            "mere": { "default": "Mère" },
+            "tuteur": { "default": "Tuteur" }
+        },
+        "labels": {
+            "default": "Legal repr - Role",
+            "fr_FR": "Représentant légal - Rôle"
         }
     },
 
@@ -360,8 +419,8 @@
         "definition": "inline",
         "type": "input",
         "labels": {
-            "default": "Father title",
-            "fr_FR": "Titre père"
+            "default": "Legal repr - Title",
+            "fr_FR": "Représentant légal - Titre"
         }
     },
 
@@ -369,8 +428,8 @@
         "definition": "inline",
         "type": "input",
         "labels": {
-            "default": "Father first name",
-            "fr_FR": "Prénom père"
+            "default": "Legal repr -  First name",
+            "fr_FR": "Représentant légal - Prénom"
         }
     },
 
@@ -378,17 +437,8 @@
         "definition": "inline",
         "type": "input",
         "labels": {
-            "default": "Father last name",
-            "fr_FR": "Nom famille père"
-        }
-    },
-
-    "candidat/property/n_fn_2": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Father name",
-            "fr_FR": "Nom père"
+            "default": "Legal repr - Last name",
+            "fr_FR": "Représentant légal - Nom"
         }
     },
 
@@ -396,35 +446,31 @@
         "definition": "inline",
         "type": "email",
         "labels": {
-            "default": "Father email",
-            "fr_FR": "Email père"
+            "default": "Legal repr - Email",
+            "fr_FR": "Représentant légal - Email"
         }
     },
 
-    "candidat/property/tel_work_2": {
+    "candidat/property/tel_2_cell": {
         "definition": "inline",
         "type": "input",
         "labels": {
-            "default": "Father phone",
-            "fr_FR": "Téléphone père"
+            "default": "Legal repr - Phone",
+            "fr_FR": "Représentant légal - Téléphone"
         }
     },
-
-    "candidat/property/tel_cell_2": {
+    
+    "candidat/property/contact_3_role": {
         "definition": "inline",
-        "type": "input",
+        "type": "select",
+        "modalities": {
+            "pere": { "default": "Père" },
+            "mere": { "default": "Mère" },
+            "tuteur": { "default": "Tuteur" }
+        },
         "labels": {
-            "default": "Father cell",
-            "fr_FR": "Mobile père"
-        }
-    },
-
-    "candidat/property/address_2": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Father address",
-            "fr_FR": "Adresse père"
+            "default": "Legal repr 2 - Role",
+            "fr_FR": "Représentant légal 2 - Rôle"
         }
     },
 
@@ -433,7 +479,7 @@
         "type": "input",
         "labels": {
             "default": "Mother title",
-            "fr_FR": "Titre mère"
+            "fr_FR": "Représentant légal 2 - Titre"
         }
     },
 
@@ -442,7 +488,7 @@
         "type": "input",
         "labels": {
             "default": "Mother first name",
-            "fr_FR": "Prénom mère"
+            "fr_FR": "Représentant légal 2 - Prénom"
         }
     },
 
@@ -451,16 +497,7 @@
         "type": "input",
         "labels": {
             "default": "Mother last name",
-            "fr_FR": "Nom famille mère"
-        }
-    },
-
-    "candidat/property/n_fn_3": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Mother name",
-            "fr_FR": "Nom mère"
+            "fr_FR": "Représentant légal 2 - Nom"
         }
     },
 
@@ -469,198 +506,16 @@
         "type": "email",
         "labels": {
             "default": "Mother email",
-            "fr_FR": "Email mère"
+            "fr_FR": "Représentant légal 2 - Email"
         }
     },
 
-    "candidat/property/tel_work_3": {
+    "candidat/property/tel_3_cell": {
         "definition": "inline",
         "type": "input",
         "labels": {
             "default": "Mother phone",
-            "fr_FR": "Téléphone mère"
-        }
-    },
-
-    "candidat/property/tel_cell_3": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Mother cell",
-            "fr_FR": "Mobile mère"
-        }
-    },
-
-    "candidat/property/address_3": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Mother address",
-            "fr_FR": "Adresse mère"
-        }
-    },
-
-    "candidat/property/n_title_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. title",
-            "fr_FR": "Titre repr. légal"
-        }
-    },
-
-    "candidat/property/n_first_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. first name",
-            "fr_FR": "Prénom repr. légal"
-        }
-    },
-
-    "candidat/property/n_last_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. last name",
-            "fr_FR": "Nom famille repr. légal"
-        }
-    },
-
-    "candidat/property/n_fn_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. name",
-            "fr_FR": "Nom repr. légal"
-        }
-    },
-
-    "candidat/property/email_4": {
-        "definition": "inline",
-        "type": "email",
-        "labels": {
-            "default": "Legal repr. email",
-            "fr_FR": "Email repr. légal"
-        }
-    },
-
-    "candidat/property/tel_work_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. phone",
-            "fr_FR": "Téléphone repr. légal"
-        }
-    },
-
-    "candidat/property/tel_cell_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. cell",
-            "fr_FR": "Portable repr. légal"
-        }
-    },
-
-    "candidat/property/address_4": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Legal repr. address",
-            "fr_FR": "Adresse repr. légal"
-        }
-    },
-
-    "candidat/property/n_title_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad title",
-            "fr_FR": "Titre contact étranger"
-        }
-    },
-
-    "candidat/property/n_first_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad first name",
-            "fr_FR": "Prénom contact étranger"
-        }
-    },
-
-    "candidat/property/n_last_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad name",
-            "fr_FR": "Nom contact étranger"
-        }
-    },
-
-    "candidat/property/n_fn_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad name",
-            "fr_FR": "Nom contact étranger"
-        }
-    },
-
-    "candidat/property/email_5": {
-        "definition": "inline",
-        "type": "email",
-        "labels": {
-            "default": "Contact abroad email",
-            "fr_FR": "Email contact étranger"
-        }
-    },
-
-    "candidat/property/tel_work_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad phone",
-            "fr_FR": "Téléphone contact étranger"
-        }
-    },
-
-    "candidat/property/tel_cell_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad cell",
-            "fr_FR": "Portable contact étranger"
-        }
-    },
-
-    "candidat/property/address_5": {
-        "definition": "inline",
-        "type": "input",
-        "labels": {
-            "default": "Contact abroad address",
-            "fr_FR": "Adresse contact étranger"
-        }
-    },
-
-    "candidat/property/date_inscription": {
-        "definition": "inline",
-        "type": "date",
-        "dependency": { "property": "status", "values": { "active", "retention" }},
-        "labels": {
-            "default": "Registration date",
-            "fr_FR": "Date Inscription"
-        }
-    },
-
-    "candidat/property/date_annulation": {
-        "definition": "inline",
-        "type": "date",
-        "dependency": { "property": "status", "values": { "canceled", "gone", "ne_plus_contacter" }},
-        "labels": {
-            "default": "Cancellation date",
-            "fr_FR": "Date Annulation"
+            "fr_FR": "Représentant légal 2 - Téléphone"
         }
     },
 
@@ -672,15 +527,6 @@
 			"fr_FR": "Date 1er contact"
 		}
     },
-
-    "candidat/property/closing_date": {
-		"definition": "inline",
-		"type": "date",
-		"labels": {
-			"default": "Closing date",
-			"fr_FR": "Date de fermeture"
-		}
-    },
     
     "candidat/property/callback_date": {
 		"definition": "inline",
@@ -690,46 +536,32 @@
 			"fr_FR": "Date de rappel"
 		}
     },
-    
-    "candidat/property/first_activation_date": {
-		"definition": "inline",
-		"type": "date",
-		"labels": {
-			"default": "First activation date",
-			"fr_FR": "Date 1ère activation"
-		}
-    },
 
     "candidat/property/next_meeting_date": {
         "definition": "inline",
-        "type": "datetime",
+        "type": "date",
         "labels": {
-            "default": "Subscription meeting_date",
-            "fr_FR": "Date de RDV d’inscription"
+            "default": "Next meeting_date",
+            "fr_FR": "Date de prochain rendez-vous"
         }
     },
-
-    "candidat/property/next_meeting_confirmed": {
-        "definition": "inline",
-        "type": "datetime",
-        "labels": {
-            "default": "Subscription meeting confirmed",
-            "fr_FR": "RDV d’inscription confirmé"
-        }
-    },
-
-    "candidat/property/priority": {
+    
+    "candidat/property/subscription_date": {
 		"definition": "inline",
-		"type": "select",
-		"modalities": {
-			"p1": { "default": "Priority 1", "fr_FR": "Priorité 1" },
-			"p2": { "default": "Priority 2", "fr_FR": "Priorité 2" },
-			"p3": { "default": "Priority 3", "fr_FR": "Priorité 3" }
-		},
+		"type": "date",
 		"labels": {
-			"default": "Priority",
-			"fr_FR": "Priorité"
+			"default": "Subscription date",
+			"fr_FR": "Date d’inscription"
 		}
+    },
+
+    "candidat/property/cancellation_date": {
+        "definition": "inline",
+        "type": "date",
+        "labels": {
+            "default": "Cancellation date",
+            "fr_FR": "Date Annulation"
+        }
     },
 
     "candidat/property/origine": {
@@ -752,16 +584,16 @@
                 "fr_FR": "Origine"
         }
     },
-
-    "candidat/property/contact_history": {
-		"definition": "inline",
-		"type": "log",
-		"labels": {
-			"default": "contact log",
-			"fr_FR": "Historique des contacts"
-		}
-    },
     
+    "candidat/property/amount": {
+        "definition": "inline",
+        "type": "number",
+        "labels": {
+            "default": "Revenue",
+            "fr_FR": "CA"
+        }
+    },
+
     "candidat/property/default_means_of_payment": {
 		"definition": "inline",
 		"type": "select",
@@ -806,85 +638,68 @@
 		}
     },
 
-    "candidat/property/discipline": { "definition": "student/property/discipline" },
-
-    "candidat/property/situation": {
+    "candidat/property/family_situation": {
         "definition": "inline",
         "type": "select",
         "modalities": {
-            "student": { "default": "Student", "fr_FR": "Etudiant/Lycéen" },
-            "employee": { "default": "Employee", "fr_FR": "Salarié" },
-            "others": { "default": "Others", "fr_FR": "Autres" }
+            "1": { "default": "Single", "fr_FR": "Célibataire" },
+            "2": { "default": "Married", "fr_FR": "Marié" },
+            "3": { "default": "Civil partnership", "fr_FR": "Pacsé" },
+            "4": { "default": "Divorced", "fr_FR": "Divorcé" },
+            "5": { "default": "Separated", "fr_FR": "Séparé" },
+            "6": { "default": "Widowed", "fr_FR": "Veuf" }
         },
         "labels": {
-            "default": "Current situation",
-            "fr_FR": "Situation actuelle"
+            "default": "School situation",
+            "fr_FR": "Situation scolaire"
         }
     },
-        
-    "candidat/property/internat": {
+
+    "candidat/property/school_situation": {
         "definition": "inline",
         "type": "select",
         "modalities": {
-            "Externe": { "default": "Externe" },
-            "Demi-pensionnaire": { "default": "Demi-pensionnaire" },
-            "Interne": { "default": "Internat" },
-            "Weekend": { "default": "Internat + WE" },
-            "Dimanche": { "default": "Internat + dimanche" },
-            "annual": { "default": "Internat annuel" }
+            "1": { "default": "Student", "fr_FR": "Etudiant/Lycéen" },
+            "2": { "default": "Employee", "fr_FR": "Salarié" },
+            "3": { "default": "Others", "fr_FR": "Autres" }
         },
         "labels": {
-            "default": "Boarding-school",
-            "fr_FR": "Internat"
+            "default": "School situation",
+            "fr_FR": "Situation scolaire"
         }
     },
 
-    "candidat/property/date_rdv_admission": {
+    "candidat/property/current_level": {
         "definition": "inline",
-        "type": "date",
+        "type": "select",
+        "modalities": {
+            "6": { "fr_FR": "6ème" },
+            "5": { "fr_FR": "5ème" },
+            "4": { "fr_FR": "4ème" },
+            "3": { "fr_FR": "3ème" },
+            "2": { "fr_FR": "2nde" },
+            "2_pro": { "fr_FR": "2nde professionnelle" },
+            "1_generale": { "fr_FR": "1ère générale" },
+            "1_stmg": { "fr_FR": "1ère STMG" },
+            "1_pro": { "fr_FR": "1ère professionnelle" },
+            "t_generale": { "fr_FR": "Terminale générale" },
+            "t_stmg": { "fr_FR": "Terminale STMG" },
+            "t_pro": { "fr_FR": "Terminale professionnelle" }
+        },
         "labels": {
-            "default": "Admission meeting date",
-            "fr_FR": "Date RDV d’admission"
+            "default": "Current school level",
+            "fr_FR": "Classe actuelle"
         }
     },
 
-
-    "candidat/property/level": { "definition": "student/property/level" },
-
-    "candidat/property/niveau_sportif": {
+    "candidat/property/discipline_level": {
         "definition": "inline",
         "type": "input",
         "labels": {
             "default": "Sport level",
-            "fr_FR": "Complément niveau sportif"
+            "fr_FR": "Niveau sportif"
         }
     },
-
-    "candidat/property/previous_level": {
-        "definition": "inline",
-        "type": "select",
-        "modalities": {
-            "cm2": { "fr_FR": "CM2" },
-            "6e": { "fr_FR": "6e" },
-            "5e": { "fr_FR": "5e" },
-            "4e": { "fr_FR": "4e" },
-            "3e": { "fr_FR": "3e" },
-            "2nde": { "fr_FR": "2nde" },
-            "2nde pro": { "fr_FR": "2nde pro" },
-            "1ère": { "fr_FR": "1ère" },
-            "1ère pro": { "fr_FR": "1ère pro" },
-            "Term.": { "fr_FR": "Term." },
-            "Term. pro": { "fr_FR": "Term. pro" },
-            "Niveau BAC": { "fr_FR": "Niveau BAC" },
-            "Niveau BAC+1": { "fr_FR": "Niveau BAC+1" }
-        },
-        "labels": {
-            "default": "School level at registration",
-            "fr_FR": "Niveau scolaire à l’inscription"
-        }
-    },
-
-    "candidat/property/school_year": { "definition": "student/property/school_year" },
 
     "candidat/property/journey": {
         "definition": "inline",
@@ -899,208 +714,217 @@
         }
     },
 
-    "candidat/property/options": {
-        "definition": "inline",
-        "type": "multiselect",
-        "modalities": {
-            "art": { "default": "Arts" },
-            "biology": { "default": "Biologie, écologie" },
-            "history-geography": { "default": "Histoire-géographie, géopolitique et sciences politiques" },
-            "literature": { "default": "Humanités, littérature et philosophie" },
-            "language": { "default": "Langues, littératures et cultures étrangères" },
-            "antiquity": { "default": "Littérature, langues et cultures de l’Antiquité" },
-            "mathematics": { "default": "Mathématiques" },
-            "computer-science": { "default": "Numérique et sciences informatiques" },
-            "physics-chemistry": { "default": "Physique-Chimie" },
-            "life-science": { "default": "Sciences de la Vie et de la Terre" },
-            "engineering-science": { "default": "Sciences de l’ingénieur" },
-            "economic-social-science": { "default": "Sciences économiques et sociales" }
-        },
-        "labels": {
-            "default": "Specialties",
-            "fr_FR": "Spécialités"
+    "candidat/property/wish_school": {
+		"definition": "inline",
+		"type": "tag",
+        "entity": "tag",
+        "vector": "vector",
+        "key": "id",
+        "where": "status:new|category:sport",
+        "order": "name",
+        "format": ["%s", "name"],
+		"labels": {
+			"default": "Wished sport",
+			"fr_FR": "Sport souhaité"
+		}
+    },
+
+    "candidat/property/wish_campus": {
+		"definition": "inline",
+		"type": "tag",
+        "entity": "tag",
+        "vector": "vector",
+        "key": "id",
+        "where": "status:new|category:campus",
+        "order": "name",
+        "format": ["%s", "name"],
+		"labels": {
+			"default": "Wished campus",
+			"fr_FR": "Campus souhaité"
+		}
+    },
+		
+	"candidat/index/commercial": {
+        "listView": "columns",
+        "where": "sport:football"
+    }, 
+		
+	"candidat/index/marketing": {
+    }, 
+
+	"candidat/count/marketing": {
+		"mars": { "filters": { "status": "new" }, "labels": { "default": "JPO mars" } },
+		"perdu02": { "filters": { "status": "gone" }, "labels": { "default": "Perdus février" } }
+    },
+
+	"candidat/search/commercial": { 
+        "properties": { 
+            "status": { "multiple": true },
+            "school": { "multiple": true },
+            "place_id": { "multiple": true },
+            "school_year": { "multiple": true },
+            "level": { "multiple": true },
+            "boarding_school": { "multiple": true },
+            "n_fn": {  },
+            "email": {  },
+            "tel_cell": {  },
+            "callback_date": {  },
+            "next_meeting_date": {  }
         }
     },
 
-	"candidat/search": { 
-        "title": { "en_US": "Students", "fr_FR": "Eleves" },
-        "todoTitle": { "en_US": "todo list", "fr_FR": "todo list" },
+	"candidat/search/marketing": { 
         "properties": { 
             "status": { "multiple": true },
+            "school": { "multiple": true },
             "place_id": { "multiple": true },
-            "property_1": { "multiple": true },
-            "property_11": {  },
-            "owner_id": { "multiple": true },
-            "property_16": { "multiple": true },
+            "school_year": { "multiple": true },
+            "level": { "multiple": true },
+            "boarding_school": { "multiple": true },
+            "n_fn": {  },
+            "email": {  },
+            "tel_cell": {  },
+            "birth_date": {  },
             "origine": { "multiple": true },
             "opening_date": {  },
             "callback_date": {  },
-            "property_8": {  },
             "next_meeting_date": {  },
-            "groups": { "multiple": true },
-            "property_7": { "multiple": true },
-            "property_18": { "multiple": true },
-            "property_6": { "multiple": true },
-            "property_15": {  },
-            "property_19": {  },
-            "property_20": {  },
-            "n_fn": {  },
-            "email": {  },
-            "tel_cell": {  },
-            "birth_date": {  }
+            "subscription_date": {  },
+
+            "wish_school": { "multiple": true },
+            "wish_campus": { "multiple": true }
         }
     },
 	
-	"candidat/list": { 
-        "properties": { 
-            "status": {},
-            "n_fn": {  },
-            "tel_cell": { "rendering": "phone" },
-            "property_16": {  },
-            "property_1": { "rendering": "image" },
-            "property_11": {  },
-            "opening_date": {  },
-            "callback_date": {  },
-            "property_8": {  },
-            "next_meeting_date": {  },
-            "origine": {  },
-            "property_7": {  },
-            "place_id": {  }
-        }
-    },
-
-	"candidat/update": {
-        "properties": {
-            "place_id": { "mandatory": true },
-            "status": { 
-                "mandatory": true,
-                "model_rules": [
-                    { 
-                        "function": "checkInitialCommitment",
-                        "params": { 
-                            "type": "p-pit-studies",
-                            "status": "confirmed",
-                            "caption": "defaultSchoolYear",
-                            "property_10": "property_4",
-                            "property_11": "property_15", 
-                            "property_12": "property_19",
-                            "property_1": "property_10",
-                            "property_13": "property_7"
-                        }
-                    }
-                ]
-            },
-            "identifier": { "mandatory": false },
-            "basket": { "mandatory": false },
-            "opening_date": { "mandatory": false },
-            "callback_date": { "mandatory": false },
-            "date_4": { "readonly": true },
-            "date_5": { "mandatory": false },
-            "origine": { "mandatory": false },
-            "title_1": null,
-            "n_title": { "mandatory": false },
-            "n_first": { "mandatory": true },
-            "n_last": { "mandatory": true },
-            "photo_link_id": { "mandatory": false },
-            "email": { "mandatory": false },
-            "tel_cell": { "mandatory": false },
-            "tel_cell_2": { "mandatory": false },
-            "tel_cell_3": { "mandatory": false },
-            "adr_street": { "mandatory": false },
-            "adr_zip": { "mandatory": false },
-            "adr_city": { "mandatory": false },
-            "gender": { "mandatory": false },
-            "birth_date": { "mandatory": false },
-            "nationality": { "mandatory": false },
-            "property_8": { "mandatory": false },
-            "property_2": { "mandatory": false },
-            "next_meeting_date": { "mandatory": false },
-            "next_meeting_confirmed": { "mandatory": false },
-            "property_3": { "mandatory": false },
-            "title_2": null,
-            "property_1": { "mandatory": false },
-            "property_11": { "mandatory": false },
-            "groups": {  },
-            "property_14": { "mandatory": false },
-            "title_3": null,
-            "comment_1": { "mandatory": false },
-            "comment_2": { "mandatory": false },
-            "comment_3": { "mandatory": false },
-            "comment_4": { "mandatory": false },
-            "contact_history": { "mandatory": false },
-            "json_property_1": { "readonly": true },
-            "json_property_2": { "readonly": true },
-            "json_property_3": { "readonly": true }
-        }
-    },
-
-    "candidat/updateContact": {
-        "properties": {
-            "n_title": { "mandatory": false },
-            "n_first": { "mandatory": true },
-            "n_last": { "mandatory": true },
-            "tel_work": { "mandatory": false },
-            "tel_cell": { "mandatory": false },
-            "email": { "mandatory": false },
-            "adr_street": { "mandatory": false },
-            "adr_extended": { "mandatory": false },
-            "adr_post_office_box": { "mandatory": false },
-            "adr_zip": { "mandatory": false },
-            "adr_city": { "mandatory": false },
-            "adr_state": { "mandatory": false },
-            "adr_country": { "mandatory": false },
-            "tiny_1": { "mandatory": false },
-            "locale": { "mandatory": true },
-        },
-    },
-
-    "candidat/groupUpdate": { 
-        "status": { "mandatory": false },
-        "callback_date": { "mandatory": false },
-        "first_activation_date": { "mandatory": false },
-        "property_8": { "mandatory": false },
-        "property_13": { "mandatory": false },
-        "property_16": { "mandatory": false },
-        "property_15": { "mandatory": false },
-        "property_19": { "mandatory": false },
-        "property_7": { "mandatory": false },
-        "contact_history": { "mandatory": false },
-    },
-
-    "candidat/duplicate": { 
-        "properties": { 
-            "status": { "defaultValue": "retention" },
-            "property_16": { "defaultValue": "student/property/school_year/default" },
-            "property_7": { "mandatory": false },
-            "contact_history": { "mandatory": false },
-        }
-    },
-
-    "candidat/export": { 
+	"candidat/list/marketing": { 
         "properties": { 
             "status": {  },
-            "property_16": {  },
-            "basket": {  },
-            "opening_date": {  },
-            "callback_date": {  },
-            "date_4": {  },
-            "date_5": {  },
-            "origine": {  },
-            "n_first": {  },
-            "n_last": {  },
-            "property_8": {  },
-            "property_1": {  },
-            "property_15": {  },
-            "property_19": {  },
-            "place_id": {  },
+            "school": {  },
+            "place_name": {  },
+            "school_year": { },
+            "level": {  },
+            "boarding_school": {  },
+            "n_fn": {  },
             "email": {  },
-            "address": {  },
+            "tel_cell": {  },
+            "next_meeting_date": {  },
+            "subscription_date": {  }
+        }
+    },
+	
+	"candidat/columns/commercial": { 
+        "distribution": {
+            "variable": "status",
+            "modalities": "new,interested,candidate,active",
+            "sum": "amount"
+        },
+        "properties": {
+            "status": {  },
+            "school": {  },
+            "place_name": {  },
+            "school_year": { },
+            "level": {  },
+            "boarding_school": {  },
+            "amount": {  },
+            "n_fn": {  },
+            "email": {  },
+            "tel_cell": {  },
+            "next_meeting_date": {  },
+            "subscription_date": {  }
+        },
+        "layout": [ 
+            { "format": "<h5 class=\"card-title\">%s</h5>", "params": "n_fn" },
+            { "format": "<h6 class=\"card-subtitle mb-2 text-muted\">%s | %s</h6>", "params": "school,place_name" },
+            { "format": "<h6 class=\"card-subtitle mb-2 text-muted\">%s</h6>", "params": "level" },
+            { "format": "<p class=\"card-text\">Internat : %s</p>", "params": "boarding_school" },
+            { "modalities": "candidate", "format": "<p class=\"card-text\">Rendez-vous le %s</p>", "params": "next_meeting_date" },
+            { "format": "<a href=\"mailto: %s\" class=\"card-link\">%s</a>", "params": "email,email" },
+            { "format": "<a href=\"phone: %s\" class=\"card-link\">%s</a>", "params": "tel_cell,tel_cell" }
+        ]
+    },
+
+	"candidat/update/default": {
+        "properties": {
+            "place_id": { "mandatory": true },
+            "status": { "mandatory": true },
+            "identifier": { "readonly": true },
+            "opening_date": { "readonly": true },
+            "callback_date": {  },
+            "subscription_date": { "readonly": true },
+            "cancellation_date": {  },
+            "origine": {  },
+            "amount": {  },
+            "title_1": {
+                "type": "title",
+                "labels": { "default": "Personal data", "fr_FR": "Données personnelles" }
+            },
+            "n_title": {  },
+            "n_first": { "mandatory": true },
+            "n_last": { "mandatory": true },
+            "email": {  },
+            "tel_cell": {  },
+            "tel_cell_2": {  },
+            "tel_cell_3": {  },
+            "adr_street": {  },
+            "adr_zip": {  },
+            "adr_city": {  },
             "gender": {  },
             "birth_date": {  },
-            "tel_cell": {  },
-            "property_7": {  },
-            "property_6": {  },
+            "nationality": {  },
+            "next_meeting_date": {  },
+            "situation": {  },
+            "title_2": {
+                "type": "title",
+                "labels": { "en_US": "Registration data", "fr_FR": "Données d’inscription" }
+            },
+            "current_level": {  },
+            "title_3": {
+                "type": "title",
+                "labels": { "en_US": "Comments", "fr_FR": "Commentaires" }
+            },
+            "contact_history": {  }
+        }
+    },
 
+    "candidat/groupUpdate/default": { 
+        "properties": {
+            "status": { "mandatory": true },
+            "callback_date": { "mandatory": true },
+            "school": {  },
+            "place_id": {  },
+            "school_year": {  },
+            "level": {  },
+            "subscription_date": {  },
+            "contact_history": { "mandatory": true }
+        }
+    },
+
+    "candidat/export/default": { 
+        "properties": { 
+            "place_name": {  },
+            "status": {  },
+            "identifier": {  },
+            "opening_date": {  },
+            "callback_date": {  },
+            "subscription_date": {  },
+            "cancellation_date": {  },
+            "origine": {  },
+            "amount": {  },
+            "n_title": {  },
+            "n_first": {  },
+            "n_last": {  },
+            "email": {  },
+            "tel_cell": {  },
+            "adr_street": {  },
+            "adr_zip": {  },
+            "adr_city": {  },
+            "gender": {  },
+            "birth_date": {  },
+            "nationality": {  },
+            "next_meeting_date": {  },
+            "situation": {  },
+            "current_level": {  },
+            "contact_history": {  }, 
             "default_means_of_payment": {  },
             "transfer_order_id": {  },
             "transfer_order_date": {  },
@@ -1109,7 +933,6 @@
             "n_title_2": {  },
             "n_first_2": {  },
             "n_last_2": {  },
-            "tel_work_2": {  },
             "tel_cell_2": {  },
             "email_2": {  },
             "address_2": {  },
@@ -1117,27 +940,9 @@
             "n_title_3": {  },
             "n_first_3": {  },
             "n_last_3": {  },
-            "tel_work_3": {  },
             "tel_cell_3": {  },
             "email_3": {  },
-            "address_3": {  },
-
-            "n_title_4": {  },
-            "n_first_4": {  },
-            "n_last_4": {  },
-            "tel_work_4": {  },
-            "tel_cell_4": {  },
-            "email_4": {  },
-            "address_4": {  },
-
-            "comment_1": {  },
-            "comment_2": {  },
-            "comment_3": {  },
-            "comment_4": {  },
-
-            "contact_history": {  },
-
-            "property_17": {  }
+            "address_3": {  }
         }
     }
 }

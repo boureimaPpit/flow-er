@@ -9,7 +9,6 @@ const renderList = (context, entity, view, rows, orderParam, limit) => {
         if (property.definition != "inline") property = context.config[property.definition]
         properties[propertyId] = Object.assign({}, property)
         properties[propertyId].options = options 
-        if (properties[propertyId].options.modalities) listModalities.push({ propertyId: properties[propertyId].options.modalities }) 
     }
 
     let major = "n_last", dir = "ASC"
@@ -192,8 +191,11 @@ const renderProperties = (context, row, properties) => {
 
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
+
         if (property.type == "select") {
-            html.push(`<td class="${(property.options.class) ? property.options.class[row[propertyId]] : ""}">${context.localize(property.modalities[row[propertyId]])}</td>`)
+            html.push(`<td class="${(property.options.class) ? property.options.class[row[propertyId]] : ""}">
+                ${(row[propertyId]) ? context.localize(property.modalities[row[propertyId]]) : ""}
+            </td>`)
         }
         
         else if (property.type == "multiselect") {

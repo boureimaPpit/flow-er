@@ -298,7 +298,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             <h5 class="alert alert-danger  my-3 text-center">${context.translate("A technical error has occured. PLease try again later")}</h5>
         </div>
 
-        ${(id) ? `<input type="hidden" id="update_time" value="${row.update_time}" />` : ""}
+        ${(id) ? `<input type="hidden" id="update_time" value="${row.update_time.toISOString().slice(0, 19).replace("T", " ")}" />` : ""}
 
         <div class="my-3">
 

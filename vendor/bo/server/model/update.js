@@ -1,6 +1,6 @@
 const { qi, qv } = require("./quote")
 
-const update = (context, table, ids, data, model = []) => {
+const dbUpdate = (context, table, ids, data, model = []) => {
     const pairs = {}
     for (let key of Object.keys(data)) {
         if (!["instance_id", "creation_time", "creation_user", "update_time", "update_user"].includes(key)) {
@@ -39,5 +39,5 @@ const update = (context, table, ids, data, model = []) => {
 }
 
 module.exports = {
-    update
+    dbUpdate
 }

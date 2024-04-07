@@ -5,6 +5,10 @@ const { renderFooter } = require("./footer")
 const { renderCore } = require("./core")
 
 const renderIndex = (context, entity, view, data) => {
+
+    const indexView = context.config[`${entity}/index/${view}`]
+    const listView = (indexView.listView) ? (indexView.listView) : "list"
+    
     return `<!DOCTYPE html>
     <html lang="fr" data-bs-theme="dark">
     
@@ -30,18 +34,18 @@ const renderIndex = (context, entity, view, data) => {
 
     <!-- Indicators section-->
     
-        <input type="hidden" id="shortcutsRoute" value="generic/${entity}/shortcut?view=${view}" />
+        <input type="hidden" id="shortcutsRoute" value="/bo/shortcuts/${entity}?view=${view}" />
         <input type="hidden" id="countRoute" value="generic/${entity}/count?view=${view}" />
         <div class="section" id="shortcutsPanel"></div>
     
     <!-- Search section-->
     
-        <input type="hidden" id="searchRoute" value="/bo/search/${entity}">
+        <input type="hidden" id="searchRoute" value="/bo/search/${entity}?view=${view}">
         <div class="section" id="searchPanel"></div>
     
     <!-- List section-->
         
-        <input type="hidden" id="listRoute" value="/bo/list/${entity}" />
+        <input type="hidden" id="listRoute" value="/bo/${listView}/${entity}?view=${view}" />
         <input type="hidden" id="listGroupRoute" value="generic/${entity}/groupUpdate?view=${view}" />
       
         <input type="hidden" id="listWhereHidden" value="${data.where}" />

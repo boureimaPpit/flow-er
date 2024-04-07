@@ -1,12 +1,14 @@
 const { assert } = require("../../../../core/api-utils")
-const { getProperties, getList } = require("./list");
+const { getProperties, getList } = require("./list")
+const { renderColumns } = require("../view/columns")
 
-const api = async ({ req }, context, db) => {
+const columns = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const where = (req.query.where) ? req.query.where : null
     const order = (req.query.order) ? req.query.order : null
-    let columns = Object.keys(context.config[`${entity}/v1/${view}`].properties)
+    const limit = (req.query.limit) ? req.query.limit : 1000
+    let columns = Object.keys(context.config[`${entity}/columns/${view}`].properties)
 
     const whereParam = (where != null) ? where.split("|") : []
 
@@ -27,9 +29,9 @@ const api = async ({ req }, context, db) => {
         }    
     }
 
-    let apiConfig = context.config[`${entity}/v1/${view}`]
-    if (!apiConfig) apiConfig = context.config[`${entity}/v1`]
-    const propertyDefs = apiConfig.properties
+    let columnsConfig = context.config[`${entity}/columns/${view}`]
+    if (!columnsConfig) columnsConfig = context.config[`${entity}/columns`]
+    const propertyDefs = columnsConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
     const propertyList = []
     for (let propertyId of properties) {
@@ -40,11 +42,10 @@ const api = async ({ req }, context, db) => {
     if (!columns) columns = propertyList
     columns = columns.concat(["id"])
 
-    const data = await getList(db, context, entity, view, columns, properties, whereParam, order)
-
-    return JSON.stringify(data)
+    const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
+    return renderColumns(context, entity, view, data, order, limit)
 }
 
 module.exports = {
-    api
+    columns
 }

@@ -35,6 +35,7 @@ const loadPage = async (entity, view) => {
         }
     }
 
+    getShortcuts()
     getSearch(context, entity, view)
 }
 

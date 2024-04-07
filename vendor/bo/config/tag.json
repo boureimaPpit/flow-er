@@ -9,6 +9,14 @@
         }
     },
 
+    "tag/property/id": {
+        "definition": "inline",
+        "type": "input",
+        "labels": {
+            "default": "Tag id"
+        }
+    },
+
     "tag/property/status": {
         "definition": "inline",
         "type": "select",

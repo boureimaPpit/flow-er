@@ -30,7 +30,6 @@ const list = async ({ req }, context, db) => {
     }
 
     let listConfig = context.config[`${entity}/list/${view}`]
-    if (!listConfig) listConfig = context.config[`${entity}/list`]
     const propertyDefs = listConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
     const propertyList = []
@@ -79,9 +78,9 @@ const getProperties = async (db, context, entity, view, propertyDefs, whereParam
             let tagOrder = {}
             if (property.order[0] == "-") tagOrder[property.order.substr(1)] = "DESC" 
             else tagOrder[property.order] = "ASC"
-            const rows = await db(select(context, property.entity, tagColumns, where, tagOrder, null, context.config[`${property.entity}/model`]))
+            const rows = (await db.execute(select(context, property.entity, tagColumns, where, tagOrder, null, context.config[`${property.entity}/model`])))[0]
             property.tags = []
-            for (let row of JSON.parse(JSON.stringify(rows))) {
+            for (let row of rows) {
                 row[property.vector] = row[property.vector].split(",").map((x) => { return parseInt(x) })
                 property.tags.push(row)
             }
@@ -159,8 +158,7 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
     }    
 
     const model = context.config[`${entity}/model`]
-    const rows = await db(select(context, entity, columns, where, order, limit, model))
-
+    const rows = (await db.execute(select(context, entity, columns, where, order, limit, model)))[0]
     if (rows.length > 0) {
         for (let propertyId of properties) {
             const property = properties[propertyId]

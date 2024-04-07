@@ -1,5 +1,7 @@
-const { assert } = require("../../../../core/api-utils")
+const { assert, throwConflictError } = require("../../../../core/api-utils")
 const { select } = require("../model/select")
+const { dbUpdate } = require("../model/update")
+const { updateCase } = require("../model/updateCase")
 const { getProperties } = require("./list")
 const { renderUpdate } = require("../view/update")
 
@@ -52,7 +54,7 @@ const update = async ({ req }, context, db) => {
             const sourceColumns = ["id"]
             for (let columnId of property.format[1].split(",")) sourceColumns.push(columnId)
             
-            const modalities = await db(select(context, sourceEntity, sourceColumns, sourceWhere, null, null, context.config[`${property.entity}/model`]))
+            const modalities = (await db.execute(select(context, sourceEntity, sourceColumns, sourceWhere, null, null, context.config[`${property.entity}/model`])))[0]
             property.modalities = {}
             for (let modality of modalities) {
                 const args = []
@@ -76,9 +78,9 @@ const update = async ({ req }, context, db) => {
     let row
     if (id) {
         const columns = Object.keys(model.properties)
-        row = (await db(select(context,entity, columns, { "id": id }, null, null, model)))[0]
+        row = (await db.execute(select(context,entity, columns, { "id": id }, null, null, model)))[0][0]
     }
-
+    
     return renderUpdate(context, entity, view, id, properties, row, false, whereParam, "formJwt à construire")
 }
 
@@ -90,7 +92,7 @@ const postUpdate = async ({ req }, context, db) => {
     let updateConfig = context.config[`${entity}/update/${view}`]
     if (!updateConfig) updateConfig = context.config[`${entity}/update`]
     const propertyDefs = updateConfig.properties
-    //const properties = await getProperties(db, context, entity, view, propertyDefs, [])
+    const properties = await getProperties(db, context, entity, view, propertyDefs, [])
 
     // Retrieve the existing row
 
@@ -98,15 +100,10 @@ const postUpdate = async ({ req }, context, db) => {
     let row
     if (id) {
         const columns = Object.keys(model.properties)
-        row = await db.execute(select(context, entity, columns, { "id": id }, null, null, model))
-        console.log(row)
+        row = (await db.execute(select(context, entity, columns, { "id": id }, null, null, model)))[0][0]
     }
+
     await db.beginTransaction()
-    await db.execute(
-        "INSERT INTO place (status, name, region) VALUES (?, ?, ?)", 
-        ["new", "Test", "Test region"]
-    )
-    await db.commit()
 
     // Check authorization
     /*$formJwt = $this->request->getPost('formJwt');
@@ -114,89 +111,91 @@ const postUpdate = async ({ req }, context, db) => {
         $this->response->setStatusCode('401');
     }*/
 
-    /*const data = {}, contact_history = null, tagsToUpdate = []
+    const data = {}, contact_history = null, tagsToUpdate = {}
     let update_time
-    for (let propertyId of req.body) {
-        const value = req.body[propertyId]
+    for (let propertyId of Object.keys(req.body)) {
+        let value = req.body[propertyId]
         if (propertyId !== "formJwt") {
-            const property = (propertyDefs[propertyId]) ? propertyDefs[propertyId] : null
+            const property = properties[propertyId]
 
             if (propertyId == "update_time") update_time = value
             
             /**
              * Tags
-             *
-            else if (property.type == 'tag') {
+             */
+            else if (property.type == "tag") {
                 value = (value) ? value.split(",") : []
+                const tagEntity = property.entity
                 const tagKey = (property.key) ? property.key : "id"
                 const vectorId = property.vector
                 for (let tag of property.tags) {
-                    const vector = (tag[vectorId]) ? tag[vectorId].split(",") : []
-                    if (value.includes(tag)) {
+                    const vector = tag[vectorId]
+                    if (value.includes(tag[tagKey])) {
                         if (!vector.includes(row.id)) vector.push(row.id)
-                        tagsToUpdate[vectorId][tag.id] = vector
+                        if (!tagsToUpdate[`${tagEntity}|${vectorId}`]) tagsToUpdate[`${tagEntity}|${vectorId}`] = {}
+                        tagsToUpdate[`${tagEntity}|${vectorId}`][tag[tagKey]] = vector
                     }
                     else if (vector.includes(row.id)) {
                         const newVector = []
                         for (let newId of vector) if (newId !== row.id) newVector.push(newId)
-                        tagsToUpdate[vectorId][tag.id] = newVector
+                        if (!tagsToUpdate[`${tagEntity}|${vectorId}`]) tagsToUpdate[`${tagEntity}|${vectorId}`] = {}
+                        tagsToUpdate[`${tagEntity}|${vectorId}`][tag.id] = newVector
                     }
                 }
             }
 
-            else if (value || row[propertyId] && row[propertyId]) {
-                if (!row[propertyId] || value !== row[propertyId]) data[propertyId] = value
+            else if (!row[propertyId] || value != row[propertyId]) {
+                data[propertyId] = value
             }
         }
     }
 
-    $connection->beginTransaction();
-
-    $entities = [];
-    foreach ($data as $propertyId => $value) {
-        $property = $model['properties'][$propertyId];
-        $entityToUpdate = $property['entity'];
-        if (!isset($entities[$entityToUpdate])) $entities[$entityToUpdate] = [];
-        $entities[$entityToUpdate][$property['column']] = $value;    
+    const entities = {}
+    for (let propertyId of Object.keys(data)) {
+        const value = data[propertyId]
+        const property = model.properties[propertyId]
+        const entityToUpdate = property.entity
+        if (!entities[entityToUpdate]) entities[entityToUpdate] = {}
+        entities[entityToUpdate][property.column] = value
     }
     
-    if (isset($entities[$entity])) $mainEntityData = $entities[$entity];
-    else $mainEntityData = null;
+    const mainEntityData = (entities[entity]) ? entities[entity] : null
 
     // Update an existing row
-    if ($id) {
-        if ($mainEntityData) {
+    if (mainEntityData) {
 
-            // Consistency: Data updated by someone else in the meantime
-            if ($update_time < $row->update_time) {
-                $this->response->setStatusCode('409');
-                $this->response->setReasonPhrase('consistency');		
-                return $this->response;
-            }
-            Generic::update($connection, $entity, [$id], $mainEntityData, $model);
+        // Consistency: Data updated by someone else in the meantime
+        if (update_time < row.update_time.toISOString().slice(0, 19).replace("T", " ")) {
+            return await throwConflictError("Consistency")
         }
+        await db.execute(dbUpdate(context, entity, [id], mainEntityData, model))
     }
 
     // Add a new row
-    else {
-        $id = Generic::insert($connection, $entity, $mainEntityData, $model);
+    /*else {
+        const id = Generic::insert($connection, $entity, $mainEntityData, $model);
         echo $id;
-    }
+    }*/
 
-    **
-        * Tags
-        *
-    if (isset($tagsToUpdate)&& count($tagsToUpdate) > 0) {
-        foreach ($tagsToUpdate as $vectorId => $vector) {
-            $dict = [];
-            foreach ($vector as $tag_id => $ids) $dict[$tag_id] = implode(',', $ids);
-            Generic::updateCase($connection, 'core_tag', $vectorId, $dict);
+    /**
+     * Tags
+     */
+    if (Object.keys(tagsToUpdate).length > 0) {
+        for (let key of Object.keys(tagsToUpdate)) {
+            const vector = tagsToUpdate[key]
+            key = key.split("|")
+            const tagEntity = key[0]
+            const vectorId = key[1]
+            const dict = {}
+            for (let tag_id of Object.keys(vector)) {
+                const ids = vector[tag_id]
+                dict[tag_id] = ids.join(",")
+            }
+            await db.execute(updateCase(context, tagEntity, vectorId, dict))
         }
     }
 
-    $this->response->setStatusCode('200');
-    $connection->commit();
-    return $this->response;*/
+    await db.commit()
 }
 
 module.exports = {

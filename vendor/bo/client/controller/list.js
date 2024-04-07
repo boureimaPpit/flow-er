@@ -78,7 +78,7 @@ const getList = (searchParams) => {
 
     // Execute the ajax request
     const xhttp = new XMLHttpRequest()
-    let route = `${$("#listRoute").val()}?`
+    let route = `${$("#listRoute").val()}`
 
     const columns = $("#columns").val()
     if (columns) route += "columns=" + columns

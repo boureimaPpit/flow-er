@@ -44,7 +44,22 @@
             "applee": {
                 "dir": "../module/applee",
                 "prefix": "/applee/"
+            },
+            "studio": {
+                "dir": "../vendor/studio",
+                "prefix": "/studio/",
+                "db" : {
+                    "host": "$DB_HOST",
+                    "port": "$DB_PORT",
+                    "user": "$DB_USER",    
+                    "password": "$DB_PASSWORD",
+                    "database": "$DB_NAME"    
+                }
             }
+        },
+        "config": {
+            "dir": "../config",
+            "current": ["sedp"]
         }
     }
 }

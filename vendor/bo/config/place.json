@@ -83,7 +83,6 @@
 
     "place/v1/default": {
         "properties": {
-            "id": {},
             "status": {},
             "region": {},
             "name": {}

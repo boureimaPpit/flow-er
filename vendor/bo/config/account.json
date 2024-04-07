@@ -17,7 +17,8 @@
             "n_first": { "entity": "vcard", "column": "n_first" },
             "n_last": { "entity": "vcard", "column": "n_last" },
             "email": { "entity": "vcard", "column": "email", "type": "email" },
-            "tel_cell": { "entity": "vcard", "column": "tel_cell" }
+            "tel_cell": { "entity": "vcard", "column": "tel_cell" },
+            "update_time": { "entity": "account", "column": "update_time" }
         }
     },
 

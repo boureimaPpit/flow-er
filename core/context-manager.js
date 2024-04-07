@@ -1,5 +1,6 @@
 const path = require("path")
 const fs = require("fs")
+const moment = require("moment")
 const { loadConfig } = require("./config-manager")
 
 const loadContext = (settings, logger) => {
@@ -20,7 +21,8 @@ const loadContext = (settings, logger) => {
     }
 
     const translations = loadTranslations(middlewares, user.locale)
-    const config = loadAppConfig(middlewares)
+    let config = loadAppConfig(middlewares)
+    config = loadClientConfig(config, settings.server.config.dir, settings.server.config.current)
 
     const context = {
 
@@ -29,8 +31,24 @@ const loadContext = (settings, logger) => {
         translations: translations,
 
         localize: (str) => {
-            if (str[user.locale]) return str[user.locale]
-            else return str.default
+            if (str) {
+                if (str[user.locale]) return str[user.locale]
+                else return str.default    
+            }
+        },
+
+        decodeDate: (str) => {
+            console.log(str)
+            if (str) {
+                return new moment(str).format("DD/MM/YYYY")
+            }
+            return ""
+        },
+
+        decodeTime: (str) => {
+            if (str) {
+                return str
+            }
         },
 
         translate: (str) => {
@@ -47,7 +65,7 @@ const loadContext = (settings, logger) => {
                 }
                 return false
             }
-            else return false
+            else return true
         }
     }
 
@@ -55,6 +73,9 @@ const loadContext = (settings, logger) => {
 }
 
 const loadAppConfig = middlewares => {
+
+    // Load the module config
+
     const appConfig = {}
     for (let key of Object.keys(middlewares)) {
         if (fs.existsSync(`${middlewares[key].dir}/config`)) {
@@ -68,6 +89,24 @@ const loadAppConfig = middlewares => {
                         }
                     }
                     else appConfig[key] = configFile[key]
+                }    
+            }
+        }
+    }
+    return appConfig
+}
+
+const loadClientConfig = (appConfig, dir, current) => {
+
+    // Load the module config
+
+    for (let key of current) {
+        if (fs.existsSync(`${dir}/${key}`)) {
+            const fileNames = fs.readdirSync(`${dir}/${key}`)
+            for (let fileName of fileNames) {
+                const configFile = loadConfig(`${dir}/${key}/${fileName}`)
+                for (let key of Object.keys(configFile)) {
+                    appConfig[key] = configFile[key]
                 }    
             }
         }

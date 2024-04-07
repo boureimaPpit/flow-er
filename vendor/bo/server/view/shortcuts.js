@@ -2,7 +2,7 @@ const moment = require("moment")
 
 const renderShortcuts = (context, entity, view) => {
 
-    const countConfig = context.config[`${entity}/count/${type}/${view}`]
+    const countConfig = context.config[`${entity}/count/${view}`]
     if (countConfig) {
         for (let countId of Object.keys(countConfig)) {
             let countDef = countConfig[countId]
@@ -37,12 +37,12 @@ const renderShortcuts = (context, entity, view) => {
         const html = []
         if (countConfig) {
             for (let countId of Object.keys(countConfig)) { 
-                const count = countConfig[countId], params = []
+                const count = countConfig[countId], params = {}
                 for (let propertyId of Object.keys(count["filters"])) {
                     const value = count["filters"][propertyId]
                     params[propertyId] = value
                 }
-                html.push(`<input type="hidden" class="shortcutsParams" id="shortcutsParams-${countId}" value="${JSON.parse(params)}" />
+                html.push(`<input type="hidden" class="shortcutsParams" id="shortcutsParams-${countId}" value="${JSON.stringify(params)}" />
                     <div class="col-md-2 mb-2 text-center">
                       <a class="chip shortcut-chip bg-light" id="anchor-${countId}">
                           ${context.localize(count.labels)}&nbsp;&nbsp;<span class="badge badge-lg badge-light" style="font-size: 11px" id="badge-${countId}">?</span>
@@ -59,7 +59,7 @@ const renderShortcuts = (context, entity, view) => {
         return html.join("\n")
     }
 
-    return `<div class="row mb-3">${renderCounts}(</div>`
+    return `<div class="row mb-3">${renderCounts()}</div>`
 }
 
 module.exports = {

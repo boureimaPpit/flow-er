@@ -54,6 +54,7 @@ const renderCore = (context, entity, view) => {
     <script src="/bo/cli/controller/check-form.js"></script>
     <script src="/bo/cli/controller/index.js"></script>
     <script src="/bo/cli/controller/search.js"></script>
+    <script src="/bo/cli/controller/shortcuts.js"></script>
     <script src="/bo/cli/controller/list.js"></script>
     <script src="/bo/cli/controller/detail.js"></script>
 

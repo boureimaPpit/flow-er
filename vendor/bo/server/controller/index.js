@@ -10,7 +10,10 @@ const { list } = require("./list")
 const { columns } = require("./columns")
 const { detail } = require("./detail")
 const { update, postUpdate } = require("./update")
+const { history } = require("./history")
 const { api } = require("./api")
+
+const { insert } = require("../model/insert")
 
 const registerBo = async ({ context, config, logger, app }) => {
     const db = await createDbClient2(config.db)
@@ -28,10 +31,11 @@ const registerBo = async ({ context, config, logger, app }) => {
     app.get(`${config.prefix}detail/:entity/:id`, execute(detail, context, db))
     app.get(`${config.prefix}update/:entity/:id`, execute(update, context, db))
     app.post(`${config.prefix}update/:entity/:id`, execute(postUpdate, context, db))
+    app.get(`${config.prefix}history/:entity/:id`, execute(history, context, db))
     app.get(`${config.prefix}api/:entity`, execute(api, context, db))
 }
 
-const index = ({ req }, context, db) => {
+const index = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const indexConfig = context.config[`${entity}/index/${view}`]

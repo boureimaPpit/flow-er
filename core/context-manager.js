@@ -12,7 +12,7 @@ const loadContext = (settings, logger) => {
 
     const user = {
         instance_id: 1,
-        instanceCaption: "flow-er.fr",
+        instanceCaption: "sedp",
         instanceFQDN: "https://intranet.flow-er.fr",
         id: 83,
         formattedName: "LARTILLOT, Bruno",
@@ -38,7 +38,6 @@ const loadContext = (settings, logger) => {
         },
 
         decodeDate: (str) => {
-            console.log(str)
             if (str) {
                 return new moment(str).format("DD/MM/YYYY")
             }
@@ -104,10 +103,12 @@ const loadClientConfig = (appConfig, dir, current) => {
         if (fs.existsSync(`${dir}/${key}`)) {
             const fileNames = fs.readdirSync(`${dir}/${key}`)
             for (let fileName of fileNames) {
-                const configFile = loadConfig(`${dir}/${key}/${fileName}`)
-                for (let key of Object.keys(configFile)) {
-                    appConfig[key] = configFile[key]
-                }    
+                if (fileName[0] !== ".") {
+                    const configFile = loadConfig(`${dir}/${key}/${fileName}`)
+                    for (let key of Object.keys(configFile)) {
+                        appConfig[key] = configFile[key]
+                    }        
+                }
             }
         }
     }

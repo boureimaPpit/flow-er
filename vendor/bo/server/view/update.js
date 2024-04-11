@@ -2,11 +2,54 @@ const moment = require("moment")
 
 const renderUpdate = (context, entity, view, id, properties, row, isDeletable, whereParam, formJwt) => {
 
-    const renderProperty = () => {
+    const renderSectionMenu = () => {
+
+        let updateConfig = context.config[`${entity}/update/${view}`]
+        const html = []
+
+        html.push("<div id=\"sectionMenu\" class=\"row my-3\">")
+        for (let sectionId of Object.keys(updateConfig.layout)) {
+            const section = updateConfig.layout[sectionId]
+            if (section.labels) {
+                html.push(`<div class="col-sm-4">
+                    <a class="primary-link" href="#${sectionId}">${context.localize(section.labels)}</a>
+                </div>`)
+            }
+        }
+        html.push("</div><hr>")
+
+        return html.join("\n")
+    }
+
+    const renderSection = () => {
+
+        let updateConfig = context.config[`${entity}/update/${view}`]
+        const html = []
+
+        for (let sectionId of Object.keys(updateConfig.layout)) {
+            const section = updateConfig.layout[sectionId]
+            if (section.labels) {
+                html.push(`<hr>
+                <div class="row">
+                    <div class="col-sm-11">
+                        <h5 id="${sectionId}" class="text-center mb-4">${context.localize(section.labels).toUpperCase()}</h5>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#sectionMenu"><i class="fas fa-arrow-up fa-lg"></i></a>
+                    </div>
+                </div>`)
+            }
+            html.push(renderProperty(section.properties))
+        }
+
+        return html.join("\n")
+    }
+
+    const renderProperty = (section) => {
 
         const html = []
 
-        for (let propertyId of Object.keys(properties)) {
+        for (let propertyId of section) {
 
             const property = properties[propertyId]
 
@@ -38,6 +81,10 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             if (!id && readonly) continue
             if (id && immutable) readonly = true
     
+            if (id && options.consistency) {
+                html.push(`<input type="hidden" id="update_time" value="${value.toISOString().slice(0, 19).replace("T", " ")}" />`)
+            }
+
             if (propertyType == "title") {
                 html.push(`<hr><h5 class="text-center mb-4">${label}</h5>`)
             }
@@ -95,7 +142,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         
             else if (["date", "datetime", "closing_date"].includes(propertyType)) {
                 html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm"><${(mandatory) ? "* " : ""}${label}</label>
+                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateDate" id="${propertyId}" value="${context.decodeDate(value)}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : "placeholder=\"DD/MM/YYYY\""} autocomplete="off" />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid date")}</div>
@@ -129,7 +176,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateNumber" id="${propertyId}" value="${context.formatFloat(value, 2)}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} />
+                        <input class="form-control form-control-sm updateNumber" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid number")}</div>
                     </div>
                 </div>`)
@@ -150,12 +197,10 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 const values = (value) ? value.split(",") : []
                 html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7 ${(property.source) ? "selectDynamic" : ""}" ${(property.source) ? `id="selectDynamic-${propertyId}"})` : ""}>
-            
-                    ${(property.modalities) ?
-        `<select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
-                        <option />
-                        ${function () {
+                    <div class="col-sm-7">            
+                        <select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
+                            <option />
+    ${function () {
         const html = []
         for (let key of Object.keys(property.modalities)) {
             const labels = property.modalities[key]
@@ -167,8 +212,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         }
         return html.join("\n")
     } ()}
-                        </select>` : ""}
-            
+                        </select>            
                     </div>
                 </div>`)
             }
@@ -216,8 +260,8 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        ${`<select class="form-control form-control-sm selectpicker updateSelectpicker updateSelect" id="${propertyId}" multiple data-none-selected-text ${(readonly) ? "disabled" : ""}>
-                        ${function () {
+                        ${`<select class="form-control form-control-sm updateSelect" id="${propertyId}" ${(readonly) ? "disabled" : ""}>
+    ${function () {
         const html = []
         for (let modalityId of Object.keys(property.modalities)) {
             const modality = property.modalities[modalityId]
@@ -247,15 +291,15 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 }
             }
 
-            else if (propertyType == "log") {          
+            else if (propertyType == "history") {          
 
                 html.push(`<div class="form-group row">
                     <div>${label}</div>
                     <textarea class="form-control form-control-sm updateTextarea" id="${propertyId}" ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
-                    <input type="hidden" id="updateLogRoute-${propertyId}" value="${property.source.route}?${property.source.query}" />
+                    <input type="hidden" id="updateHistoryRoute-${propertyId}" value="/bo/history/${property.entity}/1" />
                     <div class="invalid-feedback text-danger" id="updateError-${propertyId}"></div>
                 </div>
-                ${($id) ? `<div class="card my-3 text-muted updateLog" id="updateLog-${propertyId}"></div>` : ""}`)
+                ${(id) ? `<div class="card my-3 text-muted updateHistory" id="updateHistory-${propertyId}"></div>` : ""}`)
             }
 
             else {
@@ -298,7 +342,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             <h5 class="alert alert-danger  my-3 text-center">${context.translate("A technical error has occured. PLease try again later")}</h5>
         </div>
 
-        ${(id) ? `<input type="hidden" id="update_time" value="${row.update_time.toISOString().slice(0, 19).replace("T", " ")}" />` : ""}
+        ${renderSectionMenu()}
 
         <div class="my-3">
 
@@ -318,7 +362,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             </div>
         </div>
 
-        ${renderProperty()}
+        ${renderSection()}
 
         <div class="form-group row submitDiv">
             <div class="col-sm-5">&nbsp;</div>

@@ -1,6 +1,7 @@
 const { assert, throwConflictError } = require("../../../../core/api-utils")
 const { select } = require("../model/select")
 const { dbUpdate } = require("../model/update")
+const { dbInsert } = require("../model/insert")
 const { updateCase } = require("../model/updateCase")
 const { getProperties } = require("./list")
 const { renderUpdate } = require("../view/update")
@@ -21,7 +22,6 @@ const update = async ({ req }, context, db) => {
     }
 
     let updateConfig = context.config[`${entity}/update/${view}`]
-    if (!updateConfig) updateConfig = context.config[`${entity}/update`]
     const propertyDefs = updateConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, [])
 
@@ -77,7 +77,7 @@ const update = async ({ req }, context, db) => {
     const model = context.config[`${entity}/model`]
     let row
     if (id) {
-        const columns = Object.keys(model.properties)
+        const columns = Object.keys(propertyDefs)
         row = (await db.execute(select(context,entity, columns, { "id": id }, null, null, model)))[0][0]
     }
     
@@ -111,14 +111,19 @@ const postUpdate = async ({ req }, context, db) => {
         $this->response->setStatusCode('401');
     }*/
 
-    const data = {}, contact_history = null, tagsToUpdate = {}
-    let update_time
+    const data = {}, tagsToUpdate = {}
+    console.log(req.body)
     for (let propertyId of Object.keys(req.body)) {
         let value = req.body[propertyId]
         if (propertyId !== "formJwt") {
             const property = properties[propertyId]
 
-            if (propertyId == "update_time") update_time = value
+            if (propertyId == "update_time") {
+                // Consistency: Data updated by someone else in the meantime
+                if (value < row.update_time) {
+                    return await throwConflictError("Consistency")
+                }
+            }
             
             /**
              * Tags
@@ -144,31 +149,48 @@ const postUpdate = async ({ req }, context, db) => {
                 }
             }
 
-            else if (!row[propertyId] || value != row[propertyId]) {
+            else if (value && !row[propertyId] || value != row[propertyId]) {
                 data[propertyId] = value
             }
         }
     }
-
-    const entities = {}
+    console.log(row)
+    for (let key of Object.keys(data)) {
+        console.log(key, data[key])
+    }
+    const cellsToUpdate = {}
     for (let propertyId of Object.keys(data)) {
         const value = data[propertyId]
         const property = model.properties[propertyId]
         const entityToUpdate = property.entity
-        if (!entities[entityToUpdate]) entities[entityToUpdate] = {}
-        entities[entityToUpdate][property.column] = value
+        const idToUpdate = (model.entities[entityToUpdate]) ? row[model.properties[model.entities[entityToUpdate].foreignKey]] : "id"
+        if (!cellsToUpdate[[`${entityToUpdate}, ${idToUpdate}`]]) cellsToUpdate[[`${entityToUpdate}, ${idToUpdate}`]] = {}
+        cellsToUpdate[[`${entityToUpdate}, ${idToUpdate}`]][property.column] = value
     }
-    
-    const mainEntityData = (entities[entity]) ? entities[entity] : null
 
-    // Update an existing row
-    if (mainEntityData) {
+    const auditToInsert = []
+    for (let [entityId, rowId] of Object.keys(cellsToUpdate)) {
+        const cellToUpdate = cellsToUpdate[[entityId, rowId]]
+        const model = context.config[`model/${entityId}`]
+        await db.execute(dbUpdate(context, entityId, [rowId], cellToUpdate, model))
 
-        // Consistency: Data updated by someone else in the meantime
-        if (update_time < row.update_time.toISOString().slice(0, 19).replace("T", " ")) {
-            return await throwConflictError("Consistency")
+        /**
+         * Audit
+         */
+        for (let propertyId of Object.keys(cellToUpdate)) {
+            if (model.properties[propertyId].audit) {
+                const value = cellToUpdate[propertyId]
+                if (model.properties[propertyId].audit) {
+                    auditToInsert.push({
+                        entity: entityId,
+                        row_id: rowId,
+                        property: propertyId,
+                        value: value
+                    })
+                    await db.execute(dbInsert(context, "audit", auditToInsert, context.config["model/audit"]))
+                }    
+            }
         }
-        await db.execute(dbUpdate(context, entity, [id], mainEntityData, model))
     }
 
     // Add a new row
@@ -180,6 +202,7 @@ const postUpdate = async ({ req }, context, db) => {
     /**
      * Tags
      */
+    
     if (Object.keys(tagsToUpdate).length > 0) {
         for (let key of Object.keys(tagsToUpdate)) {
             const vector = tagsToUpdate[key]

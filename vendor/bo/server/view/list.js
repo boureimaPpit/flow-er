@@ -227,6 +227,9 @@ const renderProperties = (context, row, properties) => {
         }
 
         else {
+            if (property.options.detailCaption) {
+                html.push(`<input type="hidden" id="detailCaption-${row.id}" value="${row[propertyId]}" />`)
+            }
             html.push(`<td>${row[propertyId]}</td>`)                  
         }
     }

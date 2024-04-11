@@ -31,7 +31,11 @@ const createDbClient2 = async config => {
         port: config.port, 
         user: config.user, 
         password: config.password, 
-        database : config.database
+        database : config.database,
+        dateStrings: [
+            "DATE",
+            "DATETIME"
+        ]
     })
 }
 

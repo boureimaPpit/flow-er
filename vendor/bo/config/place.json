@@ -3,7 +3,7 @@
         "entities": {},
         "properties": {
             "id": { "entity": "place", "column": "id" },
-            "status": { "entity": "place", "column": "status" },
+            "status": { "entity": "place", "column": "status", "audit": true },
             "name": { "entity": "place", "column": "name" },
             "region": { "entity": "place", "column": "region" }
         }

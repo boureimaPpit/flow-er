@@ -47,6 +47,13 @@ const renderRows = (context, columnsConfig, properties, rows) => {
     for (let row of rows) {
         result.push(`<div class="card" draggable="true">
             <div class="card-body">
+                <p>
+                    <div class="input-group input-group-sm">
+                        <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
+                        <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </p>
                 ${renderLayout(context, columnsConfig, properties, row)}
             </div>
         </div>`)

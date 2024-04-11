@@ -31,7 +31,7 @@ const insert = (context, table, data, model) => {
     if (model.properties.update_time) pairs[qi("update_time")] = `'${new Date().toISOString().slice(0, 19).replace("T", " ")}'`
     if (model.properties.update_user) pairs[qi("update_user")] = context.user.id
     
-    return `INSERT INTO ${table} (${Object.keys(pairs).join(", ")})\n VALUES (${Object.values(pairs).join(", ")})\n`
+    return [`INSERT INTO ${table} (${Object.keys(pairs).join(", ")})\n VALUES (${Object.values(pairs).join(", ")})\n`]
 }
 
 module.exports = {

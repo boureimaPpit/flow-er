@@ -1,4 +1,20 @@
 
+function getHistory(propertyId) {
+    const xhttp = new XMLHttpRequest()
+    const route = $("#updateHistoryRoute-" + propertyId).val()
+    xhttp.open("GET", route, true)
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+
+                $("#updateHistory-" + propertyId).html(xhttp.responseText)
+            }
+            else toastr.error("A technical error has occured. PLease try again later")
+        }
+    }
+    xhttp.send()
+}
+
 const getSelect = (propertyId) => {
     const xhttp = new XMLHttpRequest()
     const route = $("#updateSelectRoute-" + propertyId).val()
@@ -26,20 +42,20 @@ const getSelect = (propertyId) => {
     xhttp.send()
 }
 
-const postTab = (tab, id, searchParams) => {
+const postTab = async (tab, id, searchParams) => {
     const form = document.getElementById("tabForm")
     if (form) {
-        form.onsubmit = function(event) {
+        form.onsubmit = async function (event) {
         
-            event.preventDefault();
-            form.checkValidity();
-            var validity = true;
+            event.preventDefault()
+            form.checkValidity()
+            var validity = true
 
             // IBAN check
             $(".inputIban").each( function () {
-                const iban = $(this).val();
-                if (iban && controleIBAN($(".inputIban").val()) != 0) validity = false; 
-            });
+                const iban = $(this).val()
+                if (iban && controleIBAN($(".inputIban").val()) != 0) validity = false 
+            })
 
             if (validity) {
 
@@ -171,45 +187,25 @@ const postTab = (tab, id, searchParams) => {
                     }
                 })
 
-                /*
-                 * - AccountController -> updateUserAction
-                 **/
+                let route = $(`#detailTabRoute-${tab}`).val()
 
-                let route = $(`#detailTabRoute-${tab}`).val() + "?tab=<?= $tab ?>"
-                let ControllerTypeId = $(`#detailTabControllerTypeId-${tab}`).val()
-                let foreignKeyId = $(`#foreignKeyProperty-${id}-${ControllerTypeId}`).val()
-                if(!!foreignKeyId){
-                    route = $(`#detailTabRouteControllerTypeId-${tab}`).val()+ "/" + foreignKeyId + "?tab=<?= $tab ?>"
-                }
+                const xhttp = await fetch(route, {
+                    method: "POST",
+                    body: formData
+                })
 
-                let ControllerTypeIdQuery = $(`#detailTabControllerTypeIdQuery-${tab}`).val()
-                if(!!ControllerTypeIdQuery){
-                    let foreignKeyIdQuery = $(`#foreignKeyProperty-${id}-${ControllerTypeIdQuery}`).val()
-                    if(!!foreignKeyIdQuery){
-                        route = $(`#detailTabRouteControllerTypeIdQuery-${tab}`).val()+ "?"+ControllerTypeIdQuery+"="+foreignKeyIdQuery+"&tab=<?= $tab ?>"
+                if (xhttp.status == 200) {
+
+                    if (xhttp.statusText.substring(0, 3) == "jwt") {
+                        document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
                     }
+
+                    if (id == 0) id = xhttp.body
+                    getTab(tab, id, "ok", searchParams)
                 }
-
-                var xhttp = new XMLHttpRequest()
-                //const route = $(`#detailTabRoute-${tab}`).val()
-                xhttp.open("POST", route, true)
-                xhttp.onload = function () {
-                    if (xhttp.readyState == 4) {
-                        if (xhttp.status == 200) {
-
-                            if (xhttp.statusText.substring(0, 3) == "jwt") {
-                                document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
-                            }
-
-                            if (id == 0) id = xhttp.responseText
-                            getTab(tab, id, "ok", searchParams)
-                        }
-                        else if (xhttp.status == 401) getTab(tab, id, "expired", searchParams)
-                        else if (xhttp.status == 409) getTab(tab, id, xhttp.statusText, searchParams)
-                        else getTab(tab, id, "serverError", searchParams)
-                    }
-                };
-                xhttp.send(formData)
+                else if (xhttp.status == 401) getTab(tab, id, "expired", searchParams)
+                else if (xhttp.status == 409) getTab(tab, id, xhttp.statusText, searchParams)
+                else getTab(tab, id, "serverError", searchParams)
             }
             else return false
         }
@@ -335,29 +331,17 @@ const getTab = (tab, id, message, searchParams) => {
                         $(`#inputError-${propertyId}`).text("")
                     }
                 })
-
-                $("#commitment-select-document").unbind("change");
-                $("#commitment-select-document").change(function () {
-                    let template = $(this).val()
-                    $("#commitment-generate-message-target").html("")
-                    if (template) {
-                        let xhttp = new XMLHttpRequest();
-                        xhttp.open("GET", $(this).val() + "&commitment_id=" + id + "&start_date=" + encodeDate($("#input-start_date").val()) + "&end_date=" + encodeDate($("#input-end_date").val()) + "&user_field=" + $("#input-user_field").val(), false)
-                        xhttp.onreadystatechange = function() {
-                            if (xhttp.status == 401) console.log("ERROR 401")
-                            if (xhttp.readyState == 4 && xhttp.status == 200) {
-                                $("#commitment-generate-message-target").html(xhttp.responseText)
-                            }   
-                        }
-                        xhttp.send();
-                    }
-                })
               
                 $(".updateDate").datepicker()
                 $(".updateDatetimeDate").datepicker()
                 $(".updateTime").timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
                 $(".updateDatetimeTime").timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
                 $(".updateSelectpicker").selectpicker()
+
+                $(".updateHistory").each(function () {
+                    const propertyId = $(this).attr("id").split("-")[1]
+                    getHistory(propertyId)
+                })
 
                 $(".updateSelectRoute").each(function () {
                     const propertyId = $(this).attr("id").split("-")[1]
@@ -386,10 +370,10 @@ const getDetail = (id, searchParams) => {
         var key = $(this).attr("id").split("-")[1]
         var value = $(this).val()
         ListForeignKeyProperty.push(`${key}:${value}`)
-    });
+    })
     let queryForeignKeyProperty = ""
     if(ListForeignKeyProperty.length > 0){
-        queryForeignKeyProperty = "foreign_key_property="+ListForeignKeyProperty.join("|")+"&";
+        queryForeignKeyProperty = "foreign_key_property="+ListForeignKeyProperty.join("|")+"&"
     }
 
     var xhttp = new XMLHttpRequest()
@@ -417,7 +401,7 @@ const getDetail = (id, searchParams) => {
                 }
 
                 if (id != 0) {
-                    const n_fn = $("#listName-" + id).val()
+                    const n_fn = $("#detailCaption-" + id).val()
                     $("#listDetailModalLabel").text(n_fn)
                 }
                 else $("#listDetailModalLabel").text("Add")

@@ -1,7 +1,11 @@
 .DS_Store
 .env
-config
-public/flow-er
-server/module
-server/vendor/*
-!server/vendor/bo
+/config/
+/node_modules/
+/public/flow-er/
+/server/module/
+/vendor/
+!/vendor/bo/
+!/vendor/studio/
+!/vendor/user/
+!/vendor/utils/

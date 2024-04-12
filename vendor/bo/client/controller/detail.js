@@ -90,13 +90,13 @@ const postTab = async (tab, id, searchParams) => {
                 $(".updateDate").each(function () {
                     const propertyId = $(this).attr("id"), val = $(this).val()
                     if (val) formData.append(propertyId, val.substring(6, 10) + "-" + val.substring(3, 5) + "-" + val.substring(0, 2))
-                    else formData.append(propertyId, 0)
+                    else formData.append(propertyId, "")
                 })
 
                 $(".updateDatetimeDate").each(function () {
                     const propertyId = $(this).attr("id"), dateval = $(this).val(), timeval = $(`#updateDatetimeTime-${propertyId}`).val()
                     if (dateval) formData.append(propertyId, `${dateval.substring(6, 10)}-${dateval.substring(3, 5)}-${dateval.substring(0, 2)} ${timeval}`)
-                    else formData.append(propertyId, 0)
+                    else formData.append(propertyId, "")
                 })
                 
                 $(".updateBirthYear").each(function () { 

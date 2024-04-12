@@ -1,0 +1,16 @@
+{
+    "audit/model": {
+        "entities": {
+        },
+        "properties": {
+            "id": { "entity": "audit", "column": "id", "type": "primary" },
+            "entity": { "entity": "audit", "column": "entity" },
+            "row_id": { "entity": "audit", "column": "row_id" },
+            "property": { "entity": "audit", "column": "property" },
+            "value": { "entity": "audit", "column": "value" },
+
+            "creation_time": { "entity": "audit", "column": "creation_time", "type": "datetime" },
+            "creation_user": { "entity": "audit", "column": "creation_user", "type": "int" }
+       }
+    }
+}

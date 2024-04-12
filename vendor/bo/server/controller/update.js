@@ -112,7 +112,6 @@ const postUpdate = async ({ req }, context, db) => {
     }*/
 
     const data = {}, tagsToUpdate = {}
-    console.log(req.body)
     for (let propertyId of Object.keys(req.body)) {
         let value = req.body[propertyId]
         if (propertyId !== "formJwt") {
@@ -149,48 +148,60 @@ const postUpdate = async ({ req }, context, db) => {
                 }
             }
 
-            else if (value && !row[propertyId] || value != row[propertyId]) {
-                data[propertyId] = value
+            else if (property.type != "history") {
+                const current = (row[propertyId] === null) ? "" : row[propertyId]
+                if (value && !current || value != current) {
+                    data[propertyId] = value
+                }
             }
         }
     }
-    console.log(row)
-    for (let key of Object.keys(data)) {
-        console.log(key, data[key])
-    }
+
     const cellsToUpdate = {}
     for (let propertyId of Object.keys(data)) {
-        const value = data[propertyId]
-        const property = model.properties[propertyId]
-        const entityToUpdate = property.entity
-        const idToUpdate = (model.entities[entityToUpdate]) ? row[model.properties[model.entities[entityToUpdate].foreignKey]] : "id"
-        if (!cellsToUpdate[[`${entityToUpdate}, ${idToUpdate}`]]) cellsToUpdate[[`${entityToUpdate}, ${idToUpdate}`]] = {}
-        cellsToUpdate[[`${entityToUpdate}, ${idToUpdate}`]][property.column] = value
+        if (model.properties[propertyId]) {
+            const value = data[propertyId]
+            const property = model.properties[propertyId]
+            const entityToUpdate = property.entity
+            const foreignKey = (model.entities[entityToUpdate]) ? model.entities[entityToUpdate].foreignKey : "id"
+            let idToUpdate = row[foreignKey]
+            if (idToUpdate === null) idToUpdate = 0
+            if (!cellsToUpdate[`${entityToUpdate}|${idToUpdate}`]) cellsToUpdate[`${entityToUpdate}|${idToUpdate}`] = {}
+            cellsToUpdate[`${entityToUpdate}|${idToUpdate}`][property.column] = value
+        }
     }
 
     const auditToInsert = []
-    for (let [entityId, rowId] of Object.keys(cellsToUpdate)) {
-        const cellToUpdate = cellsToUpdate[[entityId, rowId]]
-        const model = context.config[`model/${entityId}`]
-        await db.execute(dbUpdate(context, entityId, [rowId], cellToUpdate, model))
-
+    for (let key of Object.keys(cellsToUpdate)) {
+        const tuple = key.split("|"), entityToUpdate = tuple[0], rowToUpdate = tuple[1]
+        const tableToUpdate = (model.entities[entityToUpdate]) ? model.entities[entityToUpdate].table : entity
+        const cellToUpdate = cellsToUpdate[`${entityToUpdate}|${rowToUpdate}`] 
+        const updatingModel = context.config[`${tableToUpdate}/model`]
+        console.log(rowToUpdate, cellToUpdate)
+        if (rowToUpdate == 0) {
+            console.log(`cellToUpdate: ${cellToUpdate}`) 
+            // const insertedRow = await db.execute(insert(context, tableToUpdate, cellToUpdate, updatingModel))
+            // console.log(insertedRow)
+        }
+        return
+        //else await db.execute(dbUpdate(context, entityId, [rowId], cellToUpdate, updatingModel))
         /**
          * Audit
          */
-        for (let propertyId of Object.keys(cellToUpdate)) {
-            if (model.properties[propertyId].audit) {
-                const value = cellToUpdate[propertyId]
-                if (model.properties[propertyId].audit) {
-                    auditToInsert.push({
-                        entity: entityId,
-                        row_id: rowId,
-                        property: propertyId,
-                        value: value
-                    })
-                    await db.execute(dbInsert(context, "audit", auditToInsert, context.config["model/audit"]))
-                }    
-            }
-        }
+        // for (let propertyId of Object.keys(cellToUpdate)) {
+        //     if (model.properties[propertyId].audit) {
+        //         const value = cellToUpdate[propertyId]
+        //         if (model.properties[propertyId].audit) {
+        //             auditToInsert.push({
+        //                 entity: entityId,
+        //                 row_id: rowId,
+        //                 property: propertyId,
+        //                 value: value
+        //             })
+        //             await db.execute(dbInsert(context, "audit", auditToInsert, context.config["model/audit"]))
+        //         }    
+        //     }
+        // }
     }
 
     // Add a new row
@@ -218,7 +229,7 @@ const postUpdate = async ({ req }, context, db) => {
         }
     }
 
-    await db.commit()
+    //await db.commit()
 }
 
 module.exports = {

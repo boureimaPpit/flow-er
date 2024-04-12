@@ -36,7 +36,7 @@ const renderFilters = (context, entity, view, properties, data) => {
         const options = (property.options) ? property.options : []
         const propertyType = (options.type) ? options.type : property.type
 
-        let input;
+        let input
         
         if (["date", "time", "datetime"].includes(propertyType)) {
             input = renderFilterDateTime(context, propertyId, property)

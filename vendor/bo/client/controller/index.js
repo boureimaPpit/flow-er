@@ -36,6 +36,7 @@ const loadPage = async (entity, view) => {
     }
 
     getShortcuts()
-    getSearch(context, entity, view)
+    //getSearch(context, entity, view)
+    $('#listPanel').each(getList)
 }
 

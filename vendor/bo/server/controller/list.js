@@ -1,7 +1,6 @@
 const { assert } = require("../../../../core/api-utils")
 const { select } = require("../model/select")
 const { renderList } = require("../view/list")
-const { renderList2 } = require("../view/list2")
 
 const list = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
@@ -44,7 +43,7 @@ const list = async ({ req }, context, db) => {
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
 
-    return renderList2(context, entity, view, data, order, limit)
+    return renderList(context, entity, view, data, order, limit)
 }
 
 const getProperties = async (db, context, entity, view, propertyDefs, whereParam) => {

@@ -19,7 +19,7 @@
                     "user": "$DB_USER",    
                     "password": "$DB_PASSWORD"
                 }
-            },
+            }
        },
         "config": {
             "dir": "../config",

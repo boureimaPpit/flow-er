@@ -53,7 +53,6 @@ const renderCore = (context, entity, view) => {
     <!-- Flow-ER -->
     <script src="/bo/cli/controller/check-form.js"></script>
     <script src="/bo/cli/controller/index.js"></script>
-    <script src="/bo/cli/controller/login.js"></script>
     <script src="/bo/cli/controller/search.js"></script>
     <script src="/bo/cli/controller/shortcuts.js"></script>
     <script src="/bo/cli/controller/list.js"></script>
@@ -62,7 +61,6 @@ const renderCore = (context, entity, view) => {
     <script src="/bo/cli/view/search.js"></script>
 
     <script>
-    //getLogin(loadPage)
     loadPage("${entity}", "${view}")
     </script>
     `

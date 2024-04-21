@@ -10,22 +10,67 @@ const loadContext = (settings, logger) => {
         return
     }
 
-    const user = {
-        instance_id: 1,
-        instanceCaption: "sedp",
-        instanceFQDN: "https://intranet.flow-er.fr",
+    const instance = {
+        caption: settings.server.config.current,
+        fqdn: "https://intranet.flow-er.fr"
+    }
+
+    const user1 = {
+        //instance_id: 1,
+        id: 83,
+        formattedName: "NOURDINE, Aminata",
+        roles: ["sales_manager"],
+        locale: "fr_FR",
+        config: {
+
+            "menu/admission": {
+                "tabs": ["tab/prospect"],
+                "defaultTab": "tab/prospect",
+                "labels": { "default": "Admission" }
+            },
+        
+            "candidat/search/prospect": { 
+                "properties": { 
+                    "status": { 
+                        "multiple": true,
+                        "options": ["new", "repondeur", "a_relancer", "candidate", "non_qualifie", "ne_plus_contacter", "black_liste"]
+                    },
+                    "school": { "multiple": true },
+                    "place_id": { "multiple": true, "value": 1 },
+                    "school_year": { "multiple": true },
+                    "level": { "multiple": true },
+                    "owner_id": { "multiple": true, "value": 1 },
+                    "n_fn": {},
+                    "email": {},
+                    "tel_cell": {},
+                    "callback_date": {},
+                    "next_meeting_date": {}
+                }
+            }
+        }
+    }
+
+    const user2 = {
+        //instance_id: 1,
         id: 83,
         formattedName: "LARTILLOT, Bruno",
         roles: ["sales_manager"],
-        locale: "fr_FR"    
+        locale: "fr_FR",
+        config: {}
     }
+
+    const user = user2
 
     const translations = loadTranslations(middlewares, user.locale)
     let config = loadAppConfig(middlewares)
     config = loadClientConfig(config, settings.server.config.dir, settings.server.config.current)
+    config = loadUserConfig(config, user.config)
 
     const context = {
 
+        settings: settings,
+        dbName: settings.server.config.dbName,
+        instance: instance,
         user: user,
         config: config,
         translations: translations,
@@ -112,6 +157,13 @@ const loadClientConfig = (appConfig, dir, current) => {
             }
         }
     }
+    return appConfig
+}
+
+const loadUserConfig = (appConfig, userConfig) => {
+    for (let key of Object.keys(userConfig)) {
+        appConfig[key] = userConfig[key]
+    }        
     return appConfig
 }
 

@@ -10,7 +10,7 @@ const renderIndex = (context, entity, view, data) => {
     const listView = (indexView.listView) ? (indexView.listView) : "list"
     
     return `<!DOCTYPE html>
-    <html lang="fr" data-bs-theme="dark">
+    <html lang="fr" ${(context.config.headerParams && context.config.headerParams.darkMode) ? "data-bs-theme=\"dark\"" : ""}>
     
     <!-- Head -->
     ${renderHead(context, entity, view)}

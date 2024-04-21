@@ -65,14 +65,15 @@ const renderList = (context, entity, view, rows, orderParam, limit) => {
                 <form class="was-validated" id="ListForm">
 
                     <table class="table table-sm table-hover">
-                        <thead class="table-info">
-                            <th colspan="2">
-                                <a type="button" class="btn btn-sm sort_anchor" role="button">
-                                    <b id="listCount">${rows.length}</b>
-                                </a>
-                            </th>
-                            ${renderTableHead(context, properties, major, dir)}
-
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <a type="button" class="btn btn-sm sort_anchor" role="button">
+                                        <b id="listCount">${rows.length}</b>
+                                    </a>
+                                </th>
+                                ${renderTableHead(context, properties, major, dir)}
+                            </tr>
                         </thead>
 
                         <input type="hidden" id="caption_0" value="${context.translate("Add")}" />

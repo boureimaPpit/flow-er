@@ -5,7 +5,7 @@ const renderHeader = (context, entity, view) => {
     const applicationName = context.localize(menu.labels)
 
     return `<header>
-		<nav class="navbar navbar-expand-lg navbar-light" ${(context.config.headerParams && context.config.headerParams.backgroundColor) ? `style="background-color: ${context.config.headerParams.backgroundColor}"` : ""}>
+		<nav class="navbar navbar-expand-lg">
 			<a class="navbar-brand" target="_blank" href="${(context.config.headerParams && context.config.headerParams.href) ? `${context.config.headerParams.href}` : "#"}" rel="follow">	
 				${(context.config.headerParams && context.config.headerParams.logo) 
         ? `<img height="${context.config.headerParams.logoHeight}" src="/${`${context.instance.caption }/logos/${context.config.headerParams.logo}`}" alt="${context.instance.caption} logo" />`

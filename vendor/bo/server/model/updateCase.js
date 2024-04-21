@@ -17,8 +17,6 @@ const updateCase = (context, table, column, pairs) => {
     const user_id = context.user.id
     request.push(`update_user = ${user_id}`)
     request.push(`WHERE id IN (${ids.join(",")})`)
-    const instance_id = context.user.instance_id
-    request.push(`AND instance_id = ${instance_id}`)
     return request.join("\n")
 }
 

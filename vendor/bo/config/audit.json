@@ -5,7 +5,7 @@
         "properties": {
             "id": { "entity": "audit", "column": "id", "type": "primary" },
             "entity": { "entity": "audit", "column": "entity" },
-            "row_id": { "entity": "audit", "column": "row_id" },
+            "row_id": { "entity": "audit", "column": "row_id", "type": "int" },
             "property": { "entity": "audit", "column": "property" },
             "value": { "entity": "audit", "column": "value" },
 

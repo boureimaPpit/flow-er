@@ -256,6 +256,7 @@ const searchSelectDynamic = async (context, entity, view, propertyId, restrictio
     const query = []
     if (sourceConfig.where) query.push(`where=${sourceConfig.where}`)
     if (sourceConfig.order) query.push(`order=${sourceConfig.order}`)
+    if (sourceConfig.view) query.push(`view=${sourceConfig.view}`)
     const format = sourceConfig.format[0].split("%s"), paramKeys = sourceConfig.format[1].split(","), params = []
     for (let key of paramKeys) params[key] = context.config[`${sourceConfig.entity}/property/${key}`]
     query.push(`columns=${sourceConfig.format[1]}`)
@@ -277,6 +278,13 @@ const searchSelectDynamic = async (context, entity, view, propertyId, restrictio
     }
 
     $(`#searchSelectDiv-${propertyId}`).html(renderSearchSelect(context, propertyId, sourceConfig, modalities, restrictions))
+    const value = $(`#searchInputValue-${propertyId}`).val()
+    if (value) {
+        $("#searchCheck-" + propertyId).removeClass("btn-default").addClass("btn-secondary").addClass("active")
+        $("#searchCheckValue-" + propertyId).val("1")
+        $(`#search-${propertyId}`).val(value)
+        getList(getSearchParams())
+    }
 
     $(`#search-${propertyId}`).selectpicker()
     $(`#search-${propertyId}`).change(function () {

@@ -4,7 +4,6 @@ const { renderSearch } = require("../view/search")
 
 const search = async ({ req }, context, db) => {
 
-    let data = {}
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
 
@@ -18,13 +17,25 @@ const search = async ({ req }, context, db) => {
         properties[propertyId].options = options 
         if (properties[propertyId].options.modalities) listModalities.push({ propertyId: properties[propertyId].options.modalities }) 
     }
-    data.n_last = (await db.execute(select(context, "account", ["n_last"], {}, { n_last: "ASC" }, null, context.config["account/model"])))[0]
-    const keys = {}
-    for (let row of data.n_last) { 
-        keys[row.n_last] = null 
+    return renderSearch(context, entity, view, properties, await getCompletionData(context, entity, view, db, properties))
+}
+
+const getCompletionData = async (context, entity, view, db, properties) => {
+    let data = {}
+    for (let propertyId of Object.keys(properties)) {
+        const property = properties[propertyId]
+        if (property.options.completion) {
+            const order = {}
+            order[propertyId] = "ASC"
+            const rows = (await db.execute(select(context, "candidat", [propertyId], {}, order, null, context.config[`${entity}/model`])))[0]
+            const keys = {}
+            for (let row of rows) { 
+                keys[row[propertyId]] = null 
+            }
+            data[propertyId] = Object.keys(keys)
+        }
     }
-    data.n_last = Object.keys(keys)
-    return renderSearch(context, entity, view, properties, data)
+    return data
 }
 
 module.exports = {

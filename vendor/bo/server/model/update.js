@@ -33,7 +33,6 @@ const dbUpdate = (context, table, ids, data, model = []) => {
     request += sets.join(",\n") + "\n"
     
     request += `WHERE id IN (${ids.join(", ")})\n`
-    if (model.properties.instance_id) request += `AND instance_id = ${context.user.instance_id}\n`
     
     return request
 }

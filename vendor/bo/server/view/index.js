@@ -30,7 +30,7 @@ const renderIndex = (context, entity, view, data) => {
 
       <div class="card-body">
 
-        <input type="hidden" id="instanceCaption" value="${context.user.instanceCaption}" />
+        <input type="hidden" id="instanceCaption" value="${context.instance.caption}" />
 
     <!-- Indicators section-->
     
@@ -90,45 +90,6 @@ const renderIndex = (context, entity, view, data) => {
           </div>
           <div class="modal-body" id="groupModal">
           </div>
-        </div>
-      </div>
-    </div>
-   
-    <!-- login modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFormLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">${context.localize("Login")}</h5>
-        </div>
-        <div class="modal-body" id="loginPanel">
-    
-          <?php if ($googleClientId) : ?>
-    
-            <div class="col-sm-12">
-                <div id="buttonDiv"></div> 
-            </div>
-    
-          <?php endif ?>
-    
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- newPassword modal -->
-    <div class="modal fade" id="newPasswordModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFormLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">${context.localize("New password")}</h5>
-            <div>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </div>
-          <div class="modal-body" id="newPasswordPanel"></div>
         </div>
       </div>
     </div>

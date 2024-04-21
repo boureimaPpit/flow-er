@@ -24,14 +24,14 @@ const createDbClient = config => {
     }
 }
 
-const createDbClient2 = async config => {
+const createDbClient2 = async (config, dbName) => {
     return await mysql2.createConnection({
         connectionLimit: 100,
         host: config.host, 
         port: config.port, 
         user: config.user, 
         password: config.password, 
-        database : config.database,
+        database : (dbName) ? dbName : config.database,
         dateStrings: [
             "DATE",
             "DATETIME"

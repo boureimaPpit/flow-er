@@ -126,13 +126,17 @@ const renderFilterSelect = (context, propertyId, property, options) => {
                     const restrictionProperty = restriction.property
                     clas += ` restriction-${restriction.parent} restriction-${restriction.parent}-${modality.properties[restrictionProperty].join('|')}`
                 }
-            }    
-            options.push(`<option value="${modalityId}" class="${clas}" id="search-${propertyId}-${modalityId}">${context.localize(modality)}</option>`)
+            }
+
+            if (!property.options.options || property.options.options.includes(modalityId)) {
+                options.push(`<option value="${modalityId}" class="${clas}" id="search-${propertyId}-${modalityId}">${context.localize(modality)}</option>`)
+            }
         }
         return options.join("\n")
     }
 
-    return `<input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
+    return `${(property.options.value) ? `<input type="hidden" class="searchInputValue" id="searchInputValue-${propertyId}" value="${property.options.value}" />` : ""}
+    <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
     <div class="input-group input-group-sm mb-2 mr-sm-2 ${(property["source"]) ? "searchSelectDynamic" : ""} id="searchSelectDiv-${propertyId}">
         <div class="input-group-prepend">
             <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
@@ -147,7 +151,8 @@ const renderFilterSelect = (context, propertyId, property, options) => {
 
 const renderFilterSource = (context, propertyId, property) => {
 
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
+    return `${(property.options.value) ? `<input type="hidden" class="searchInputValue" id="searchInputValue-${propertyId}" value="${property.options.value}" />` : ""}
+    <div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
     </div>`
 } 
 

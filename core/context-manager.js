@@ -15,14 +15,52 @@ const loadContext = (settings, logger) => {
         fqdn: "https://intranet.flow-er.fr"
     }
 
-    const user = {
+    const user1 = {
         //instance_id: 1,
         id: 83,
+        formattedName: "NOURDINE, Aminata",
+        roles: ["sales_manager"],
+        locale: "fr_FR",
+        config: {
+
+            "menu/admission": {
+                "tabs": ["tab/prospect"],
+                "defaultTab": "tab/prospect",
+                "labels": { "default": "Admission" }
+            },
+        
+            "candidat/search/prospect": { 
+                "properties": { 
+                    "status": { 
+                        "multiple": true,
+                        "options": ["new", "repondeur", "a_relancer", "candidate", "non_qualifie", "ne_plus_contacter", "black_liste"]
+                    },
+                    "school": { "multiple": true },
+                    "place_id": { "multiple": true, "value": 1 },
+                    "school_year": { "multiple": true },
+                    "level": { "multiple": true },
+                    "owner_id": { "multiple": true, "value": 1 },
+                    "n_fn": {},
+                    "email": {},
+                    "tel_cell": {},
+                    "callback_date": {},
+                    "next_meeting_date": {}
+                }
+            }
+        }
+    }
+
+    const user2 = {
+        //instance_id: 1,
+        id: 83,
+    
         formattedName: "Démo CRITE",
         roles: ["sales_manager"],
         locale: "fr_FR",
         config: {}
     }
+
+    const user = user1
 
     const translations = loadTranslations(middlewares, user.locale)
     let config = loadAppConfig(middlewares)

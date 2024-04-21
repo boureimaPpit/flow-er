@@ -1,5 +1,0 @@
-{
-    "guard": {
-        "applee/index": { "roles": ["sales_manager"]}
-    }
-}

@@ -13,7 +13,7 @@ const startServer = async (context, config, logger) => {
 
     const app = express()
 
-    //app.use(compression())
+    app.use(compression())
     app.use(cookieParser())
     app.use("/", express.static("./public/"))
 

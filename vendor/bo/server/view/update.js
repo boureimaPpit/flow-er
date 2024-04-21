@@ -1,6 +1,6 @@
 const moment = require("moment")
 
-const renderUpdate = (context, entity, view, id, properties, row, isDeletable, whereParam, formJwt) => {
+const renderUpdate = (context, entity, view, id, properties, row, isDeletable, where, formJwt) => {
 
     const renderSectionMenu = () => {
 
@@ -52,7 +52,6 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         for (let propertyId of section) {
 
             const property = properties[propertyId]
-
             const options = property.options
             const label = (options.labels) ? context.localize(options.labels) : context.localize(property.labels)
             const propertyType = (options.type) ? options.type : property.type
@@ -81,11 +80,11 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             if (!id && readonly) continue
             if (id && immutable) readonly = true
     
-            if (id && options.consistency) {
-                html.push(`<input type="hidden" id="update_time" value="${value.toISOString().slice(0, 19).replace("T", " ")}" />`)
+            if (options.consistency) {
+                html.push(`<input type="hidden" id="update_time" value="${value}" />`)
             }
 
-            if (propertyType == "title") {
+            else if (propertyType == "title") {
                 html.push(`<hr><h5 class="text-center mb-4">${label}</h5>`)
             }
     
@@ -201,12 +200,22 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                         <select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
                             <option />
     ${function () {
+        const restriction = (property.options.restriction) ? property.options.restriction : {}
         const html = []
         for (let key of Object.keys(property.modalities)) {
+            let keep = true
+            if (restriction[key]) {
+                for (let filterId of Object.keys(restriction[key])) {
+                    if (where[filterId]) {
+                        if (restriction[key][filterId] && !restriction[key][filterId].includes(where[filterId][0])) keep = false
+                        console.log(propertyId, key, keep, restriction[key], filterId, where[filterId])
+                    }
+                }
+            }
             const labels = property.modalities[key]
             let selectable = true
             if (!values[key] && labels.archive) selectable = false                
-            if (selectable) {
+            if (selectable && keep) {
                 html.push(`<option value="${key}" ${(values.includes(key)) ? "selected" : ""} ${(labels.archive) ? "disabled" : ""}>${context.localize(labels)}</option>`)
             }
         }
@@ -239,15 +248,19 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "tag") {
-                const values = (value) ? value.split(",") : []
                 html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7 selectTags" id="selectTags-${propertyId}">
                         ${`<select class="form-control form-control-sm selectpicker updateSelectpicker updateSelect" id="${propertyId}" multiple data-none-selected-text ${(readonly) ? "disabled" : ""}>
-                        ${function () {
+                            <option />
+    ${function () {
         const html = []
         for (let tag of property.tags) {
-            html.push(`<option value="${tag.id}" ${(values.includes(tag.id)) ? "selected" : ""}>${tag.name}</option>`)
+            const vectorId = property.vector
+            const ids = tag[vectorId]
+            const tagKey = (property.key) ? property.key : "id"
+            const selected = (ids.includes(row[tagKey])) ? true : false
+            html.push(`<option value="${tag.id}" ${(selected) ? "selected" : ""}>${tag.name}</option>`)
         }
         return html.join("\n")
     } ()}
@@ -261,11 +274,24 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         ${`<select class="form-control form-control-sm updateSelect" id="${propertyId}" ${(readonly) ? "disabled" : ""}>
+                            <option />
     ${function () {
+        const restriction = (property.options.restriction) ? property.options.restriction : {}
         const html = []
         for (let modalityId of Object.keys(property.modalities)) {
+            let keep = true
+            if (restriction[modalityId]) {
+                for (let filterId of Object.keys(restriction[modalityId])) {
+                    if (where[filterId]) {
+                        if (restriction[modalityId][filterId] && !restriction[modalityId][filterId].includes(where[filterId][0])) keep = false
+                        console.log(propertyId, modalityId, keep, restriction[modalityId], filterId, where[filterId])
+                    }
+                }
+            }
             const modality = property.modalities[modalityId]
-            html.push(`<option value="${modalityId}" ${(value == modalityId) ? "selected" : ""}>${modality}</option>`)
+            if (keep) {
+                html.push(`<option value="${modalityId}" ${(value == modalityId) ? "selected" : ""}>${modality}</option>`)
+            }
         }
         return html.join("\n")
     } ()}

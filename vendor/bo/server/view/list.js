@@ -215,7 +215,7 @@ const renderProperties = (context, row, properties) => {
         }
 
         else if (property.type == "email") {
-            html.push(`<td><a href="mailto:${row[propertyId]}">${row[propertyId]}</a></td>`)
+            html.push(`<td>${(row[propertyId]) ? `<a href="mailto:${row[propertyId]}">${row[propertyId]}</a>` : ""}</td>`)
         }              
 
         else if (property.type == "phone") {
@@ -230,7 +230,7 @@ const renderProperties = (context, row, properties) => {
             if (property.options.detailCaption) {
                 html.push(`<input type="hidden" id="detailCaption-${row.id}" value="${row[propertyId]}" />`)
             }
-            html.push(`<td>${row[propertyId]}</td>`)                  
+            html.push(`<td>${(row[propertyId] !== null) ? row[propertyId] : ""}</td>`)                  
         }
     }
     return html.join("\n")

@@ -8,8 +8,8 @@ const renderHeader = (context, entity, view) => {
 		<nav class="navbar navbar-expand-lg navbar-light" ${(context.config.headerParams && context.config.headerParams.backgroundColor) ? `style="background-color: ${context.config.headerParams.backgroundColor}"` : ""}>
 			<a class="navbar-brand" target="_blank" href="${(context.config.headerParams && context.config.headerParams.href) ? `${context.config.headerParams.href}` : "#"}" rel="follow">	
 				${(context.config.headerParams && context.config.headerParams.logo) 
-        ? `<img height="${context.config.headerParams.logoHeight}" src="/${`${context.user.instanceCaption }/logos/${context.config.headerParams.logo}`}" alt="${context.user.instanceCaption} logo" />`
-        : `<span>${context.user.instanceCaption}&nbsp;&nbsp;|</span>`}
+        ? `<img height="${context.config.headerParams.logoHeight}" src="/${`${context.instance.caption }/logos/${context.config.headerParams.logo}`}" alt="${context.instance.caption} logo" />`
+        : `<span>${context.instance.caption}&nbsp;&nbsp;|</span>`}
 			</a>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@ const renderApplications = (context) => {
             const m = context.config[`menu/${applicationId}`]
             const menuEntry = context.config[m.defaultTab]
             const urlParams = (menuEntry.urlParams) ? menuEntry.urlParams : ""
-            const url = `/${menuEntry.route}?${urlParams}`
+            const url = `${menuEntry.route}?${urlParams}`
 
             html.push(`<a class="dropdown-item" href="${url}">
 				${context.localize(application.labels)}

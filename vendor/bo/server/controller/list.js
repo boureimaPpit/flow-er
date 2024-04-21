@@ -1,6 +1,7 @@
 const { assert } = require("../../../../core/api-utils")
 const { select } = require("../model/select")
 const { renderList } = require("../view/list")
+const { renderList2 } = require("../view/list2")
 
 const list = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
@@ -43,7 +44,7 @@ const list = async ({ req }, context, db) => {
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
 
-    return renderList(context, entity, view, data, order, limit)
+    return renderList2(context, entity, view, data, order, limit)
 }
 
 const getProperties = async (db, context, entity, view, propertyDefs, whereParam) => {
@@ -81,7 +82,8 @@ const getProperties = async (db, context, entity, view, propertyDefs, whereParam
             const rows = (await db.execute(select(context, property.entity, tagColumns, where, tagOrder, null, context.config[`${property.entity}/model`])))[0]
             property.tags = []
             for (let row of rows) {
-                row[property.vector] = row[property.vector].split(",").map((x) => { return parseInt(x) })
+                const vector = (row[property.vector]) ? row[property.vector].split(",") : []
+                row[property.vector] = vector.map((x) => { return parseInt(x) })
                 property.tags.push(row)
             }
         }
@@ -101,8 +103,17 @@ const arrayIntersect = (arrays) => {
 }
 
 const getList = async (db, context, entity, view, columns, properties, whereParam, orderParam, limit) => {
-    const whereTags = {}
+
     const where = {}
+
+    for (let propertyId of Object.keys(properties)) {
+        const property = properties[propertyId]
+        if (property.options && property.options.restriction) {
+            where[propertyId] = property.options.restriction
+        }
+    }    
+
+    const whereTags = {}
     for (let param of whereParam) {
         const keyValue = param.split(":")
         const key = keyValue[0]
@@ -155,7 +166,7 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
             if (properties[propertyId].type != "tag") order[propertyId] = direction    
             else orderTags[propertyId] = direction
         }    
-    }    
+    }
 
     const model = context.config[`${entity}/model`]
     const rows = (await db.execute(select(context, entity, columns, where, order, limit, model)))[0]

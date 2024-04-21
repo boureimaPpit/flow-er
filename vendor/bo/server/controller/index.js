@@ -4,6 +4,7 @@ const multer = require('multer');
 const { executeService, assert } = require("../../../../core/api-utils")
 const { renderIndex } = require("../view/index")
 const { createDbClient2 } = require("../../../utils/db-client")
+const { select } = require("../model/select")
 const { shortcuts } = require("./shortcuts")
 const { search } = require("./search")
 const { list } = require("./list")
@@ -16,10 +17,10 @@ const { api } = require("./api")
 const { insert } = require("../model/insert")
 
 const registerBo = async ({ context, config, logger, app }) => {
-    const db = await createDbClient2(config.db)
+    const db = await createDbClient2(config.db, context.dbName)
     const execute = executeService(config, logger)
-    const upload = multer()
-    app.use(upload.array())
+    /*const upload = multer()
+    app.use(upload.array())*/
     app.get(`${config.prefix}config`, execute(() => { return JSON.stringify(context.config) }))
     app.get(`${config.prefix}language`, execute(() => { return JSON.stringify(context.translations) }))
     app.get(`${config.prefix}user`, execute(() => { return JSON.stringify(context.user) }))

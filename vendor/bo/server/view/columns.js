@@ -16,9 +16,11 @@ const renderColumns = (context, entity, view, rows, orderParam, limit) => {
         pipe[modality] = { count: 0, sum : 0, rows: [] }
     }
     for (let row of rows) {
-        pipe[row[columnsConfig.distribution.variable]].count ++
-        pipe[row[columnsConfig.distribution.variable]].sum += parseFloat(row[columnsConfig.distribution.sum])
-        pipe[row[columnsConfig.distribution.variable]].rows.push(row)
+        if (pipe[row[columnsConfig.distribution.variable]]) {
+            pipe[row[columnsConfig.distribution.variable]].count ++
+            pipe[row[columnsConfig.distribution.variable]].sum += parseFloat(row[columnsConfig.distribution.sum])
+            pipe[row[columnsConfig.distribution.variable]].rows.push(row)    
+        }
     }
 
     const result = ["<div class=\"row\">"]

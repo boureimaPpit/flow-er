@@ -17,18 +17,29 @@ const select = (context, table, columns, where, order = [], limit = null, model 
 
     const columnDict = {}
     for (let propertyId of columns) {
-        if (model.properties[propertyId] && (!model.properties[propertyId].type || model.properties[propertyId].type != "virtual")) {
+        const qPropertyId = qi(propertyId)
+        if (model.properties[propertyId]) {
             const property = model.properties[propertyId]
-            const entityId = property.entity
-            const qPropertyId = qi(propertyId)
-            const qEntity = qi(entityId)
-            const qColumn = qi(property.column)
-            if (entityId == table) columnDict[qPropertyId] = `${qTable}.${qPropertyId}`
-            else columnDict[qPropertyId] = `${qEntity}.${qColumn}`
+            if (property.type == "CONCAT") {
+                const components = []
+                for (let component of property.components) {
+                    if (model.properties[component]) {
+                        components.push(`${qi(model.properties[component].entity)}.${qi(model.properties[component].column)}`)
+                    }
+                    else components.push(qv(component))
+                }
+                columnDict[qPropertyId] = `CONCAT(${components.join(", ")})`
+            }
+            else {
+                const property = model.properties[propertyId]
+                const entityId = property.entity
+                const qEntity = qi(entityId)
+                const qColumn = qi(property.column)
+                if (entityId == table) columnDict[qPropertyId] = `${qTable}.${qPropertyId}`
+                else columnDict[qPropertyId] = `${qEntity}.${qColumn}`    
+            }
         }
     }
-
-    const instanceId = 1
 
     const select = []
     for (let propertyId of Object.keys(columnDict)) {
@@ -41,15 +52,32 @@ const select = (context, table, columns, where, order = [], limit = null, model 
     request += `${Object.values(joins).join("\n")}\n`
 
     const predicates = []
-    if (model.properties.status) predicates.push(`${qTable}.${qi("status")} != 'deleted'\n`)
-    if (model.properties.instance_id) predicates.push(`${qTable}.${qi("instance_id")} = ${context.user.instance_id}\n`)
+    if (model.properties.status) predicates.push(`${qTable}.${qi("status")} != 'deleted'`)
     
     for (let propertyId of Object.keys(where)) {
         if (!["instance_id", "creation_time", "creation_user", "update_time", "update_user"].includes(propertyId)) {
             if (propertyId == "id" || model.properties[propertyId]) {
+                const property = model.properties[propertyId]
+
+                let qEntity, qColumn
+                if (property.type == "CONCAT") {
+                    qEntity = ""
+                    const components = []
+                    for (let component of property.components) {
+                        if (model.properties[component]) {
+                            components.push(`${qi(model.properties[component].entity)}.${qi(model.properties[component].column)}`)
+                        }
+                        else components.push(qv(component))
+                    }
+                    qColumn = `CONCAT(${components.join(", ")})`    
+                }
+                else {
+                    qEntity = `${qi(property.entity)}.`
+                    qColumn = qi(property.column)
+                }
+
                 let value = where[propertyId]
-                const qEntity = qi(model.properties[propertyId].entity)
-                const qColumn = qi(model.properties[propertyId].column)
+
                 if (Array.isArray(value)) {
                     if (!["in", "ni", "between", "like", "contains", "startsWith", "endsWith", "eq", "ne", "gt", "ge", "lt", "le", "null", "not_null"].includes(value[0])) {
                         value = ["in"].concat(value)
@@ -57,61 +85,61 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                     const operator = value[0]
                     if (operator == "in") {
                         value.shift()
-                        predicates.push(`${qEntity}.${qColumn} IN (${value.map(qv).join(", ")})\n`)
+                        predicates.push(`${qEntity}${qColumn} IN (${value.map(qv).join(", ")})`)
                     }
                     else if (operator == "ni") {
                         value.shift()
-                        predicates.push(`${qEntity}.${qColumn} NOT IN (${value.map(qv).join(", ")})\n`)
+                        predicates.push(`${qEntity}${qColumn} NOT IN (${value.map(qv).join(", ")})`)
                     }
                     else if (operator == "between") {
-                        if (model.properties[propertyId].type && model.properties[propertyId].type == "datetime") {
-                            predicates.push(`${qEntity}.${qColumn} BETWEEN ${qv(value[1])} AND ${qv(value[2] + " 23:59:59.999")}\n`)
+                        if (property.type && property.type == "datetime") {
+                            predicates.push(`${qEntity}${qColumn} BETWEEN ${qv(value[1])} AND ${qv(value[2] + " 23:59:59.999")}`)
                         }
                         else {
-                            predicates.push(`${qEntity}.${qColumn} BETWEEN ${qv($value[1])} AND ${qv($value[2])}\n`)
+                            predicates.push(`${qEntity}${qColumn} BETWEEN ${qv($value[1])} AND ${qv($value[2])}`)
                         }
                     }
                     else if (operator == "like") {
-                        predicates.push(`${qEntity}.${qColumn} LIKE ${qv(value[1])}\n`)
+                        predicates.push(`${qEntity}${qColumn} LIKE ${qv(value[1])}`)
                     }
                     else if (operator == "contains") {
-                        predicates.push(`${qEntity}.${qColumn} LIKE ${qv(`%${value[1]}%`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} LIKE ${qv(`%${value[1]}%`)}`)
                     }
                     else if (operator == "startsWith") {
-                        predicates.push(`${qEntity}.${qColumn} LIKE ${qv(`${value[1]}%`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} LIKE ${qv(`${value[1]}%`)}`)
                     }
                     else if (operator == "endsWith") {
-                        predicates.push(`${qEntity}.${qColumn} LIKE ${qv(`%${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} LIKE ${qv(`%${value[1]}`)}`)
                     }
                     else if (operator == "eq") {
-                        predicates.push(`${qEntity}.${qColumn} = ${qv(`${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} = ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "ne") {
-                        predicates.push(`${qEntity}.${qColumn} != ${qv(`${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} != ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "gt") {
-                        predicates.push(`${qEntity}.${qColumn} > ${qv(`${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} > ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "ge") {
-                        predicates.push(`${qEntity}.${qColumn} >= ${qv(`${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} >= ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "lt") {
-                        predicates.push(`${qEntity}.${qColumn} < ${qv(`${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} < ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "le") {
-                        predicates.push(`${qEntity}.${qColumn} <= ${qv(`${value[1]}`)}\n`)
+                        predicates.push(`${qEntity}${qColumn} <= ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "null") {
-                        predicates.push(`${qEntity}.${qColumn} IS NULL\n`)
+                        predicates.push(`${qEntity}${qColumn} IS NULL`)
                     }
                     else if (operator == "not_null") {
-                        predicates.push(`${qEntity}.${qColumn} IS NOT NULL\n`)
+                        predicates.push(`${qEntity}${qColumn} IS NOT NULL`)
                     }
                 }
                 else {
                     value = qv(value)
-                    if (model.properties[propertyId].type && ["int", "float", "modality"].includes(model.properties[propertyId].type)) predicates.push(`${qEntity}.${qColumn} = ${value}\n`)
-                    else predicates.push(`${qEntity}.${qColumn} LIKE ${value}\n`)
+                    if (property.type && ["int", "float", "modality"].includes(property.type)) predicates.push(`${qEntity}.${qColumn} = ${value}\n`)
+                    else predicates.push(`${qEntity}${qColumn} LIKE ${value}\n`)
                 }
         
                 // Perimeter check
@@ -131,7 +159,7 @@ const select = (context, table, columns, where, order = [], limit = null, model 
             }
         }
     }
-    if (predicates) request += `WHERE ${predicates.join("\nAND")}\n`
+    if (predicates.length > 0) request += `WHERE ${predicates.join("\nAND ")}\n`
 
     if (order != null) {
         request += "ORDER BY "

@@ -109,7 +109,7 @@ const requestPasswordReset = async ({ req, config }, context, db, mailClient) =>
         const token = createToken({ email }, hashKey, config.resetPasswordTokenExpirationTime)
         const data = {
             resetPasswordLink: `${origin}user/reinitialisation-mot-de-passe"/${Buffer(token).toString("base64")}`,
-            registrationLink: context.config.user.instanceFQDN
+            registrationLink: context.instance.fqdn
         }
         const content = renderResetPassword(context, data)
         await mailClient.sendMail({
@@ -168,7 +168,7 @@ const sendActivationLink = async ({ req, config }, context, db, mailClient) => {
         const token = createToken({ email }, hashKey, config.accountActivationTokenExpirationTime)
         const data = {
             activationLink: `${origin}user/activation/${Buffer(token).toString("base64")}`,
-            registrationLink: context.user.instanceFQDN
+            registrationLink: context.instance.fqdn
         }
         const content = renderCreateAccount(context, data)
         console.log(content)

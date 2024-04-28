@@ -283,7 +283,7 @@ const searchSelectDynamic = async (context, entity, view, propertyId, restrictio
         $("#searchCheck-" + propertyId).removeClass("btn-default").addClass("btn-secondary").addClass("active")
         $("#searchCheckValue-" + propertyId).val("1")
         $(`#search-${propertyId}`).val(value)
-        getList(getSearchParams())
+        getList(context, entity, view, getSearchParams())
     }
 
     $(`#search-${propertyId}`).selectpicker()
@@ -355,7 +355,7 @@ const getSearch = async (context, entity, view) => {
     let refresh = function () {
         $("#refreshButton").removeClass("btn-warning").addClass("btn-default")
         $("#refreshButton").attr("disabled", "disabled")
-        getList(getSearchParams())
+        getList(context, entity, view, getSearchParams())
     }
     // Trigger the Entry key event that refreshes the list
     $(document).keyup(function(e) {    
@@ -373,7 +373,7 @@ const getSearch = async (context, entity, view) => {
         $(".searchSelectpicker").selectpicker("refresh")
         $(".searchCheckValue").val("0")
         $(".searchCheck").removeClass("btn-secondary").addClass("btn-default").removeClass("active")
-        getList(getSearchParams())
+        getList(context, entity, view, getSearchParams())
     })
 
     $(".searchSelectpicker").selectpicker("refresh")

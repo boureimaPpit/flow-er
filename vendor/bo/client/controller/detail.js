@@ -361,7 +361,7 @@ const getTab = (tab, id, message, searchParams) => {
     xhttp.send()
 }
 
-const getDetail = (id, searchParams) => {
+const getDetail = (context, entity, view, id, searchParams) => {
     
     $(".modal-body").unbind()
 
@@ -377,7 +377,7 @@ const getDetail = (id, searchParams) => {
     }
 
     var xhttp = new XMLHttpRequest()
-    var route = `${$("#detailRoute").val()}/` + id + "?"
+    var route = `${$("#detailRoute").val()}/${id}?`
 
     const checkIds = []
     $(`.listCheckId-${id}`).each(function () {
@@ -404,7 +404,7 @@ const getDetail = (id, searchParams) => {
                     const n_fn = $("#detailCaption-" + id).val()
                     $("#listDetailModalLabel").text(n_fn)
                 }
-                else $("#listDetailModalLabel").text("Add")
+                else $("#listDetailModalLabel").text(context.translate("Add"))
 
                 $(".updateBirthYear").unbind()
                 $(".updateDate").unbind()

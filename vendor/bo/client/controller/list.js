@@ -74,7 +74,7 @@ const getListGroupUpdate = () => {
     xhttp.send(formData)
 }
 
-const getList = (searchParams) => {		
+const getList = (context, entity, view, searchParams) => {		
 
     // Execute the ajax request
     const xhttp = new XMLHttpRequest()
@@ -142,13 +142,13 @@ const getList = (searchParams) => {
                     else if ("listSortAnchor-" + criterion == descCriterion) dir = ""
                     else dir = ""
                     $("#listOrderHidden").val(dir + criterion)
-                    getList(getSearchParams())
+                    getList(context, entity, view, getSearchParams())
                 })
 
                 // Connect the more anchor
                 $(".listMoreButton").click(function () {
                     $("#listLimitHidden").val("")
-                    getList(getSearchParams())
+                    getList(context, entity, view, getSearchParams())
                 })
 
                 // Able the group action button
@@ -290,7 +290,7 @@ const getList = (searchParams) => {
                     $(this).removeClass("btn-outline-primary").addClass("btn-primary")
                     $("#listDetailModal").html("")
                     $("#listDetailModalForm").modal("show")
-                    getDetail(id, searchParams)
+                    getDetail(context, entity, view, id, searchParams)
                 })
 
                 // Connect the distribution anchor
@@ -316,7 +316,7 @@ $("#listDetailModalForm").on("hidden.bs.modal", function (e) {
         $("#refreshButton").attr("disabled", false)
         $(".listDetailButton").removeClass("btn-primary").addClass("btn-outline-primary")
     }
-    else getList(getSearchParams())
+    else getList(context, entity, view, getSearchParams())
 })
 
 $("#groupModalForm").on("hidden.bs.modal", function (e) {
@@ -326,5 +326,5 @@ $("#groupModalForm").on("hidden.bs.modal", function (e) {
         $("#refreshButton").attr("disabled", false)
         $(".listDetailButton").removeClass("btn-primary").addClass("btn-outline-primary")
     }
-    else getList(getSearchParams())
+    else getList(context, entity, view, getSearchParams())
 })

@@ -1,6 +1,6 @@
 const { assert } = require("../../../../core/api-utils")
 const { select } = require("../model/select");
-const { renderSearch } = require("../view/search")
+const { renderSearch } = require("../view/renderSearch")
 
 const search = async ({ req }, context, db) => {
 

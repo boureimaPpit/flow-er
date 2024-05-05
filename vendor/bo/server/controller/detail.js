@@ -1,5 +1,5 @@
 const { assert } = require("../../../../core/api-utils")
-const { renderDetail } = require("../view/detail")
+const { renderDetail } = require("../view/renderDetail")
 
 const detail = ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")

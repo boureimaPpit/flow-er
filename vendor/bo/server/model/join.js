@@ -3,7 +3,10 @@ const { qi, qv } = require("./quote")
 const join = (table, columns, where, order, model) => {
 
     let involvedProperties = {}
-    for (let propertyId of columns) involvedProperties[propertyId] = null
+    for (let column of columns) {
+        const propertyId = (Array.isArray(column)) ? column[1] : column
+        involvedProperties[propertyId] = null
+    }
     for (let propertyId of Object.keys(where)) involvedProperties[propertyId] = null
     if (order != null) for (let propertyId of Object.keys(order)) involvedProperties[propertyId] = null
     involvedProperties = Object.keys(involvedProperties)

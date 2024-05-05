@@ -1,7 +1,7 @@
 const { qi, qv } = require("./quote")
 const { join } = require("./join")
 
-const select = (context, table, columns, where, order = [], limit = null, model = []) => {
+const select = (context, table, columns, where, order = [], limit = null, model = [], debug = false) => {
 
     if (!columns) {
         columns = []
@@ -16,10 +16,13 @@ const select = (context, table, columns, where, order = [], limit = null, model 
     const qTable = qi(table)
 
     const columnDict = {}
-    for (let propertyId of columns) {
+    for (let column of columns) {
+        const propertyId = (Array.isArray(column)) ? column[1] : column
+        const aggregator = (Array.isArray(column)) ? column[0] : false
         const qPropertyId = qi(propertyId)
         if (model.properties[propertyId]) {
             const property = model.properties[propertyId]
+            let expression
             if (property.type == "CONCAT") {
                 const components = []
                 for (let component of property.components) {
@@ -28,16 +31,17 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                     }
                     else components.push(qv(component))
                 }
-                columnDict[qPropertyId] = `CONCAT(${components.join(", ")})`
+                expression = `CONCAT(${components.join(", ")})`
             }
             else {
                 const property = model.properties[propertyId]
                 const entityId = property.entity
                 const qEntity = qi(entityId)
                 const qColumn = qi(property.column)
-                if (entityId == table) columnDict[qPropertyId] = `${qTable}.${qPropertyId}`
-                else columnDict[qPropertyId] = `${qEntity}.${qColumn}`    
+                if (entityId == table) expression = `${qTable}.${qPropertyId}`
+                else expression = `${qEntity}.${qColumn}`
             }
+            columnDict[qPropertyId] = (aggregator) ? `${aggregator}(${expression})` : expression
         }
     }
 
@@ -166,9 +170,8 @@ const select = (context, table, columns, where, order = [], limit = null, model 
         const orderArray = []
         for (let orderSpecifier of Object.keys(order)) {
             const direction = order[orderSpecifier]
-            const qEntity = qi(model.properties[orderSpecifier].entity)
             const qColumn = qi(model.properties[orderSpecifier].column)
-            orderArray.push(`${qEntity}.${qColumn} ${direction}`)
+            orderArray.push(`${qColumn} ${direction}`)
         }
         request += orderArray.join(", ")
         request += "\n"
@@ -176,6 +179,8 @@ const select = (context, table, columns, where, order = [], limit = null, model 
 
     if (limit) request += `LIMIT ${limit}\n`
 
+    if (debug) console.log(request)
+    
     return request
 }
 

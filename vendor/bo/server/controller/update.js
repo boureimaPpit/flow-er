@@ -3,7 +3,7 @@ const { select } = require("../model/select")
 const { dbUpdate } = require("../model/update")
 const { insert } = require("../model/insert")
 const { updateCase } = require("../model/updateCase")
-const { getProperties } = require("./list")
+const { getProperties } = require("./getProperties")
 const { renderUpdate } = require("../view/update")
 
 const update = async ({ req }, context, db) => {

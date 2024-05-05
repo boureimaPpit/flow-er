@@ -5,7 +5,7 @@
 /node_modules/
 /public/
 /module/
-/vendor/
+/vendor/*
 !/vendor/bo/
 !/vendor/studio/
 !/vendor/user/

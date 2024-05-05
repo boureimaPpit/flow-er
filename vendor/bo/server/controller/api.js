@@ -1,5 +1,6 @@
 const { assert } = require("../../../../core/api-utils")
-const { getProperties, getList } = require("./list");
+const { getProperties } = require("./getProperties")
+const { getList } = require("./getList")
 
 const api = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")

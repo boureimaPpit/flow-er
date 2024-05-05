@@ -112,7 +112,7 @@ const getList = (context, entity, view, searchParams) => {
                     document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
                 }
 
-                $("#listPanel").html(xhttp.responseText)
+                $("#dataView").html(xhttp.responseText)
 
                 $(".searchSelectTagsIds").each(function () {
                     const propertyId = $(this).attr("id").split("-")[1]
@@ -134,7 +134,7 @@ const getList = (context, entity, view, searchParams) => {
                 $("#listGroupTr").hide()
 
                 // Connect the sort anchors
-                $(".listSortAnchor").click(function () {
+                /*$(".listSortAnchor").click(function () {
                     criterion = $(this).attr("id").split("-")[1]
                     ascCriterion = $(".sortAnchorUp").attr("id")
                     descCriterion = $(".sortAnchorDown").attr("id")
@@ -143,7 +143,7 @@ const getList = (context, entity, view, searchParams) => {
                     else dir = ""
                     $("#listOrderHidden").val(dir + criterion)
                     getList(context, entity, view, getSearchParams())
-                })
+                })*/
 
                 // Connect the more anchor
                 $(".listMoreButton").click(function () {

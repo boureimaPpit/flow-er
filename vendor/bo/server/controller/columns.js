@@ -1,6 +1,7 @@
 const { assert } = require("../../../../core/api-utils")
-const { getProperties, getList } = require("./list")
-const { renderColumns } = require("../view/columns")
+const { getProperties } = require("./getProperties")
+const { getList } = require("./getList")
+const { renderColumns } = require("../view/renderColumns")
 
 const columns = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")

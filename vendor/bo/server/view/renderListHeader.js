@@ -40,7 +40,7 @@ const renderListHeader = (context, entity, view, measure, distribution, orderPar
         return options.join("\n")
     }
 
-    const head = [`<thead class="table-info">
+    const head = [`<thead>
     <th colspan="2">
         <a type="button" class="btn btn-sm sort_anchor" role="button">
             <b id="listCount" title="Nombre de lignes">${count}</b>
@@ -51,15 +51,14 @@ const renderListHeader = (context, entity, view, measure, distribution, orderPar
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
         head.push(`<th>
-            <a type="button" class="btn btn-sm listSortAnchor ${(major == propertyId) ? `btn-secondary active ${(dir == "ASC") ? "sortAnchorUp" : "sortAnchorDown"}` : "" }" data-toggle="collapse" href="#listSortCollapse-${propertyId}" role="button" id="listSortAnchor-${propertyId}" aria-expanded="false" aria-controls="listSortCollapse-${propertyId}">
+            <a type="button" class="btn listSortAnchor ${(major == propertyId) ? `btn-secondary active ${(dir == "ASC") ? "sortAnchorUp" : "sortAnchorDown"}` : "" }" data-bs-toggle="collapse" href="#listSortCollapse-${propertyId}" role="button" id="listSortAnchor-${propertyId}" aria-expanded="false" aria-controls="listSortCollapse-${propertyId}">
             
-                <span ${ ( ["school_year", "level"].includes(propertyId) ) ? "class=\"font-weight-bold\"" : "" }>${ context.localize(property.labels) }</span>
+                <span ${ ( ["school_year", "level"].includes(propertyId) ) ? "class=\"fw-bold\"" : "" }>${ context.localize(property.labels) }</span>
 
                 ${(major == propertyId) ? `<i class="fas fa-caret-${(dir == "ASC") ? "up" : "down"}"></i>` : ""}
             </a>
             <div class="collapse" id="listSortCollapse-${propertyId}">
                 <div class="card card-body">
-                    Sélection&nbsp;multiple&nbsp;possible
                     <select class="custom-select custom-select-sm" size="${ Object.keys(property.distribution).length }" id="distributionSelect" multiple>${renderSelectOption(propertyId)}</select>
                 </div>
             </div>

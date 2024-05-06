@@ -44,8 +44,8 @@ const renderShortcuts = (context, entity, view) => {
                 }
                 html.push(`<input type="hidden" class="shortcutsParams" id="shortcutsParams-${countId}" value="${JSON.stringify(params)}" />
                     <div class="col-md-2 mb-2 text-center">
-                      <a class="chip shortcut-chip bg-light" id="anchor-${countId}">
-                          ${context.localize(count.labels)}&nbsp;&nbsp;<span class="badge badge-lg badge-success" style="font-size: 11px" id="badge-${countId}">12</span>
+                      <a type="button" class="btn btn-sm btn-light position-relative" id="anchor-${countId}">
+                          ${context.localize(count.labels)}&nbsp;&nbsp;<span class="badge bg-success" style="font-size: 11px" id="badge-${countId}">12</span>
                       </a>
                     </div>`)
             }

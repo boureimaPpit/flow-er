@@ -7,16 +7,16 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         let updateConfig = context.config[`${entity}/update/${view}`]
         const html = []
 
-        html.push("<div id=\"sectionMenu\" class=\"row my-3\">")
+        html.push("<nav id=\"sectionMenu\" class=\"nav justify-content-center\"><ul class=\"nav nav-pills\">")
         for (let sectionId of Object.keys(updateConfig.layout)) {
             const section = updateConfig.layout[sectionId]
             if (section.labels) {
-                html.push(`<div class="col-sm-4">
-                    <a class="primary-link" href="#${sectionId}">${context.localize(section.labels)}</a>
-                </div>`)
+                html.push(`<li class="nav-item">
+                    <a class="nav-link" href="#${sectionId}">${context.localize(section.labels)}</a>
+                </li>`)
             }
         }
-        html.push("</div><hr>")
+        html.push("</ul></nav>")
 
         return html.join("\n")
     }
@@ -32,10 +32,10 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<hr>
                 <div class="row">
                     <div class="col-sm-11">
-                        <h5 id="${sectionId}" class="text-center mb-4">${context.localize(section.labels).toUpperCase()}</h5>
+                        <h5 id="${sectionId}" class="text-center mb-4">${context.localize(section.labels)}</h5>
                     </div>
                     <div class="col-sm-1">
-                        <a href="#sectionMenu"><i class="fas fa-arrow-up fa-lg"></i></a>
+                        <a href="#sectionMenu"><i class="fas fa-arrow-up"></i></a>
                     </div>
                 </div>`)
             }
@@ -89,7 +89,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyId == "bank_identifier") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateIban" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} placeholder="${context.localize("Uniquement lettres et chiffres sans espaces")}" />
@@ -99,7 +99,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "input") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
@@ -109,7 +109,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (row.id && propertyId == "email" && row.email_validity == -1) {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
@@ -120,7 +120,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "email") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
@@ -130,7 +130,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "phone") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updatePhone" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
@@ -140,7 +140,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
         
             else if (["date", "datetime", "closing_date"].includes(propertyType)) {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateDate" id="${propertyId}" value="${context.decodeDate(value)}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : "placeholder=\"DD/MM/YYYY\""} autocomplete="off" />
@@ -150,7 +150,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "birth_year") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <select class="form-control form-control-sm updateBirthYear" id="${propertyId}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
@@ -162,7 +162,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
 
             else if (propertyType == "time") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateTime" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} />
@@ -172,7 +172,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "number") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm updateNumber" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} />
@@ -182,7 +182,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "textarea") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <textarea class="form-control form-control-sm updateTextarea" rows="5" id="${propertyId}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "* " : ""}${label} maxlength="${(property.options.max_length) ? property.options.max_length : 2047}">${value}</textarea>
@@ -194,7 +194,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             else if (propertyType == "select") {
                 const multiple = property.multiple
                 const values = (value) ? value.split(",") : []
-                html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
+                html.push(`<div class="form-group row mb-2" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">            
                         <select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
@@ -229,7 +229,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             else if (propertyType == "multiselect") {
                 const values = (value) ? value.split(",") : []
                 html.push(`<input type="hidden" class="updateSelectedValue" id="updateSelectedValue-${propertyId}" value="${row[propertyId]}" />
-                    <div class="form-group row" id="updateSelectDiv-${propertyId}">
+                    <div class="form-group row mb-2" id="updateSelectDiv-${propertyId}">
                         <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                         <div class="col-sm-7">
                             ${(property.modalities) ?
@@ -248,7 +248,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "tag") {
-                html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
+                html.push(`<div class="form-group row mb-2" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7 selectTags" id="selectTags-${propertyId}">
                         ${`<select class="form-control form-control-sm selectpicker updateSelectpicker updateSelect" id="${propertyId}" multiple data-none-selected-text ${(readonly) ? "disabled" : ""}>
@@ -270,7 +270,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "source") {
-                html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
+                html.push(`<div class="form-group row mb-2" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         ${`<select class="form-control form-control-sm updateSelect" id="${propertyId}" ${(readonly) ? "disabled" : ""}>
@@ -301,14 +301,14 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
     
             else if (propertyType == "photo") {
-                html.push(`<div class="form-group row photo-group">
+                html.push(`<div class="form-group row mb-2 photo-group">
                     <label class="col-sm-5 col-form-label col-form-label-sm"></label>
                     <div class="col-sm-7">
                         <img height="150" src="photos/${(row.photo_link_id) ? row.photo_link_id : row.contact_1_id.jpg}" />
                     </div>
                 </div>`)
                 if (!readonly) {
-                    html.push(`<div class="form-group row photo-group">
+                    html.push(`<div class="form-group row mb-2 photo-group">
                         <label class="col-sm-5 col-form-label col-form-label-sm"></label>
                         <div class="col-sm-7">
                             <input type="file" id="${propertyId}" class="form-control form-control-sm updateFile" />
@@ -319,7 +319,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
             else if (propertyType == "history") {          
 
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                     <div>${label}</div>
                     <textarea class="form-control form-control-sm updateTextarea" id="${propertyId}" ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
                     <input type="hidden" id="updateHistoryRoute-${propertyId}" value="/bo/history/${property.entity}/1" />
@@ -329,7 +329,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
 
             else {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group row mb-2">
                 <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                 <div class="col-sm-7">
                   <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
@@ -372,14 +372,14 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
         <div class="my-3">
 
-            <div class="form-group row submitDiv">
+            <div class="form-group row mb-2 submitDiv">
                 <div class="col-sm-5">&nbsp;</div>
                 <div class="col-sm-7">
                     <input name="submit" type="submit" id="upSubmitButton" class="btn btn-warning submitButton" value="${context.translate((id) ? "Update" : "Add")}">
                 </div>
             </div>
 
-            <div class="form-group row submitSpinner">
+            <div class="form-group row mb-2 submitSpinner">
                 <div class="col-sm-5">&nbsp;</div>
                 <div class="col-sm-7">
                     <div class="spinner-border" role="status">
@@ -390,14 +390,14 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
         ${renderSection()}
 
-        <div class="form-group row submitDiv">
+        <div class="form-group row mb-2 submitDiv">
             <div class="col-sm-5">&nbsp;</div>
             <div class="col-sm-7">
                 <input name="submit" type="submit" id="submitButton" class="btn btn-warning submitButton" value="${context.translate((id) ? "Update" : "Add")}">
             </div>
         </div>
 
-        <div class="form-group row submitSpinner">
+        <div class="form-group row mb-2 submitSpinner">
             <div class="col-sm-5">&nbsp;</div>
             <div class="col-sm-7">
             <div class="spinner-border" role="status">

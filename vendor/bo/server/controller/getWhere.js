@@ -30,7 +30,8 @@ const getWhere = (properties, whereParam) => {
         if (property.type == "tag") {
             value = value.map((x) => { return parseInt(x) })
             const tags = {}
-            for (let tag of property.tags) {
+            for (let tagKey of Object.keys(property.tags)) {
+                const tag = property.tags[tagKey]
                 if (value.includes(tag.id)) {
                     tags[tag.id] = tag
                     const vectorId = property.vector

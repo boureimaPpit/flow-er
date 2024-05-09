@@ -1,3 +1,4 @@
+const vsprintf = require("sprintf-js").vsprintf
 const { getWhere } = require("./getWhere")
 const { select } = require("../model/select")
 
@@ -25,14 +26,15 @@ const getDistribution = async (db, context, entity, view, column, properties, wh
             const tags = property.tags
 
             for (let row of rows) row[column] = []
-            for (let tag of tags) {
+            for (let tagKey of Object.keys(tags)) {
+                const tag = tags[tagKey]
                 tag.rowCache = []
                 const vectorId = (property.vector) ? property.vector : "ids"
-                const vector = tag[vectorId].split(",")
+                const vector = tag[vectorId]
                 for (let rowKey of vector) {
                     if (dictRows[rowKey]) {
                         for (let row of dictRows[rowKey]) {
-                            const keep = true
+                            let keep = true
                             if (property.matching) {
                                 for (let tagProp of property.matching) {
                                     const dataProp = property.matching[tagProp]
@@ -40,14 +42,11 @@ const getDistribution = async (db, context, entity, view, column, properties, wh
                                 }
                             }
                             if (keep) {
-                                const arguments = []
+                                const args = []
                                 for (let param of property.format[1].split(",")) {
-                                    arguments.push(tag[param])
+                                    args.push(tag[param])
                                 }
-                                row[propertyId].push(vsprintf(property.format[0], arguments))
-                                if (orderTags[propertyId]) {
-                                    tag.rowCache.push(row)
-                                }
+                                row[column].push(vsprintf(property.format[0], args))
                             }
                         }
                     }
@@ -65,7 +64,7 @@ const getDistribution = async (db, context, entity, view, column, properties, wh
         const values = (row[column] != null) ? row[column].split(",") : ""
         for (let value of values) {
             code = (row[column])
-            if (!distribution[value]) distribution[value] = { code: code, value: 0 }
+            if (!distribution[value]) distribution[value] = { code: value, value: 0 }
             distribution[value].value++    
         }
     }

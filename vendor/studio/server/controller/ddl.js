@@ -15,6 +15,7 @@ const ddl = async ({ req }, context, db) => {
         let type = "VARCHAR(255) DEFAULT ''"
         if (property.entity == entity && property.type != "tag") {
             if (property.type == "date") type = "DATE DEFAULT NULL"
+            else if (property.type == "time") type = "TIME DEFAULT NULL"
             else if (property.type == "datetime") type = "DATETIME DEFAULT NULL"
             else if (["int", "primary"].includes(property.type)) type = "INT(11) DEFAULT 0"
             else if (property.type == "tinyint") type = "TINYINT DEFAULT 0"

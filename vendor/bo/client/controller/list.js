@@ -114,6 +114,9 @@ const getList = (context, entity, view, searchParams) => {
 
                 $("#dataView").html(xhttp.responseText)
 
+                createCalendar(context, entity, view)
+                displayChart(context, entity, view)
+
                 $(".searchSelectTagsIds").each(function () {
                     const propertyId = $(this).attr("id").split("-")[1]
                     const tagId = $(this).attr("id").split("-")[2]
@@ -134,7 +137,7 @@ const getList = (context, entity, view, searchParams) => {
                 $("#listGroupTr").hide()
 
                 // Connect the sort anchors
-                /*$(".listSortAnchor").click(function () {
+                $(".listSortAnchor").click(function () {
                     criterion = $(this).attr("id").split("-")[1]
                     ascCriterion = $(".sortAnchorUp").attr("id")
                     descCriterion = $(".sortAnchorDown").attr("id")
@@ -143,7 +146,7 @@ const getList = (context, entity, view, searchParams) => {
                     else dir = ""
                     $("#listOrderHidden").val(dir + criterion)
                     getList(context, entity, view, getSearchParams())
-                })*/
+                })
 
                 // Connect the more anchor
                 $(".listMoreButton").click(function () {

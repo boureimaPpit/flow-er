@@ -10,7 +10,7 @@ const renderIndex = (context, entity, view, data) => {
     const listView = (indexView.listView) ? (indexView.listView) : "dataview"
     
     return `<!DOCTYPE html>
-    <html lang="fr" data-bs-theme="dark">
+    <html lang="fr">
     
     <!-- Head -->
     ${renderHead(context, entity, view)}
@@ -65,7 +65,11 @@ const renderIndex = (context, entity, view, data) => {
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="listDetailModalLabel"></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}"></button>
+            <div>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
           <div class="modal-body" id="listDetailModal">
           </div>

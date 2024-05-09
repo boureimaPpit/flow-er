@@ -242,7 +242,7 @@ const submitDelete = (id) => {
 const getTab = (tab, id, message, searchParams) => {
 
     let route = $(`#detailTabRoute-${tab}`).val()
-    
+    console.log(tab)
     const xhttp = new XMLHttpRequest()
 
     let params = []

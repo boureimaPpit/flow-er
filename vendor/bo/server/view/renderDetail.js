@@ -11,14 +11,17 @@ const renderDetail = (context, entity, view, id) => {
 }
 
 const renderMenu = function (context, detailConfig, id) {
-    const html = [`<input type="hidden" id="defaultTab" value="${Object.keys(detailConfig.tabs)[0]}">`]
-    const first = true
+    console.log(detailConfig)
+    let defaultTab = false
+    const html = []
     for (let tabId of Object.keys(detailConfig.tabs)) {
         const tab = detailConfig.tabs[tabId]
         if (tab.key == "id" && id != 0 || !tab.key && id == 0) {
-            html.push(`<li class="nav-item"><a class="nav-link detailTab ${(first) ? "active" : "disabled"}" id="detailTab-${tabId}">${context.localize(tab.labels)}</a></li>`)
+            html.push(`<li class="nav-item"><a class="nav-link detailTab ${(!defaultTab) ? "active" : "disabled"}" id="detailTab-${tabId}">${context.localize(tab.labels)}</a></li>`)
+            defaultTab = tabId
         }
     }
+    html.push(`<input type="hidden" id="defaultTab" value="${defaultTab}">`)
     return html.join("\n")
 }
 

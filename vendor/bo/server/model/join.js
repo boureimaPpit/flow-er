@@ -1,7 +1,6 @@
 const { qi, qv } = require("./quote")
 
 const join = (table, columns, where, order, model) => {
-
     let involvedProperties = {}
     for (let column of columns) {
         const propertyId = (Array.isArray(column)) ? column[1] : column

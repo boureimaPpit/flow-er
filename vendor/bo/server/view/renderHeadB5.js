@@ -35,6 +35,36 @@ const renderHeadB5 = (context, entity, view) => {
       'GRAD' 0,
       'opsz' 24
     }
+
+    /* Recommended icon sizes */
+    span.size-20 {
+      font-size: 20px;
+      font-variation-settings: 'OPSZ' 20;
+    }
+    span.size-24 {
+      font-size: 24px;
+      font-variation-settings: 'OPSZ' 24;
+    }
+    span.size-40 {
+      font-size: 40px;
+      font-variation-settings: 'OPSZ' 40;
+    }
+    span.size-48 {
+      font-size: 48px;
+      font-variation-settings: 'OPSZ' 48;
+    }
+
+    /* Rules for using icons as black on a light background. */
+    .dark {
+      background: black;
+      color: rgba(255, 255, 255, 1);
+      font-variation-settings: 'GRAD' -25;
+    }
+    .dark-inactive {
+      background: black;
+      color: rgba(255, 255, 255, 0.3);
+      font-variation-settings: 'GRAD' -25;
+    }
     </style>
 
     </head>`

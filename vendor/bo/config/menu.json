@@ -1,23 +1,22 @@
 {
-    	
-    "applications": {
-		"applee": {
-			"labels": { "default": "Applee" },
-			"default": "default",
-			"defaultRole": "sales_manager"
-        }
+    "menu/admin": {
+        "tabs": ["tab/profile", "tab/place", "tab/tag", "tab/interaction"],
+        "defaultTab": "tab/profile",
+        "labels": { "default": "Admin" }
     },
 
-    "menu/applee": {
-        "tabs": ["tab/default", "tab/place", "tab/tag"],
-        "defaultTab": "tab/default",
-        "labels": { "default": "Applee", "fr_FR": "Applee" }
+    "tab/profile": {
+        "menu": "menu/admin",
+        "route": "/bo/index/profile",
+        "urlParams": "view=profile",
+        "labels": { "default": "Équipe" }
     },
 
-    "tab/default": {
-        "menu": "menu/applee",
-        "route": "/bo/index/account",
-        "labels": { "default": "Leads", "fr_FR": "Prospects" }
+    "tab/interaction": {
+        "menu": "menu/admin",
+        "route": "/bo/index/interaction",
+        "urlParams": "view=interaction",
+        "labels": { "default": "Interactions" }
     },
 
     "tab/place": {

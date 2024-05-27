@@ -100,7 +100,7 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                             predicates.push(`${qEntity}${qColumn} BETWEEN ${qv(value[1])} AND ${qv(value[2] + " 23:59:59.999")}`)
                         }
                         else {
-                            predicates.push(`${qEntity}${qColumn} BETWEEN ${qv($value[1])} AND ${qv($value[2])}`)
+                            predicates.push(`${qEntity}${qColumn} BETWEEN ${qv(value[1])} AND ${qv(value[2])}`)
                         }
                     }
                     else if (operator == "like") {

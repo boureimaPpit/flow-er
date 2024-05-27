@@ -5,55 +5,47 @@ const renderHeader = (context, entity, view) => {
     const applicationName = context.localize(menu.labels)
 
     return `<header>
-		<nav class="navbar navbar-expand-lg navbar-light" ${(context.config.headerParams && context.config.headerParams.backgroundColor) ? `style="background-color: ${context.config.headerParams.backgroundColor}"` : ""}>
-			<a class="navbar-brand" target="_blank" href="${(context.config.headerParams && context.config.headerParams.href) ? `${context.config.headerParams.href}` : "#"}" rel="follow">	
-				${(context.config.headerParams && context.config.headerParams.logo) 
+		<nav class="navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">	
+					${(context.config.headerParams && context.config.headerParams.logo) 
         ? `<img height="${context.config.headerParams.logoHeight}" src="/${`${context.instance.caption }/logos/${context.config.headerParams.logo}`}" alt="${context.instance.caption} logo" />`
         : `<span>${context.instance.caption}&nbsp;&nbsp;|</span>`}
-			</a>
+				</a>
 
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav">
-					<li class="nav-item">
-						&nbsp;&nbsp;<a class="navbar-brand" href="#" rel="follow">${context.user.formattedName}</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link"  href="#" rel="follow">${context.translate("Home")}</a>
-					</li>
-					<li class="nav-item dropdown active">
-						<a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownAppLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							${applicationName}
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownAppLink">
-							${renderApplications(context)}
-						</div>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownVcardLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="material-symbols-outlined">person</span>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownVcardLink">
-							<a class="dropdown-item" id="logoutAnchor" href="#">
-								${context.translate("Logout")}
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+						${renderApplications(context, applicationName)}
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<span class="far fa-lg fa-user"></span>
 							</a>
-						</div>
-					</li>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="#">${context.user.formattedName}</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" id="logoutAnchor" href="#">${context.translate("Logout")}</a></li>
+							</ul>
+						</li>
 
-					<li class="nav-item">
-						<a class="nav-link" title="${context.translate("Show the documentation")}">
-							<span class="material-symbols-outlined">help</span>
-						</a>
-					</li>
+						<li class="nav-item">
+							<a class="nav-link" title="${context.translate("Show the documentation")}">
+								<span class="far fa-lg fa-question-circle"> </span>
+							</a>
+						</li>
 
-				</ul>
+					</ul>
+				</div>
 			</div>
 		</nav>
 	</header>`
 }
 
-const renderApplications = (context) => {
+const renderApplications = (context, applicationName) => {
     const html = []
     for (let applicationId of Object.keys(context.config.applications)) {
         const application = context.config.applications[applicationId]
@@ -62,13 +54,16 @@ const renderApplications = (context) => {
             const menuEntry = context.config[m.defaultTab]
             const urlParams = (menuEntry.urlParams) ? menuEntry.urlParams : ""
             const url = `${menuEntry.route}?${urlParams}`
+            const label = context.localize(application.labels)
 
-            html.push(`<a class="dropdown-item" href="${url}">
-				${context.localize(application.labels)}
-			</a>`)
+            html.push(`<li class="nav-item">
+				<a class="nav-link ${ (label.localeCompare(applicationName) == 0) ? "active" : "" }" href="${url}">
+					${label}
+				</a>
+			</li>`)
         }
     }
-    return html
+    return html.join("\n")
 }
 
 module.exports = {

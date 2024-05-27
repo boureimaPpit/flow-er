@@ -26,6 +26,9 @@ const insert = (context, table, data, model) => {
         }
     }
     if (model.properties.creation_time) pairs[qi("creation_time")] = `'${new Date().toISOString().slice(0, 19).replace("T", " ")}'`
+    if (model.properties.creation_date) pairs[qi("creation_date")] = `'${new Date().toISOString().slice(0, 10)}'`
+    if (model.properties.creation_month) pairs[qi("creation_month")] = `'${new Date().toISOString().slice(0, 7)}'`
+    if (model.properties.creation_year) pairs[qi("creation_year")] = `'${new Date().toISOString().slice(0, 4)}'`
     if (model.properties.creation_user) pairs[qi("creation_user")] = context.user.id
     if (model.properties.update_time) pairs[qi("update_time")] = `'${new Date().toISOString().slice(0, 19).replace("T", " ")}'`
     if (model.properties.update_user) pairs[qi("update_user")] = context.user.id

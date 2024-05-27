@@ -30,25 +30,27 @@ const join = (table, columns, where, order, model) => {
     }
 
     let joins = {}
-    for (let entityId of Object.keys(entitiesToJoin)) {
-        const entity = model.entities[entityId]
+    for (let entityId of Object.keys(model.entities)) {
         if (entitiesToJoin[entityId]) {
-            const primary = "id"
-            if (entity.key) primary = entity.key
-            joins[entityId] = `LEFT JOIN ${qi(entity.table)} AS ${qi(entityId)}`
-            if (entity.join) {
-                const on = []
-                for (let matching of entity.join) {
-                    const primary = "id"
-                    if (matching.key) primary = matching.key
-                    on.push(`${qi(entityId)}.${primary} = ${qi(entity.foreign_entity)}.${qi(matching.foreign_key)}`)
-                }
-                joins[entityId] += ` ON ${on.join(" AND ")}`
-            }
-            else {
-                let primary = "id"
+            const entity = model.entities[entityId]
+            if (entitiesToJoin[entityId]) {
+                const primary = "id"
                 if (entity.key) primary = entity.key
-                joins[entityId] += ` ON ${qi(entityId)}.${qi(primary)} = ${qi(entity.foreignEntity)}.${qi(entity.foreignKey)}`
+                joins[entityId] = `LEFT JOIN ${qi(entity.table)} AS ${qi(entityId)}`
+                if (entity.join) {
+                    const on = []
+                    for (let matching of entity.join) {
+                        const primary = "id"
+                        if (matching.key) primary = matching.key
+                        on.push(`${qi(entityId)}.${primary} = ${qi(entity.foreign_entity)}.${qi(matching.foreign_key)}`)
+                    }
+                    joins[entityId] += ` ON ${on.join(" AND ")}`
+                }
+                else {
+                    let primary = "id"
+                    if (entity.key) primary = entity.key
+                    joins[entityId] += ` ON ${qi(entityId)}.${qi(primary)} = ${qi(entity.foreignEntity)}.${qi(entity.foreignKey)}`
+                }
             }
         }
     }

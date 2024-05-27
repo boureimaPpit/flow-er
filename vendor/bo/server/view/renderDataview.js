@@ -10,7 +10,7 @@ const renderDataview = (context, entity, view, rows, orderParam, limit, measure,
     </style>
     <div class="row">
         <div class="table-responsive">
-            <div class="col-md-12">
+            <div class="fixTableHead col-md-12">
                 <table class="table table-sm table-hover" id="listPanel">
                     ${ renderListHeader(context, entity, view, measure, distribution, orderParam, properties) }
                     <input type="hidden" id="listCount" value="${rows.length}" />

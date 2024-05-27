@@ -56,6 +56,7 @@ const renderCore = (context, entity, view) => {
     <!-- Flow-ER -->
     <script src="/bo/cli/controller/check-form.js"></script>
     <script src="/bo/cli/controller/index.js"></script>
+    <script src="/bo/cli/controller/getSearchParams.js"></script>
     <script src="/bo/cli/controller/search.js"></script>
     <script src="/bo/cli/controller/shortcuts.js"></script>
     <script src="/bo/cli/controller/list.js"></script>

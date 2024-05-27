@@ -59,14 +59,18 @@ const getDistribution = async (db, context, entity, view, column, properties, wh
     }
 
     let distribution = {}, code
-
+    
     for (let row of rows) {
-        const values = (row[column] != null) ? row[column].split(",") : ""
-        for (let value of values) {
-            code = (row[column])
-            if (!distribution[value]) distribution[value] = { code: value, value: 0 }
-            distribution[value].value++    
+        let values
+        if  (typeof row[column] === "string") {
+            values = row[column].split(",")
+            for (let value of values) {
+                code = (row[column])
+                if (!distribution[value]) distribution[value] = { code: value, value: 0 }
+                distribution[value].value++    
+            }
         }
+        else values = row[column]
     }
 
     return distribution

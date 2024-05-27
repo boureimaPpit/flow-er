@@ -10,7 +10,7 @@ const renderLinks = (context) => {
 const renderFooter = (context) => {
     return `
     <!--Footer-->
-    <footer class="container-fluid">
+    <footer class="container-fluid bg-body-tertiary">
         <div>
             <div class="row">
                 <!--Copyright-->

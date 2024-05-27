@@ -10,27 +10,39 @@ const renderList = (context, entity, view, rows, orderParam, limit) => {
         properties[propertyId].options = options 
     }
 
-    return `${renderRows(context, listConfig, properties, rows)}
-
-    <tr>
+    return `<tr>
         <td>
-            <input type="checkbox" class="listCheckAll" title="${context.translate("Check all")}"></input>
-        </td>
-
-        <td style="text-align: center">
-            <div class="input-group input-group-sm">
-                <button type="button" class="btn btn-sm btn-outline-primary index-btn listGroupButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Grouped actions")}" id="listGroupButton-1">
-                    <span class="fas fa-list"></span>
-                </button>
+            <div class="text-center">
+                <input type="checkbox" class="listCheckAll" data-toggle="tooltip" data-placement="top" title="${context.translate("Check all")}"></input>
             </div>
         </td>
 
-        ${(rows.length == limit) ?`<td style="text-align: center">
-            <div class="input-group input-group-sm">
-                <button type="button" class="btn btn-sm btn-outline-primary listMoreButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Display the entire list")}">
-                    <i class="fas fa-ellipsis-h"></i>
-                </button>
+        <td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Add")}" id="listDetailButton-0">
+                <span class="fas fa-plus"></span>
+            </button>
+        </td>
+    </tr>
+
+    ${renderRows(context, listConfig, properties, rows)}
+
+    <tr class="listRow">
+        <td>
+            <div class="text-center">
+                <input type="checkbox" class="listCheckAll" title="${context.translate("Check all")}"></input>
             </div>
+        </td>
+
+        <td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-primary index-btn listGroupButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Grouped actions")}" id="listGroupButton-1">
+                <span class="fas fa-list"></span>
+            </button>
+        </td>
+
+        ${(rows.length == limit) ?`<td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-primary listMoreButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Display the entire list")}">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
         </td>` : "<td>&nbsp;</td>"}
 
         <td colspan="${Object.keys(properties).length}" />
@@ -52,18 +64,18 @@ const renderRows = (context, listConfig, properties, rows) => {
         }
 
         result.push(`
-        <tr>
+        <tr class="listRow">
             <td>
-                <input type="checkbox" class="listCheck" id="listCheck-${row.id}-${i}"></input>
-                ${listCheckIds.join("\n")}
+                <div class="text-center">
+                    <input type="checkbox" class="listCheck" id="listCheck-${row.id}-${i}"></input>
+                    ${listCheckIds.join("\n")}
+                </div>
             </td>
 
-            <td style="text-align: center">
-              <div class="input-group input-group-sm">
+            <td class="text-center">
                 <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
                   <i class="fas fa-search"></i>
                 </button>
-              </div>
             </td>
 
             ${renderProperties(context, row, properties)}

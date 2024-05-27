@@ -1,56 +1,12 @@
 const moment = require("moment")
 
-const renderUpdate = (context, entity, view, id, properties, row, isDeletable, where, formJwt) => {
+const renderConfigShortcuts = (context, entity, view, id, properties, row, isDeletable, formJwt) => {
 
-    const renderSectionMenu = () => {
-
-        let updateConfig = context.config[`${entity}/update/${view}`]
-        const html = []
-
-        html.push("<nav id=\"sectionMenu\" class=\"nav justify-content-center\"><ul class=\"nav nav-pills\">")
-        for (let sectionId of Object.keys(updateConfig.layout)) {
-            const section = updateConfig.layout[sectionId]
-            if (section.labels) {
-                html.push(`<li class="nav-item">
-                    <a class="nav-link" href="#${sectionId}">${context.localize(section.labels)}</a>
-                </li>`)
-            }
-        }
-        html.push("</ul></nav>")
-
-        return html.join("\n")
-    }
-
-    const renderSection = () => {
-
-        let updateConfig = context.config[`${entity}/update/${view}`]
-        const html = []
-
-        for (let sectionId of Object.keys(updateConfig.layout)) {
-            const section = updateConfig.layout[sectionId]
-            if (section.labels) {
-                html.push(`<hr>
-                <div class="row">
-                    <div class="col-sm-11">
-                        <h5 id="${sectionId}" class="text-center mb-4">${context.localize(section.labels)}</h5>
-                    </div>
-                    <div class="col-sm-1">
-                        <a href="#sectionMenu"><i class="fas fa-arrow-up"></i></a>
-                    </div>
-                </div>`)
-            }
-            html.push(renderProperty(section.properties))
-        }
-
-        return html.join("\n")
-    }
-
-    const renderProperty = (section) => {
+    const renderProperty = () => {
 
         const html = []
 
-        for (let propertyId of section) {
-
+        for (let propertyId of Object.keys(properties)) {
             const property = properties[propertyId]
             const options = property.options
             const label = (options.labels) ? context.localize(options.labels) : context.localize(property.labels)
@@ -90,9 +46,9 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
     
             else if (propertyId == "bank_identifier") {
                 html.push(`<div class="form-group row mb-2">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
+                    <label class="col-sm-5 col-form-label col-form-label-sm">${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateIban" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} placeholder="${context.localize("Uniquement lettres et chiffres sans espaces")}" />
+                        <input class="form-control form-control-sm updateIban" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} placeholder="${context.localize("Uniquement lettres et chiffres sans espaces")}" />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}"></div>
                     </div>
                 </div>`)
@@ -102,7 +58,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
+                        <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
                         <div class="invalid-feedback" id="inputError-${propertyId} ?>"></div>
                     </div>
                 </div>`)
@@ -112,7 +68,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
+                        <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} maxlength="255" />
                         <p class="text-danger"> Email invalide</p>
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}"></div>
                     </div>
@@ -123,7 +79,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
+                        <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} maxlength="255" />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid email")}</div>
                     </div>
                 </div>`)
@@ -133,7 +89,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updatePhone" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="255" />
+                        <input class="form-control form-control-sm updatePhone" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} maxlength="255" />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid phone")}</div>
                     </div>
                 </div>`)              
@@ -141,9 +97,9 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         
             else if (["date", "datetime", "closing_date"].includes(propertyType)) {
                 html.push(`<div class="form-group row mb-2">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
+                    <label class="col-sm-5 col-form-label col-form-label-sm">${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateDate" id="${propertyId}" value="${context.decodeDate(value)}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : "placeholder=\"DD/MM/YYYY\""} autocomplete="off" />
+                        <input class="form-control form-control-sm updateDate" id="${propertyId}" value="${(value.substring(0, 5) == "today") ? value : context.decodeDate(value)}" ${(readonly) ? "disabled" : ""} autocomplete="off" />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid date")}</div>
                     </div>
                 </div>`)
@@ -153,7 +109,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <select class="form-control form-control-sm updateBirthYear" id="${propertyId}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
+                        <select class="form-control form-control-sm updateBirthYear" id="${propertyId}" ${(readonly) ? "disabled" : ""}>
                             <option />
                             ${() => { for (let year = 1950; year < new Date.getFullYear(); year++) `<option value="${year}" ${(value == year) ? "selected=\"selected\"" : ""}>${year}</option>` }}
                         </select>
@@ -165,7 +121,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateTime" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} />
+                        <input class="form-control form-control-sm updateTime" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid time")}</div>
                     </div>
                 </div>`)              
@@ -175,7 +131,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateNumber" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} />
+                        <input class="form-control form-control-sm updateNumber" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} />
                         <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid number")}</div>
                     </div>
                 </div>`)
@@ -192,29 +148,20 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             }
 
             else if (propertyType == "select") {
-                const multiple = property.multiple
+                const multiple = true
                 const values = (value) ? value.split(",") : []
                 html.push(`<div class="form-group row mb-2" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">            
-                        <select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""}>
+                        <select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(readonly) ? "disabled" : ""}>
                             <option />
     ${function () {
-        const restriction = (property.options.restriction) ? property.options.restriction : {}
         const html = []
         for (let key of Object.keys(property.modalities)) {
-            let keep = true
-            if (restriction[key]) {
-                for (let filterId of Object.keys(restriction[key])) {
-                    if (where[filterId]) {
-                        if (restriction[key][filterId] && !restriction[key][filterId].includes(where[filterId][0])) keep = false
-                    }
-                }
-            }
             const labels = property.modalities[key]
             let selectable = true
             if (!values[key] && labels.archive) selectable = false                
-            if (selectable && keep) {
+            if (selectable) {
                 html.push(`<option value="${key}" ${(values.includes(key)) ? "selected" : ""} ${(labels.archive) ? "disabled" : ""}>${context.localize(labels)}</option>`)
             }
         }
@@ -319,7 +266,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
                 html.push(`<div class="form-group row mb-2">
                     <div>${label}</div>
-                    <textarea class="form-control form-control-sm updateTextarea" id="${propertyId}" ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
+                    <textarea class="form-control form-control-sm updateTextarea" id="${propertyId}" maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
                     <input type="hidden" id="updateHistoryRoute-${propertyId}" value="/bo/history/${property.entity}/1" />
                     <div class="invalid-feedback text-danger" id="updateError-${propertyId}"></div>
                 </div>
@@ -330,7 +277,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 html.push(`<div class="form-group row mb-2">
                 <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                 <div class="col-sm-7">
-                  <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
+                  <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(readonly) ? "disabled" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
                   <div class="invalid-feedback" id="inputError-${propertyId}"></div>
                 </div>
               </div>`)
@@ -366,8 +313,6 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             <h5 class="alert alert-danger  my-3 text-center">${context.translate("A technical error has occured. PLease try again later")}</h5>
         </div>
 
-        ${renderSectionMenu()}
-
         <div class="my-3">
 
             <div class="form-group row submitDiv">
@@ -386,7 +331,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             </div>
         </div>
 
-        ${renderSection()}
+        ${renderProperty()}
 
         <div class="form-group row submitDiv">
             <div class="col-sm-5">&nbsp;</div>
@@ -406,5 +351,5 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 }
 
 module.exports = {
-    renderUpdate
+    renderConfigShortcuts
 }

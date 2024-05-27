@@ -1,87 +1,8 @@
-const getListGroupUpdate = () => {
-
-    $(".listEditButton").removeClass("btn-warning").addClass("btn-danger")
-
-    const formData = new FormData()
-    formData.append("formJwt", $("#listFormJwt").val())
-
-    let ids = []
-    $(".listCheck").each(function () {
-        if ($(this).prop("checked")) ids.push($(this).attr("id").split("-")[1])
-    })
-    formData.append("ids", ids)
-  
-    let xhttp = new XMLHttpRequest()
-
-    $(".listText").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) formData.append(propertyId, $(this).val());
-    })
-
-    $(".listEmail").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) formData.append(propertyId, $(this).val())
-    })
-  
-    $(".listPhone").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) formData.append(propertyId, $(this).val())
-    })
-
-    $(".listDate").each(function () {
-        const propertyId = $(this).attr("name"), val = $(this).val(), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) {
-            if (val) formData.append(propertyId, val.substring(6, 10) + "-" + val.substring(3, 5) + "-" + val.substring(0, 2));
-            else formData.append(propertyId, 0);
-        }
-    })
-
-    $(".listNumber").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) formData.append(propertyId, $(this).val());
-    })
-
-    $(".listTime").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) formData.append(propertyId, $(this).val());
-    })
-  
-    $(".listSelect").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (propertyId && check == 1) formData.append(propertyId, $(this).val());
-    })
-  
-    $(".listTextarea").each(function () {
-        const propertyId = $(this).attr("name"), check = $(`#listGroupCheck-${propertyId}`).prop("checked")
-        if (check == 1) formData.append(propertyId, $(this).val());
-    })
-
-    const route = `${$("#listGroupRoute").val()}?ids=${ids}`
-    xhttp.open("POST", route, true)
-    xhttp.onload = function () {
-        if (xhttp.readyState == 4) { 
-            if (xhttp.status == 401) {
-                $(".modal-body").html("")
-                $("#groupModalForm").modal("hide")
-                getLogin(loadPage)
-            }
-            else if (xhttp.status == 200) {
-                getList(getSearchParams())
-            }
-            else toastr.error("A technical error has occured. PLease try again later")
-        }
-    }
-    xhttp.send(formData)
-}
-
-const getList = (context, entity, view, searchParams) => {		
+const getListRows = (context, entity, view, searchParams) => {		
 
     // Execute the ajax request
     const xhttp = new XMLHttpRequest()
-    let route = `${$("#listRoute").val()}`
-
-    const columns = $("#columns").val()
-    if (columns) route += "columns=" + columns
+    let route = `/bo/listRows/${entity}?view=${view}`
 
     let params = []
     for (const key of Object.keys(searchParams)) {
@@ -112,48 +33,16 @@ const getList = (context, entity, view, searchParams) => {
                     document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
                 }
 
-                $("#dataView").html(xhttp.responseText)
-
-                createCalendar(context, entity, view)
-                displayChart(context, entity, view)
-
-                triggerSearch(context, entity, view)
-
-                $(".searchSelectTagsIds").each(function () {
-                    const propertyId = $(this).attr("id").split("-")[1]
-                    const tagId = $(this).attr("id").split("-")[2]
-                    const name = $(`#searchSelectTagsName-${propertyId}-${tagId}`).val()
-                    const ids = $(this).val().split(",")
-                    for (const id of ids) {
-                        const td = $(`#listTagsName-${propertyId}-${id}`)
-                        if (td) {
-                            let label = (td.html()) ? td.html().split(",") : []
-                            label.push(name)
-                            $(`#listTagsName-${propertyId}-${id}`).html(label.join(","))
-                        }
-                    }
-                })
+                $("#listTbody").html(xhttp.responseText)
 
                 $("#listGroupButton-0").hide()
                 $("#listGroupButton-1").prop("disabled", true)
                 $("#listGroupTr").hide()
 
-                // Connect the sort anchors
-                $(".listSortAnchor").click(function () {
-                    criterion = $(this).attr("id").split("-")[1]
-                    ascCriterion = $(".sortAnchorUp").attr("id")
-                    descCriterion = $(".sortAnchorDown").attr("id")
-                    if ("listSortAnchor-" + criterion == ascCriterion) dir = "-"
-                    else if ("listSortAnchor-" + criterion == descCriterion) dir = ""
-                    else dir = ""
-                    $("#listOrderHidden").val(dir + criterion)
-                    getList(context, entity, view, getSearchParams())
-                })
-
                 // Connect the more anchor
                 $(".listMoreButton").click(function () {
                     $("#listLimitHidden").val("")
-                    getList(context, entity, view, getSearchParams())
+                    getListRows(context, entity, view, getSearchParams())
                 })
 
                 // Able the group action button
@@ -278,10 +167,6 @@ const getList = (context, entity, view, searchParams) => {
                     getListGroupUpdate()
                 })
 
-                $(".datepicker").datepicker()
-                $(".timepicker").timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
-                //$(".listSelectpicker").selectpicker()
-
                 // Connect the grouped actions anchors
                 $(".listGroupButton").click(function () {
                     $("#listGroupModal").html("")
@@ -297,39 +182,9 @@ const getList = (context, entity, view, searchParams) => {
                     $("#listDetailModalForm").modal("show")
                     getDetail(context, entity, view, id, searchParams)
                 })
-
-                // Connect the distribution anchor
-                $(".distributionAnchor").hide()
-                var distributionValue = $("#distributionSelect").val()
-                $("#distribution-" + distributionValue).show()
-                $("#distributionSelect").change(function () {
-                    $(".distributionAnchor").hide()
-                    var distributionValue = $("#distributionSelect").val()
-                    $("#distribution-" + distributionValue).show()
-                })
             }
             else toastr.error("A technical error has occured. PLease try again later")
         }
     }
     xhttp.send()
 }
-
-$("#listDetailModalForm").on("hidden.bs.modal", function (e) {
-    const refresh = $("#listRefreshHidden").val()
-    if (refresh == "manual") {
-        $("#refreshButton").removeClass("btn-default").addClass("btn-warning")
-        $("#refreshButton").attr("disabled", false)
-        $(".listDetailButton").removeClass("btn-primary").addClass("btn-outline-primary")
-    }
-    else getList(context, entity, view, getSearchParams())
-})
-
-$("#groupModalForm").on("hidden.bs.modal", function (e) {
-    const refresh = $("#listRefreshHidden").val()
-    if (refresh == "manual") {
-        $("#refreshButton").removeClass("btn-default").addClass("btn-warning")
-        $("#refreshButton").attr("disabled", false)
-        $(".listDetailButton").removeClass("btn-primary").addClass("btn-outline-primary")
-    }
-    else getList(context, entity, view, getSearchParams())
-})

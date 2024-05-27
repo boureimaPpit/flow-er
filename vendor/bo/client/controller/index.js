@@ -1,4 +1,3 @@
-
 const loadPage = async (entity, view) => {
     let response = await fetch("/bo/config")
     const config = await response.json()
@@ -36,7 +35,7 @@ const loadPage = async (entity, view) => {
     }
 
     getShortcuts()
-    getSearch(context, entity, view)
+    //getSearch(context, entity, view)
     getList(context, entity, view, {})
 }
 

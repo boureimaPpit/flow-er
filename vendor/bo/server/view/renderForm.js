@@ -7,20 +7,19 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
     const renderSection = () => {
 
         let addConfig = context.config[`${entity}/form/${view}`]
-        const html = []
+        const html = ["<div class=\"row\">"]
 
         for (let sectionId of Object.keys(addConfig.layout)) {
             const section = addConfig.layout[sectionId]
             if (section.labels) {
-                html.push(`<hr>
-                <div class="row">
-                    <div class="col-sm-11">
-                        <h5 id="${sectionId}" class="text-center mb-4">${ context.localize(section.labels) }</h5>
-                    </div>
+                html.push(`<div class="col-lg-12">
+                    <h5 id="${sectionId}" class="text-center mb-4">${ context.localize(section.labels) }</h5>
                 </div>`)
             }
             html.push(renderProperty(section.properties))
         }
+
+        html.push("</div>")
 
         return html.join("\n")
     }
@@ -30,13 +29,14 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
         const html = []
 
         for (let propertyId of section) {
-
             const property = properties[propertyId]
             const options = property.options
             const label = (options.labels) ? context.localize(options.labels) : context.localize(property.labels)
             const propertyType = (options.type) ? options.type : property.type
             const immutable = (property.options.immutable) ? true : false
             const mandatory = (property.options.mandatory) ? true : false
+
+            html.push(`<div class="${ (options.class) ? options.class : col-lg-12 }">`)
 
             let currentDate = new Date()
             const year = currentDate.getFullYear(), month = String(currentDate.getMonth() + 1).padStart(2, "0"), day = String(currentDate.getDate()).padStart(2, "0")
@@ -55,63 +55,39 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
                 else if (value && value.charAt(5) == "-") value = moment().subtract(value.substring(6), "days").format("YYYY-MM-DD")
                 else value = moment().format("YYYY-MM-DD")    
             }
-
-            else if (propertyType == "title") {
-                html.push(`<hr><h5 class="text-center mb-4">${label}</h5>`)
-            }
     
             else if (propertyId == "bank_identifier") {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateIban" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} placeholder="${context.localize("Uniquement lettres et chiffres sans espaces")}" />
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}"></div>
-                    </div>
+                html.push(`<div class="form-group">
+                    <input type="text" class="form-control updateIban" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
                 </div>`)
             }
     
             else if (propertyType == "input") {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
-                        <div class="invalid-feedback" id="inputError-${propertyId} ?>"></div>
-                    </div>
+                html.push(`<div class="form-group">
+                    <input type="text" class="form-control" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
                 </div>`)
             }
     
             else if (propertyType == "email") {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateEmail" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} maxlength="255" />
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid email")}</div>
-                    </div>
+                html.push(`<div class="form-group">
+                    <input type="text" class="form-control updateEmail" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
                 </div>`)
             }
     
             else if (propertyType == "phone") {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updatePhone" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} maxlength="255" />
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid phone")}</div>
-                    </div>
+                html.push(`<div class="form-group">
+                    <input type="text" class="form-control updatePhone" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
                 </div>`)              
             }
         
             else if (["date", "datetime", "closing_date"].includes(propertyType)) {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateDate" id="${propertyId}" value="${context.decodeDate(value)}" ${(mandatory) ? "required" : "placeholder=\"DD/MM/YYYY\""} autocomplete="off" />
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid date")}</div>
-                    </div>
+                html.push(`<div class="form-group">
+                    <input type="text" class="form-control updateDate" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
                 </div>`)
             }
     
             else if (propertyType == "birth_year") {
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         <select class="form-control form-control-sm updateBirthYear" id="${propertyId}" ${(mandatory) ? "required" : ""}>
@@ -123,23 +99,15 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
             }
 
             else if (propertyType == "time") {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateTime" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} />
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid time")}</div>
-                    </div>
-                </div>`)              
+                html.push(`<div class="form-group">
+                <input type="text" class="form-control updateTime" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
+            </div>`)              
             }
     
             else if (propertyType == "number") {
-                html.push(`<div class="form-group row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm updateNumber" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} />
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("Missing or invalid number")}</div>
-                    </div>
-                </div>`)
+                html.push(`<div class="form-group">
+                <input type="text" class="form-control updateNumber" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
+            </div>`)
             }
     
             else if (propertyType == "textarea") {
@@ -155,7 +123,7 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
             else if (propertyType == "select") {
                 const multiple = property.multiple
                 const values = (value) ? value.split(",") : []
-                html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
+                html.push(`<div class="form-group" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">            
                         <select class="${(!multiple) ? "form-control form-control-sm" : ""} updateSelect" id="${propertyId}" ${(multiple) ? "multiple" : ""} ${(mandatory) ? "required" : ""}>
@@ -189,7 +157,7 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
             else if (propertyType == "multiselect") {
                 const values = (value) ? value.split(",") : []
                 html.push(`<input type="hidden" class="updateSelectedValue" id="updateSelectedValue-${propertyId}" />
-                    <div class="form-group row" id="updateSelectDiv-${propertyId}">
+                    <div class="form-group" id="updateSelectDiv-${propertyId}">
                         <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                         <div class="col-sm-7">
                             ${(property.modalities) ?
@@ -208,7 +176,7 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
             }
     
             else if (propertyType == "tag") {
-                html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
+                html.push(`<div class="form-group" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7 selectTags" id="selectTags-${propertyId}">
                         ${`<select class="form-control form-control-sm selectpicker updateSelectpicker updateSelect" id="${propertyId}" multiple data-none-selected-text>
@@ -230,7 +198,7 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
             }
     
             else if (propertyType == "source") {
-                html.push(`<div class="form-group row" id="updateSelectDiv-${propertyId}">
+                html.push(`<div class="form-group" id="updateSelectDiv-${propertyId}">
                     <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
                     <div class="col-sm-7">
                         ${`<select class="form-control form-control-sm updateSelect" id="${propertyId}">
@@ -244,7 +212,6 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
                 for (let filterId of Object.keys(restriction[modalityId])) {
                     if (where[filterId]) {
                         if (restriction[modalityId][filterId] && !restriction[modalityId][filterId].includes(where[filterId][0])) keep = false
-                        console.log(propertyId, modalityId, keep, restriction[modalityId], filterId, where[filterId])
                     }
                 }
             }
@@ -262,7 +229,7 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
 
             else if (propertyType == "history") {          
 
-                html.push(`<div class="form-group row">
+                html.push(`<div class="form-group">
                     <div>${label}</div>
                     <textarea class="form-control form-control-sm updateTextarea" id="${propertyId}" ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
                     <input type="hidden" id="updateHistoryRoute-${propertyId}" value="/bo/history/${property.entity}/1" />
@@ -271,14 +238,12 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
             }
 
             else {
-                html.push(`<div class="form-group row">
-                <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                <div class="col-sm-7">
-                  <input class="form-control form-control-sm updateInput" id="${propertyId}" value="${value}" ${(mandatory) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 255}" />
-                  <div class="invalid-feedback" id="inputError-${propertyId}"></div>
-                </div>
-              </div>`)
+                html.push(`<div class="form-group">
+                <input type="text" class="form-control updateInput" name="${propertyId}" value="" placeholder="${ (mandatory) ? "* " : "" } ${label}" class="wpcf7-form-control wpcf7-text" aria-invalid="false" ${ (mandatory) ? "required" : "" } maxlength="255">
+            </div>`)
             }
+
+            html.push("</div>")
         }
 
         return html.join("\n")
@@ -286,37 +251,77 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
 
     const html = [`<!DOCTYPE html>
     <html lang="fr">
-    
-    <!-- Head -->
-    ${renderHead(context, entity, view)}
-    
-    <body>`]
 
-    html.push(`<form class="has-validation" id="tabForm">
+    <head>
+        <title>Do the right move - Contact</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        ${renderSection()}
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-        <div class="form-group row submitDiv">
-            <div class="col-sm-5">&nbsp;</div>
-            <div class="col-sm-7">
-                <input name="submit" type="submit" id="submitButton" class="btn btn-warning submitButton" value="${context.translate("Add")}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css">
+
+        <link rel="stylesheet" href="/dtrm/cli/resources/css/animate.css">
+        <link rel="stylesheet" href="/dtrm/cli/resources/css/flaticon.css">
+        <link rel="stylesheet" href="/dtrm/cli/resources/css/tiny-slider.css">
+        <link rel="stylesheet" href="/dtrm/cli/resources/css/glightbox.min.css">
+        <link rel="stylesheet" href="/dtrm/cli/resources/css/aos.css">
+        <link rel="stylesheet" href="/dtrm/cli/resources/css/style.css">
+
+        <script src="https://www.google.com/recaptcha/enterprise.js?render=6LewVNcpAAAAAI1Wo8s3o2SlmnPuCVoBu5w-rSaz"></script>
+
+    </head>
+
+    <body style="background: #fff">`]
+
+    html.push(`<form method="post" id="customForm" class="contactForm" enctype="multipart/form-data">
+        <input id="lead_origin" type="hidden" name="p_pit-identifier" value="">
+        <div class="row">
+            ${renderSection()}
+
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <input type="checkbox" name="p_pit-optin" required></input>
+                    &nbsp;&nbsp;
+                    <label>J’accepte d’être recontacté</label>
+                </div>
             </div>
-        </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="your_site_key"></div>
+                </div>
+            </div>
 
-        <div class="form-group row submitSpinner">
-            <div class="col-sm-5">&nbsp;</div>
-            <div class="col-sm-7">
-            <div class="spinner-border" role="status">
-                <span class="sr-only">${context.translate("Loading")}...</span>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+
+                <input type="submit" value="Envoyer" class="btn btn-primary">
+
             </div>
         </div>
     </form>`)
 
-    html.push(`</div><hr></body>
-
-    <!-- Scripts -->
-    ${renderCore(context, entity, view)}
-
+    html.push(`</body>
+            
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/tiny-slider.js"></script>
+    <script src="js/glightbox.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/rellax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="js/google-map.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    function onClick(e) {
+      e.preventDefault();
+      grecaptcha.enterprise.ready(async () => {
+        const token = await grecaptcha.enterprise.execute('6LewVNcpAAAAAI1Wo8s3o2SlmnPuCVoBu5w-rSaz', {action: 'LOGIN'});
+      });
+    }
+    </script>
     </html>`)
 
     return html.join("\n")

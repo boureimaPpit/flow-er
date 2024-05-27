@@ -19,6 +19,7 @@ const ddl = async ({ req }, context, db) => {
             else if (property.type == "datetime") type = "DATETIME DEFAULT NULL"
             else if (["int", "primary"].includes(property.type)) type = "INT(11) DEFAULT 0"
             else if (property.type == "tinyint") type = "TINYINT DEFAULT 0"
+            else if (property.max_length && property.max_length > 255) type = "MEDIUMTEXT DEFAULT ''"
             
             if (property.type == "primary") {
                 propertyDdl.push(`  \`${propertyId}\` ${type}`)

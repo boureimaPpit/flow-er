@@ -71,10 +71,10 @@
         }
     },
 	
-	"event/index/default": {
+	"event/index/event": {
     }, 
 
-	"event/search/default": { 
+	"event/search/event": { 
         "properties": { 
             "caption": {},
             "date": {},
@@ -84,7 +84,7 @@
         }
     },
 	
-	"event/list/default": { 
+	"event/list/event": { 
         "view": "renderCalendar",
         "properties": {
             "caption": {},
@@ -95,17 +95,17 @@
         }
     },
 
-    "event/detail/default": {
+    "event/detail/event": {
         "tabs": {
             "update": {
                 "definition": "inline",
-                "route": "/bo/update/default",
+                "route": "/bo/update/event",
                 "labels": {"en_US": "Update", "fr_FR": "Modifier"}
             }
         }
     },
 
-	"event/update/default": {
+	"event/update/event": {
         "layout": {
             "intro": {
                 "properties": ["caption", "date", "start_time", "end_date", "end_time", "location"]
@@ -121,7 +121,7 @@
         }
     },
 
-    "event/groupUpdate/default": { 
+    "event/groupUpdate/event": { 
         "properties": {
             "caption": { "mandatory": true },
             "date": { "mandatory": true },
@@ -132,7 +132,7 @@
         }
     },
 
-    "event/export/default": { 
+    "event/export/event": { 
         "properties": { 
             "caption": { "mandatory": true },
             "date": { "mandatory": true },
@@ -143,7 +143,7 @@
        }
     },
 
-    "event/v1/default": {
+    "event/v1/event": {
         "properties": {
             "caption": { "mandatory": true },
             "date": { "mandatory": true },

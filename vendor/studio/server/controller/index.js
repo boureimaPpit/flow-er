@@ -4,7 +4,7 @@ const { executeService, assert } = require("../../../../core/api-utils")
 const { ddl } = require("./ddl")
 
 const registerStudio = async ({ context, config, logger, app }) => {
-    const db = await createDbClient2(config.db)
+    const db = await createDbClient2(config.db, context.dbName)
     const execute = executeService(config, logger)
     const upload = multer()
     app.use(upload.array())

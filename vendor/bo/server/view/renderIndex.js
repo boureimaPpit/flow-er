@@ -7,7 +7,7 @@ const { renderCore } = require("./renderCore")
 const renderIndex = (context, entity, view, data) => {
 
     const indexView = context.config[`${entity}/index/${view}`]
-    const listView = (indexView.listView) ? (indexView.listView) : "dataview"
+    const listView = (indexView && indexView.listView) ? (indexView.listView) : "dataview"
     
     return `<!DOCTYPE html>
     <html lang="fr">

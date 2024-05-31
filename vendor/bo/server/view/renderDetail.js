@@ -11,7 +11,6 @@ const renderDetail = (context, entity, view, id) => {
 }
 
 const renderMenu = function (context, detailConfig, id) {
-    console.log(detailConfig)
     let defaultTab = false
     const html = []
     for (let tabId of Object.keys(detailConfig.tabs)) {

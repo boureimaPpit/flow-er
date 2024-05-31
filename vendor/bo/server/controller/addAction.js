@@ -113,7 +113,7 @@ const postAddAction = async ({ req }, context, db) => {
      * Find out the data to actually update in the database 
      */
     let { cellsToInsert } = await dataToStore(properties, form)
-    console.log(cellsToInsert)
+
     /**
      * Insert
      */

@@ -18,7 +18,6 @@ const searchAction = async ({ req }, context, db, renderer) => {
     }
 
     const searchRenderer = renderer.retrieve((context.config[`${entity}/search/${view}`].view) ? context.config[`${entity}/search/${view}`].view : "renderSearch")
-    console.log(searchRenderer)
     return searchRenderer(context, entity, view, properties, await getCompletionData(context, entity, view, db, properties))
 }
 

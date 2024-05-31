@@ -28,11 +28,9 @@ const renderListHeaderB5 = (context, entity, view, measure, distribution, orderP
     const renderSelectOption = (propertyId) => {
         const property = properties[propertyId]
         const options = []
-        console.log(property)
         for (let modality of Object.keys(property.distribution)) {
             const { code, value } = property.distribution[modality]
             let label
-            console.log(code)
             if (["select"/*, "source"*/, "tag"].includes(property.type)) label = context.localize(property.modalities[code])
             else if (property.type == "date") label = context.decodeDate(code)
             else if (property.type == "number") label = parseFloat(code).toLocaleString("fr-FR")

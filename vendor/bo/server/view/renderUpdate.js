@@ -208,7 +208,6 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 for (let filterId of Object.keys(restriction[key])) {
                     if (where[filterId]) {
                         if (restriction[key][filterId] && !restriction[key][filterId].includes(where[filterId][0])) keep = false
-                        console.log(propertyId, key, keep, restriction[key], filterId, where[filterId])
                     }
                 }
             }
@@ -284,7 +283,6 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 for (let filterId of Object.keys(restriction[modalityId])) {
                     if (where[filterId]) {
                         if (restriction[modalityId][filterId] && !restriction[modalityId][filterId].includes(where[filterId][0])) keep = false
-                        console.log(propertyId, modalityId, keep, restriction[modalityId], filterId, where[filterId])
                     }
                 }
             }
@@ -326,6 +324,16 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                     <div class="invalid-feedback text-danger" id="updateError-${propertyId}"></div>
                 </div>
                 ${(id) ? `<div class="card my-3 text-muted updateHistory" id="updateHistory-${propertyId}"></div>` : ""}`)
+            }
+    
+            else if (propertyType == "json") {
+                html.push(`<div class="form-group row mb-2">
+                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control form-control-sm updateTextarea" rows="5" id="${propertyId}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "* " : ""}${label} maxlength="${(property.options.max_length) ? property.options.max_length : 2047}">${value}</textarea>
+                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("The input is too long")}</div>
+                    </div>
+                </div>`)
             }
 
             else {

@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const { executeService, assert } = require("../../../../core/api-utils")
 const { createDbClient2 } = require("../../../utils/db-client")
+const { getModel } = require("../model/index")
+const { getDBConfig } = require("../../../../vendor/studio/server/controller/getDBConfig")
 const { shortcutsAction } = require("./shortcutsAction")
 const { searchAction } = require("./searchAction")
 const { dataviewAction } = require("./dataviewAction")
@@ -25,7 +27,11 @@ const { renderCalendar } = require("../view/renderCalendar")
 const { renderChart } = require("../view/renderChart")
 
 const registerBo = async ({ context, config, logger, app, renderer }) => {
-    const db = await createDbClient2(config.db, context.dbName)
+    const model = await getModel(config, context)
+    const db = model.db
+    if (context.config.studio.mode == "staging") {
+        getDBConfig(context, model)
+    }
     const execute = executeService(config, logger)
     const upload = multer()
     registerViews(renderer)
@@ -54,8 +60,8 @@ const index = async ({ req }, context, db, renderer) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const indexConfig = context.config[`${entity}/index/${view}`]
-    const data = { where: (indexConfig.where) ? indexConfig.where : "", order: (indexConfig.order) ? indexConfig.order : "", limit: (indexConfig.limit) ? indexConfig.limit : 1000 }
-    const indexRenderer = renderer.retrieve((context.config[`${entity}/index/${view}`].view) ? context.config[`${entity}/index/${view}`].view : "renderIndex")
+    const data = { where: (indexConfig && indexConfig.where) ? indexConfig.where : "", order: (indexConfig && indexConfig.order) ? indexConfig.order : "", limit: (indexConfig && indexConfig.limit) ? indexConfig.limit : 1000 }
+    const indexRenderer = renderer.retrieve((indexConfig && indexConfig.view) ? indexConfig.view : "renderIndex")
     return indexRenderer(context, entity, view, data)
 }
 

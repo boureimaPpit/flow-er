@@ -244,7 +244,6 @@ const renderForm = (context, entity, view, properties, where, formJwt) => {
                 for (let filterId of Object.keys(restriction[modalityId])) {
                     if (where[filterId]) {
                         if (restriction[modalityId][filterId] && !restriction[modalityId][filterId].includes(where[filterId][0])) keep = false
-                        console.log(propertyId, modalityId, keep, restriction[modalityId], filterId, where[filterId])
                     }
                 }
             }

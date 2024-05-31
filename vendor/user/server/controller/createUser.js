@@ -10,7 +10,6 @@ const createUser = async ({ req }, context, db) => {
 
     const model = context.config["user/model"]
     const [result, fields] = (await db.execute(select(context, "user", ["email"], { "email": email }, null, null, model)))[0]
-    console.log(result)
     if (result) {
         return throwUnauthorized("user already exist", "ALREADY_EXIST")
     }
@@ -25,7 +24,6 @@ const createUser = async ({ req }, context, db) => {
         password: encryptedPassword
     }
 
-    console.log(insert(context, "user", userData, model))
     await db.execute(insert(context, "user", userData, model))
 
     return { status: "ok" }

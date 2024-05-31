@@ -28,10 +28,14 @@ const renderListHeaderB5 = (context, entity, view, measure, distribution, orderP
     const renderSelectOption = (propertyId) => {
         const property = properties[propertyId]
         const options = []
-        for (let modality of Object.keys(property.modalities)) {
-            const label = context.localize(property.modalities[modality])
-            const value = (property.distribution[modality]) ? property.distribution[modality].value : 0
-            options.push(`<option value="${modality}" title="${label} (${value}">${label} (${value})</option>`)
+        for (let modality of Object.keys(property.distribution)) {
+            const { code, value } = property.distribution[modality]
+            let label
+            if (["select"/*, "source"*/, "tag"].includes(property.type)) label = context.localize(property.modalities[code])
+            else if (property.type == "date") label = context.decodeDate(code)
+            else if (property.type == "number") label = parseFloat(code).toLocaleString("fr-FR")
+            else label = code
+            options.push(`<option value="${modality}">${ (modality) ? label : "Vide" } (${value})</option>`)
         }
         return options.join("\n")
     }

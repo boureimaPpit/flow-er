@@ -24,7 +24,6 @@ const checkCredentials = async ({ req }, context, db) => {
         data.login_failed = 0
     }
 
-    console.log(update(context, "user", [user.id], data, model))
     await db.execute(update(context, "user", [user.id], data, model))
 
     if (!authorized) {
@@ -171,7 +170,6 @@ const sendActivationLink = async ({ req, config }, context, db, mailClient) => {
             registrationLink: context.instance.fqdn
         }
         const content = renderCreateAccount(context, data)
-        console.log(content)
         /*await mailClient.sendMail({
             type: "html",
             from: context.config["create-account"].replyAddress,

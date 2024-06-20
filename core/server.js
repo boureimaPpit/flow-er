@@ -40,8 +40,8 @@ const registerMiddlewares = async (context, config, logger, app, renderer) => {
     for (let key of Object.keys(middlewares)) {
         const middleware = require(middlewares[key].dir)
         if (typeof middleware.register === "function") {
-            console.log(`${middlewares[key].prefix}cli/`, `./vendor${middlewares[key].prefix}client/`)
             app.use(`${middlewares[key].prefix}cli/`, express.static(`./vendor${middlewares[key].prefix}client/`))
+            app.use(`${middlewares[key].prefix}cli/`, express.static(`./module${middlewares[key].prefix}public/`))
             await middleware.register({context, config: middlewares[key], logger, app, renderer})
         }
         else {

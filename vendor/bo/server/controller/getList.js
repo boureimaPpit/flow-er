@@ -25,9 +25,10 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
     }
 
     const model = context.config[`${entity}/model`]
+    console.log(select(context, entity, columns, where, order, limit, model))
     const rows = (await db.execute(select(context, entity, columns, where, order, limit, model)))[0]
     if (rows.length > 0) {
-        for (let propertyId of properties) {
+        for (let propertyId of Object.keys(properties)) {
             const property = properties[propertyId]
 
             /**

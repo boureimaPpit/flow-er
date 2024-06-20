@@ -57,8 +57,12 @@
             "fr_FR": "Définition"
         }
     },
+		
+	"config_property/index/configView": { 
+        "view": "renderIndexB5"
+    }, 
 
-    "config_property/search/default": {
+    "config_property/search/configView": {
         "properties": {
             "status": { "multiple": true },
             "entity": {},
@@ -66,7 +70,7 @@
         }
     },
 
-    "config_property/list/default": {
+    "config_property/list/configView": {
         "properties": {
             "status": {},
             "entity": {},

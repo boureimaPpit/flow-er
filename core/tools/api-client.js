@@ -89,7 +89,7 @@ const execute = ({auth, config, path, method, body, headers, onlyHeaders}) => {
 };
 
 const createToken = async ({auth, config}) => {
-    const { token } = await execute({auth, config, path: config.createTokenUrl, method: "POST", body:{ id: config.id, password: config.password }});
+    const { token } = await execute({auth, config, path: config.createTokenUrl, method: "POST", body: config.params});
     return token;
 };
 
@@ -113,8 +113,10 @@ const request = ({ auth, config, method , onlyHeaders }) => async (path, body, h
 
 const createApiClient = config => {
     const auth = {
-        token: null
-    };
+        token: config.bearerToken
+    }
+    console.log(auth)
+    //const auth = {}
     return {
         get: request({ auth, config, method: "GET" }),
         post: request({ auth, config, method: "POST" }),

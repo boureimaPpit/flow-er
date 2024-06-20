@@ -47,15 +47,21 @@
             "fr_FR": "Vecteur"
         }
     },
+		
+	"tag/index/tag": {
+        "view": "renderIndexB5"
+    }, 
 
     "tag/search/default": {
+        "view": "renderSearchB5",
         "properties": {
             "status": { "multiple": true },
             "name": {}
         }
     },
 
-    "tag/list/default": {
+    "tag/list/tag": {
+        "view": "renderDataviewB5",
         "properties": {
             "status": {},
             "name": {},

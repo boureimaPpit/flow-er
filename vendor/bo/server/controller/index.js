@@ -5,8 +5,13 @@ const { executeService, assert } = require("../../../../core/api-utils")
 const { createDbClient2 } = require("../../../utils/db-client")
 const { getModel } = require("../model/index")
 const { getDBConfig } = require("../../../../vendor/studio/server/controller/getDBConfig")
+
+const { getAction } = require("./getAction")
+const { postAction } = require("./postAction")
+
 const { shortcutsAction } = require("./shortcutsAction")
 const { searchAction } = require("./searchAction")
+const { listHeaderB5Action } = require("./listHeaderB5Action")
 const { dataviewAction } = require("./dataviewAction")
 const { listHeaderAction } = require("./listHeaderAction")
 const { listRowsAction } = require("./listRowsAction")
@@ -47,6 +52,7 @@ const registerBo = async ({ context, config, logger, app, renderer }) => {
     app.get(`${config.prefix}index/:entity`, execute(index, context, db, renderer))
     app.get(`${config.prefix}shortcuts/:entity`, execute(shortcutsAction, context, db))
     app.get(`${config.prefix}search/:entity`, execute(searchAction, context, db, renderer))
+    app.get(`${config.prefix}listHeaderB5/:entity`, execute(listHeaderB5Action, context, db, renderer))
     app.get(`${config.prefix}dataview/:entity`, execute(dataviewAction, context, db, renderer))
     app.get(`${config.prefix}listHeader/:entity`, execute(listHeaderAction, context, db, renderer))
     app.get(`${config.prefix}listRows/:entity`, execute(listRowsAction, context, db, renderer))
@@ -58,11 +64,16 @@ const registerBo = async ({ context, config, logger, app, renderer }) => {
     app.get(`${config.prefix}update/:entity/:id`, execute(updateAction, context, db))
     app.post(`${config.prefix}update/:entity/:id`, execute(postUpdateAction, context, db))
     app.get(`${config.prefix}history/:entity/:id`, execute(historyAction, context, db))
-    app.get(`${config.prefix}api/:entity`, execute(apiAction, context, db))
+    app.get(`${config.prefix}api/:entity`, execute(apiAction, context, db)) // Deprecated
     app.get(`${config.prefix}form/:entity`, execute(formAction, context, db))
     app.post(`${config.prefix}form/:entity`, execute(postFormAction, context, db))
     app.get(`${config.prefix}configShortcuts/:entity/:id`, execute(configShortcutsAction, context, db))
     app.post(`${config.prefix}configShortcuts/:entity/:id`, execute(postConfigShortcutsAction, context, db))
+
+    app.get(`${config.prefix}v1/:entity/:view`, execute(getAction, context, db))
+    app.post(`${config.prefix}v1/:entity`, execute(postAction, context, db))
+    // app.post(`${config.prefix}v1/:entity/:id`, execute(postAction, context, db))
+    // app.delete(`${config.prefix}v1/:entity/:id`, execute(deleteAction, context, db))
 }
 
 const index = async ({ req }, context, db, renderer) => {
@@ -70,7 +81,7 @@ const index = async ({ req }, context, db, renderer) => {
     const view = (req.query.view) ? req.query.view : "default"
     const indexConfig = context.config[`${entity}/index/${view}`]
     const data = { where: (indexConfig && indexConfig.where) ? indexConfig.where : "", order: (indexConfig && indexConfig.order) ? indexConfig.order : "", limit: (indexConfig && indexConfig.limit) ? indexConfig.limit : 1000 }
-    const indexRenderer = renderer.retrieve((indexConfig && indexConfig.view) ? indexConfig.view : "renderIndex")
+    const indexRenderer = renderer.retrieve((indexConfig && indexConfig.view) ? indexConfig.view : "renderIndexB5")
     return indexRenderer(context, entity, view, data)
 }
 

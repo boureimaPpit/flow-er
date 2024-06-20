@@ -17,7 +17,7 @@ const searchAction = async ({ req }, context, db, renderer) => {
         if (properties[propertyId].options.modalities) listModalities.push({ propertyId: properties[propertyId].options.modalities }) 
     }
 
-    const searchRenderer = renderer.retrieve((context.config[`${entity}/search/${view}`].view) ? context.config[`${entity}/search/${view}`].view : "renderSearch")
+    const searchRenderer = renderer.retrieve((context.config[`${entity}/search/${view}`].view) ? context.config[`${entity}/search/${view}`].view : "renderSearchB5")
     return searchRenderer(context, entity, view, properties, await getCompletionData(context, entity, view, db, properties))
 }
 

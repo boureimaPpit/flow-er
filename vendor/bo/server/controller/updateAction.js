@@ -149,7 +149,8 @@ const dataToStore = async (mainEntity, properties, form, data, model) => {
             const value = cellsToUpdate[propertyId]
             const property = model.properties[propertyId]
 
-            const { table, foreignEntity, foreignKey } = (model.entities[property.entity])
+            const { table, foreignEntity, foreignKey } = 
+                (model.entities[property.entity])
                 ? { 
                     table: model.entities[property.entity].table,
                     foreignEntity: model.entities[property.entity].foreignEntity,

@@ -5,12 +5,11 @@ const { renderFooter } = require("./renderFooter")
 const { renderCoreB5 } = require("./renderCoreB5")
 
 const renderIndexB5 = (context, entity, view, data) => {
-
     const indexView = context.config[`${entity}/index/${view}`]
-    const listView = (indexView.listView) ? (indexView.listView) : "dataview"
+    const listView = (indexView && indexView.listView) ? (indexView.listView) : "dataview"
     
     return `<!DOCTYPE html>
-    <html lang="fr"${ (context.config.headerParams.darkMode) ? "data-bs-theme=\"dark\"" : "" }>
+    <html lang="fr" ${ (context.config[`tab/${view}`].darkMode) ? "data-bs-theme=\"dark\"" : "" }>
     
     <!-- Head -->
     ${renderHeadB5(context, entity, view)}
@@ -46,6 +45,7 @@ const renderIndexB5 = (context, entity, view, data) => {
     <!-- List section-->
         
         <input type="hidden" id="listRoute" value="/bo/${listView}/${entity}?view=${view}" />
+        <input type="hidden" id="listHeaderRoute" value="/bo/listHeaderB5/${entity}?view=${view}" />
         <input type="hidden" id="listGroupRoute" value="generic/${entity}/groupUpdate?view=${view}" />
       
         <input type="hidden" id="listWhereHidden" value="${data.where}" />

@@ -9,7 +9,7 @@ const join = (table, columns, where, order, model) => {
     for (let propertyId of Object.keys(where)) involvedProperties[propertyId] = null
     if (order != null) for (let propertyId of Object.keys(order)) involvedProperties[propertyId] = null
     involvedProperties = Object.keys(involvedProperties)
-    
+
     const entitiesToJoin = {}
     for (let propertyId of involvedProperties) {
         if (model.properties[propertyId]) {
@@ -21,9 +21,10 @@ const join = (table, columns, where, order, model) => {
     // Refine entities to join depending on other entities to join. Ex vcard to join with commitment needs account for contact_1_id as foreign key
     for (let entityId of Object.keys(entitiesToJoin)) {
         while (true) {
-            if (!model.entities[entityId].foreign_entity) break
-            const foreignEntityId = model.entities[entityId].foreign_entity
+            if (!model.entities[entityId].foreignEntity) break
+            const foreignEntityId = model.entities[entityId].foreignEntity
             if (foreignEntityId == table) break
+            if (!model.entities[foreignEntityId]) break;
             entitiesToJoin[foreignEntityId] = []
             entityId = foreignEntityId
         }

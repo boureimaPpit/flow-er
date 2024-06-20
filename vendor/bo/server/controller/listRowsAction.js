@@ -10,7 +10,11 @@ const listRowsAction = async ({ req }, context, db, renderer) => {
     const where = (req.query.where) ? req.query.where : null
     const order = (req.query.order) ? req.query.order : null
     const limit = (req.query.limit) ? req.query.limit : 1000
-    let columns = Object.keys(context.config[`${entity}/list/${view}`].properties)
+
+    let listConfig = context.config[`${entity}/list/${view}`]
+    if (!listConfig) listConfig = context.config[`${entity}/list/default`]
+
+    let columns = Object.keys(listConfig.properties)
 
     const whereParam = (where != null) ? where.split("|") : []
 
@@ -31,11 +35,10 @@ const listRowsAction = async ({ req }, context, db, renderer) => {
         }    
     }
 
-    let listConfig = context.config[`${entity}/list/${view}`]
     const propertyDefs = listConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
     const propertyList = []
-    for (let propertyId of properties) {
+    for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
         if (property.type != "tags") propertyList.push(propertyId)
     }
@@ -50,13 +53,9 @@ const listRowsAction = async ({ req }, context, db, renderer) => {
     columns = columns.concat(["id"])
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
-    for (let propertyId of Object.keys(properties)) {
-        const property = properties[propertyId]
-        property.distribution = await getDistribution(db, context, entity, view, propertyId, properties, whereParam)
-    }
     
     const listRenderer = renderer.retrieve("renderList")
-    return listRenderer(context, entity, view, data, order, limit)
+    return listRenderer(context, entity, view, data, order, limit, listConfig, properties)
 }
 
 module.exports = {

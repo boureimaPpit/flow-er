@@ -8,7 +8,7 @@ const getPlanning = (context, entity, view, params) => {
     let end = new Date($("#calendar").fullCalendar("getView").intervalEnd)
     end = end.toISOString().substring(0, 10)
     const where = "" //`end_date:ge,${start}|date:le,${end}`
-    let route = `/bo/api/${entity}?view=${view}&where=${where}`
+    let route = `/bo/api/${entity}/${view}?where=${where}`
     const xhttp = new XMLHttpRequest()
     xhttp.open("GET", route, true)
     const jwt = `JWT-${ $("#instanceCaption") }`

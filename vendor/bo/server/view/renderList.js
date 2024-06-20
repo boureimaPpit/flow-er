@@ -1,14 +1,4 @@
-const renderList = (context, entity, view, rows, orderParam, limit) => {
-
-    const listConfig = context.config[`${entity}/list/${view}`]
-    const properties = {}
-    for (let propertyId of Object.keys(listConfig.properties)) {
-        const options = listConfig.properties[propertyId]
-        let property = context.config[`${entity}/property/${propertyId}`]
-        if (property.definition != "inline") property = context.config[property.definition]
-        properties[propertyId] = Object.assign({}, property)
-        properties[propertyId].options = options 
-    }
+const renderList = (context, entity, view, rows, orderParam, limit, listConfig, properties) => {
 
     return `<tr>
         <td>

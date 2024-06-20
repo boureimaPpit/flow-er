@@ -20,14 +20,14 @@
     },
 
     "tab/place": {
-        "menu": "menu/applee",
+        "menu": "menu/admin",
         "route": "/bo/index/place",
         "urlParams": "view=place",
         "labels": { "default": "Places", "fr_FR": "Établissements" }
     },
 
     "tab/tag": {
-        "menu": "menu/applee",
+        "menu": "menu/admin",
         "route": "/bo/index/tag",
         "urlParams": "view=tag",
         "labels": { "default": "Tags", "fr_FR": "Tags" }

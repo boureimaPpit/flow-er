@@ -44,6 +44,10 @@
             "fr_FR": "Région"
         }
     },
+		
+	"place/index/place": {
+        "view": "renderIndexB5"
+    }, 
 
     "place/search/default": {
         "properties": {
@@ -54,6 +58,7 @@
     },
 
     "place/list/default": {
+        "view": "renderDataviewB5",
         "properties": {
             "status": {},
             "region": {},

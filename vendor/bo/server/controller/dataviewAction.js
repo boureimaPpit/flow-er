@@ -5,41 +5,24 @@ const { getMeasure } = require("./getMeasure")
 const { getDistribution } = require("./getDistribution")
 const { renderDataview } = require("../view/renderDataview")
 
+const util = require('util')
+
 const dataviewAction = async ({ req }, context, db, renderer) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const where = (req.query.where) ? req.query.where : null
     const order = (req.query.order) ? req.query.order : null
     const limit = (req.query.limit) ? req.query.limit : 1000
-    let columns = Object.keys(context.config[`${entity}/list/${view}`].properties)
 
     const whereParam = (where != null) ? where.split("|") : []
 
-    let orderArray = null
-    if (order != null) {
-        orderArray = {}
-        for (let orderer of order.split(",")) {
-            let propertyId, direction
-            if (orderer[0] == "-") {
-                propertyId = orderer.substring(1)
-                direction = "DESC"
-            }
-            else {
-                propertyId = orderer
-                direction = "ASC"
-            }
-            orderArray[propertyId] = direction    
-        }    
-    }
-
+    /**
+     * Properties definition
+     */
     let listConfig = context.config[`${entity}/list/${view}`]
+    if (!listConfig) listConfig = context.config[`${entity}/list/default`]
     const propertyDefs = listConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
-    const propertyList = []
-    for (let propertyId of properties) {
-        const property = properties[propertyId]
-        if (property.type != "tags") propertyList.push(propertyId)
-    }
 
     let major = false
     if (order != null) {
@@ -47,19 +30,28 @@ const dataviewAction = async ({ req }, context, db, renderer) => {
         if (major.charAt(0) == "-") major = major.substring(1)
     }
 
-    if (!columns) columns = propertyList
-    columns = columns.concat(["id"])
-
+    /**
+     * List of DB columns to retrieve
+     */
+    const columns = Object.keys(propertyDefs).concat("id")
+    
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
+
+    /**
+     * Measure the data as a tuplet [count, sum]
+     */
     const measure = (listConfig.measure) ? await getMeasure(db, context, entity, view, listConfig.measure, whereParam) : false
-    const distribution = (major) ? await getDistribution(db, context, entity, view, major, properties, whereParam) : false
+
+    /**
+     * Retrieve distributions of the data
+     */
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
         property.distribution = await getDistribution(db, context, entity, view, propertyId, properties, whereParam)
     }
     
-    const listRenderer = renderer.retrieve((context.config[`${entity}/list/${view}`].view) ? context.config[`${entity}/list/${view}`].view : "renderDataview")
-    return listRenderer(context, entity, view, data, order, limit, measure, distribution, properties)
+    const listRenderer = renderer.retrieve((listConfig.view) ? listConfig.view : "renderDataviewB5")
+    return listRenderer(context, entity, view, data, order, limit, measure, listConfig, properties)
 }
 
 module.exports = {

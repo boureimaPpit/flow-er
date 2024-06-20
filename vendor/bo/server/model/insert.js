@@ -5,6 +5,7 @@ const insert = (context, table, data, model) => {
     for (let key of Object.keys(data)) {
         if (!["instance_id", "creation_time", "creation_user", "update_time", "update_user"].includes(key)) {
             let value = data[key]
+            console.log(`${key}: ${value}`)
             const type = (model.properties[key].type) ? model.properties[key].type : "text"
             if (!value) {
                 if (["date", "datetime"].includes(type)) value = "null"
@@ -14,13 +15,15 @@ const insert = (context, table, data, model) => {
             }
             else {
                 if (["date", "datetime"].includes(type)) value = `'${value}'`
-                else if (type === "json") value = qv(JSON.parse(value))
+                else if (type === "json") value = qv(JSON.stringify(value))
                 else if (type === "text") {
-                    const maxLength = (model.properties[key].max_length) ? model.properties[key].max_length : 255
-                    value = value.substr(0, maxLength)
-                    value = qv(value)
+                    if (typeof value === "string") {
+                        const maxLength = (model.properties[key].max_length) ? model.properties[key].max_length : 255
+                        value = value.substr(0, maxLength)
+                        value = qv(value)    
+                    }
                 }
-                else if (type === "longtext") value = qv(value)
+                else if (type === "longtext") value = qv(value)    
             }
             pairs[qi(key)] = value
         }

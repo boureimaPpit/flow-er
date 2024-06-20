@@ -1,14 +1,6 @@
-const renderListHeaderB5 = (context, entity, view, measure, distribution, orderParam, properties) => {
+const renderListHeaderB5 = (context, entity, view, measure, orderParam, properties) => {
 
     const listConfig = context.config[`${entity}/list/${view}`]
-    /*const properties = {}
-    for (let propertyId of Object.keys(listConfig.properties)) {
-        const options = listConfig.properties[propertyId]
-        let property = context.config[`${entity}/property/${propertyId}`]
-        if (property.definition != "inline") property = context.config[property.definition]
-        properties[propertyId] = Object.assign({}, property)
-        properties[propertyId].options = options 
-    }*/
 
     let major = "n_last", dir = "ASC"
     if (orderParam) {
@@ -31,24 +23,16 @@ const renderListHeaderB5 = (context, entity, view, measure, distribution, orderP
         for (let modality of Object.keys(property.distribution)) {
             const { code, value } = property.distribution[modality]
             let label
-            if (["select"/*, "source"*/, "tag"].includes(property.type)) label = context.localize(property.modalities[code])
+            if (["select"].includes(property.type)) label = context.localize(property.modalities[code])
             else if (property.type == "date") label = context.decodeDate(code)
             else if (property.type == "number") label = parseFloat(code).toLocaleString("fr-FR")
             else label = code
-            options.push(`<option value="${modality}">${ (modality) ? label : "Vide" } (${value})</option>`)
+            options.push(`<option value="${modality}" title="${ (modality) ? label : "Vide" } (${value})">${ (modality) ? label : "Vide" } (${value})</option>`)
         }
         return options.join("\n")
     }
 
     const head = [`<thead class="table-light">
-    <th class="text-center">
-        <button class="btn btn-sm btn-outline-primary" title="${context.translate("Refresh the list")}" id="refreshButton">
-            <i class="fa fa-sync-alt text-center"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-primary" title="${context.translate("Erase")}" id="eraseButton">
-            <i class="fa fa-times text-center"></i>
-        </button>
-    </th>
     <th>
         <div class="text-center">
             <small>
@@ -57,12 +41,20 @@ const renderListHeaderB5 = (context, entity, view, measure, distribution, orderP
                 ${ (average) ? `<br><em id="listAverage" title="Moyenne">${average.toLocaleString("fr-FR")}</em>`: "" }
             </small>
         </div>
+    </th>
+    <th class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Refresh the list")}" id="flRefreshButton">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Cancel the filters")}" id="flEraseButton">
+            <i class="fas fa-times"></i>
+        </button>
     </th>`]
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
         const forms = []
-        if (["select","tag"].includes(property.type)) {
-            forms.push(`<select class="form-select form-select-sm px-0 searchInput searchInputSelect" size="${ 3 /*Math.min(4, Object.keys(property.distribution).length)*/ }" id="search-${propertyId}" multiple>${renderSelectOption(propertyId)}</select>`)
+        if (["select", "tag"].includes(property.type)) {
+            forms.push(`<select class="form-select form-select-sm px-0 searchInput searchInputSelect" size="${ Math.min(4, Object.keys(property.distribution).length) }" id="search-${propertyId}" multiple>${renderSelectOption(propertyId)}</select>`)
         }
         else if (["input", "email", "phone", "source"].includes(property.type)) {
             forms.push(`<input type="text" class="form-control form-control-sm searchInput" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}" />
@@ -85,10 +77,8 @@ const renderListHeaderB5 = (context, entity, view, measure, distribution, orderP
 
         head.push(`<th>
             <div data-bs-toggle="collapse" href="#listSortCollapse-${propertyId}" role="button" id="listSortAnchor-${propertyId}" aria-expanded="false" aria-controls="listSortCollapse-${propertyId}">
-            
                 <span class="listHeaderLabel" id="listHeaderLabel-${propertyId}">${ context.localize(property.labels) }</span>
-
-                ${(major == propertyId) ? `<i class="fas fa-caret-${(dir == "ASC") ? "up" : "down"}"></i>` : ""}
+                <i class="fa fa-filter listHeaderIcon" id="listHeaderIcon-${propertyId}"></i>
             </div>
             <div class="collapse" id="listSortCollapse-${propertyId}">
                 ${ forms.join("") }

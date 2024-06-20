@@ -1,7 +1,7 @@
 const { select } = require("../model/select")
 
 const getProperties = async (db, context, entity, view, propertyDefs, whereParam) => {
-    const properties = [], propertyList = Object.keys(propertyDefs)
+    const properties = {}, propertyList = Object.keys(propertyDefs)
 
     for (let param of whereParam) {
         const keyValue = param.split(":")
@@ -10,7 +10,8 @@ const getProperties = async (db, context, entity, view, propertyDefs, whereParam
     
     for (let propertyId of propertyList) {
         const options = propertyDefs[propertyId]
-        const property = context.config[`${entity}/property/${propertyId}`]
+        let property = context.config[`${entity}/property/${propertyId}`]
+        if (!property) property = {}
 
         /**
          * Tags

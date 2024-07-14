@@ -5,12 +5,11 @@ const insert = (context, table, data, model) => {
     for (let key of Object.keys(data)) {
         if (!["instance_id", "creation_time", "creation_user", "update_time", "update_user"].includes(key)) {
             let value = data[key]
-            console.log(`${key}: ${value}`)
             const type = (model.properties[key].type) ? model.properties[key].type : "text"
             if (!value) {
-                if (["date", "datetime"].includes(type)) value = "null"
-                else if (["int", "float"].includes(type)) value = 0
-                else if (["json"].ibcludes(type)) value = "'[]'"
+                if (["foreign", "date", "datetime"].includes(type)) value = "null"
+                else if (["int", "smallint", "tinyint", "float"].includes(type)) value = 0
+                else if (["json"].includes(type)) value = "'[]'"
                 else value = "''"
             }
             else {
@@ -23,7 +22,7 @@ const insert = (context, table, data, model) => {
                         value = qv(value)    
                     }
                 }
-                else if (type === "longtext") value = qv(value)    
+                else if (["mediumtext", "longtext"].includes(type)) value = qv(value)    
             }
             pairs[qi(key)] = value
         }

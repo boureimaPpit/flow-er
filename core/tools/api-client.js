@@ -34,26 +34,26 @@ const createOptions = ({ auth, config, path, method, headers }) => {
 };
 
 const execute = ({auth, config, path, method, body, headers, onlyHeaders}) => {
-    const options = createOptions({auth, config, path, method, headers}) ;
+    const options = createOptions({auth, config, path, method, headers})
     return new Promise((resolve, reject) => {
         const content = [];
         const scheme = config.scheme === "https" ? https : http;
         const req = scheme.request(options, res => {
             res.on("data", chunk => {
-                content.push(chunk);
+                content.push(chunk)
             });
             res.on("end", () => {
                 let data = Buffer.concat(content);
                 if (res.statusCode < 400) {
                     if (onlyHeaders) {
-                        resolve(res.headers);
+                        resolve(res.headers)
                     }
                     else {
                         if (res.headers["content-type"] && res.headers["content-type"].startsWith("application/json")) {
                             resolve(JSON.parse(data));
                         }
                         else {
-                            resolve(data);
+                            resolve(data)
                         }
                     }
                 }
@@ -115,7 +115,6 @@ const createApiClient = config => {
     const auth = {
         token: config.bearerToken
     }
-    console.log(auth)
     //const auth = {}
     return {
         get: request({ auth, config, method: "GET" }),

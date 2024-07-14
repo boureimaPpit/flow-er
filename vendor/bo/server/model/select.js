@@ -16,9 +16,11 @@ const select = (context, table, columns, where, order = [], limit = null, model 
     const qTable = qi(table)
 
     const columnDict = {}
+    let groupBy = false
     for (let column of columns) {
         const propertyId = (Array.isArray(column)) ? column[1] : column
         const aggregator = (Array.isArray(column)) ? column[0] : false
+        if (aggregator && column[2]) groupBy = column[2]
         const qPropertyId = qi(propertyId)
         if (model.properties[propertyId]) {
             const property = model.properties[propertyId]
@@ -142,7 +144,7 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                 }
                 else {
                     value = qv(value)
-                    if (property.type && ["int", "float", "modality"].includes(property.type)) predicates.push(`${qEntity}.${qColumn} = ${value}\n`)
+                    if (property.type && ["primary", "foreign", "int", "float", "modality"].includes(property.type)) predicates.push(`${qEntity}${qColumn} = ${value}\n`)
                     else predicates.push(`${qEntity}${qColumn} LIKE ${value}\n`)
                 }
         
@@ -164,6 +166,8 @@ const select = (context, table, columns, where, order = [], limit = null, model 
         }
     }
     if (predicates.length > 0) request += `WHERE ${predicates.join("\nAND ")}\n`
+
+    if (groupBy) request += `GROUP BY ${groupBy.join(", ")}\n`
 
     if (order != null) {
         request += "ORDER BY "

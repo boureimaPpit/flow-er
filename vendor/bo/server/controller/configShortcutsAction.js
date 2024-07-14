@@ -16,7 +16,6 @@ const configShortcutsAction = async ({ req }, context, db) => {
     const model = context.config["config/model"]
     const row = (await db.execute(select(context, "config", ["entity", "level", "key", "value"], { "id": id }, null, null, model)))[0][0]
     const value = JSON.parse(row.value)
-    console.log(value)
 
     let config = context.config[`${row.entity}/search/${row.key}`]
     const propertyDefs = config.properties

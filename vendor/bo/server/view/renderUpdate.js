@@ -50,7 +50,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         const html = []
 
         for (let propertyId of section) {
-
+            console.log(propertyId)
             const property = properties[propertyId]
             const options = property.options
             const label = (options.labels) ? context.localize(options.labels) : context.localize(property.labels)
@@ -350,7 +350,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         return html.join("\n")
     }
 
-    return `<form class="was-validated" id="tabForm">
+    return `<div class="my-3"><form class="was-validated" id="tabForm">
 
         <input type="hidden" id="formJwt" name="formJwt" value="${formJwt}" />
 
@@ -378,7 +378,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
         ${renderSectionMenu()}
 
-        <div class="my-3">
+        <!--<div class="my-3">
 
             <div class="form-group row submitDiv">
                 <div class="col-sm-5">&nbsp;</div>
@@ -394,7 +394,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                     <span class="sr-only">${context.translate("Loading")}...</span>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         ${renderSection()}
 
@@ -412,7 +412,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
                 <span class="sr-only">${context.translate("Loading")}...</span>
             </div>
         </div>
-    </form>`
+    </form></div>`
 }
 
 module.exports = {

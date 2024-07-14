@@ -14,12 +14,15 @@ const ddl = async ({ req }, context, db) => {
         const property = model.properties[propertyId]
         let type = "VARCHAR(255) DEFAULT ''"
         if (property.entity == entity && property.type != "tag") {
-            if (property.type == "date") type = "DATE DEFAULT NULL"
+            if (["primary", "foreign"].includes(property.type)) type = "INT(11) DEFAULT NULL"
+            else if (property.type == "date") type = "DATE DEFAULT NULL"
             else if (property.type == "time") type = "TIME DEFAULT NULL"
             else if (property.type == "datetime") type = "DATETIME DEFAULT NULL"
-            else if (["int", "primary"].includes(property.type)) type = "INT(11) DEFAULT 0"
+            else if (property.type == "int") type = "INT(11) DEFAULT 0"
             else if (property.type == "tinyint") type = "TINYINT DEFAULT 0"
             else if (property.max_length && property.max_length > 255) type = "MEDIUMTEXT DEFAULT ''"
+            else if (property.type == "mediumtext") type = "MEDIUMTEXT DEFAULT ''"
+            else if (property.type == "mediumblob") type = "MEDIUMBLOB DEFAULT ''"
             else if (property.type == "json") type = "MEDIUMTEXT DEFAULT ''"
             
             if (property.type == "primary") {

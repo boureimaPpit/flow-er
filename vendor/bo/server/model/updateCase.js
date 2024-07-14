@@ -7,9 +7,10 @@ const updateCase = (context, table, column, pairs) => {
     request.push(`SET ${column} = CASE`)
     const ids = []
     for (let id of Object.keys(pairs)) {
-        const value = pairs[id]
+        let value = pairs[id]
+        if (typeof(value) == "string") value = qv(value)
         ids.push(id)
-        request.push(`WHEN id = ${id} THEN ${qv(value)}`)
+        request.push(`WHEN id = ${id} THEN ${value}`)
     }
     request.push("END,")
     const update_time = `${new Date().toISOString().slice(0, 19).replace("T", " ")}`

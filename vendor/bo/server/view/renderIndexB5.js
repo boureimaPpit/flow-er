@@ -9,7 +9,7 @@ const renderIndexB5 = (context, entity, view, data) => {
     const listView = (indexView && indexView.listView) ? (indexView.listView) : "dataview"
     
     return `<!DOCTYPE html>
-    <html lang="fr" ${ (context.config[`tab/${view}`].darkMode) ? "data-bs-theme=\"dark\"" : "" }>
+    <html lang="fr" ${ (context.config[`tab/${view}`] && context.config[`tab/${view}`].darkMode) ? "data-bs-theme=\"dark\"" : "" }>
     
     <!-- Head -->
     ${renderHeadB5(context, entity, view)}

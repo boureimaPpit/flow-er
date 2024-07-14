@@ -4,6 +4,15 @@ const join = (table, columns, where, order, model) => {
     let involvedProperties = {}
     for (let column of columns) {
         const propertyId = (Array.isArray(column)) ? column[1] : column
+        const property = model.properties[propertyId]
+        if (property.type == "CONCAT") {
+            const components = []
+            for (let component of property.components) {
+                if (model.properties[component]) {
+                    involvedProperties[model.properties[component].column] = null
+                }
+            }
+        }
         involvedProperties[propertyId] = null
     }
     for (let propertyId of Object.keys(where)) involvedProperties[propertyId] = null

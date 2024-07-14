@@ -24,7 +24,7 @@ const updateAction = async ({ req }, context, db) => {
     let updateConfig = context.config[`${entity}/update/${view}`]
     const propertyDefs = updateConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, [])
-
+    
     /**
      * Data source
      */
@@ -78,7 +78,8 @@ const updateAction = async ({ req }, context, db) => {
     let row
     if (id) {
         const columns = Object.keys(propertyDefs).concat(["id"])
-        row = (await db.execute(select(context,entity, columns, { "id": id }, null, null, model)))[0][0]
+        console.log(select(context, entity, columns, { "id": id }, null, null, model))
+        row = (await db.execute(select(context, entity, columns, { "id": id }, null, null, model)))[0][0]
     }
     
     return renderUpdate(context, entity, view, id, properties, row, false, where, "formJwt à construire")

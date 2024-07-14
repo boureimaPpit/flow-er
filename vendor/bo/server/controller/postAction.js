@@ -6,142 +6,182 @@ const { updateCase } = require("../model/updateCase")
 const { getProperties } = require("./getProperties")
 const { renderAdd } = require("../view/renderAdd")
 
+/**
+ * Check for integrity of the given data to store (either insert or update as determined later)
+ */
 const dataToStore = (entity, model, form) => {
 
-    const cellsToStore = {}, cellsToReject = {}
+    const rowsToStore = [], rowsToReject = []
 
-    for (let propertyId of Object.keys(form)) {
-        const property = model.properties[propertyId]
-        if (!property) cellsToReject[propertyId] = "unknown"
-        else if (property.type == "primary") cellsToReject[propertyId] = "primary"
-        else /*if (property.entity == entity)*/ {
-            let value = form[propertyId]
-            if (property.type == "int" && !Number.isInteger(value)) cellsToReject[propertyId] = "type"
-            else if (property.type == "float" && typeof(value) != "number") cellsToReject[propertyId] = "type"
-            else cellsToStore[propertyId] = value    
-        }
-        //else cellsToReject[propertyId] = "joined"
-    }
-
-    return { "cellsToStore": cellsToStore, "cellsToReject": cellsToReject }
-}
-
-const entitiesToStore = (mainEntity, model, cellsToStore, data, audit) => {
-
-    /**
-     * Retrieve foreign keys on already existing joined entities
-     */
-    for (let entityId of Object.keys(model.entities)) {
-        const entity = model.entities[entityId]
-        if (cellsToStore[entity.foreignKey]) data[entity.foreignKey] = cellsToStore[entity.foreignKey]
-    }
-
-    const entitiesToInsert = {}, entitiesToUpdate = {}
-    for (let propertyId of Object.keys(cellsToStore)) {
-        if (model.properties[propertyId]) {
-            const value = cellsToStore[propertyId]
+    for (let row of form) {
+        const cellsToStore = {}, cellsToReject = {}
+        for (let propertyId of Object.keys(row)) {
             const property = model.properties[propertyId]
-
-            const { table, foreignEntity, foreignKey } = 
-                (model.entities[property.entity])
-                ? { 
-                    table: model.entities[property.entity].table,
-                    foreignEntity: model.entities[property.entity].foreignEntity,
-                    foreignKey: model.entities[property.entity].foreignKey
-                }
-                : { table: mainEntity, foreignKey: "id" }
-
-            let idToUpdate = data[foreignKey]
-            if (!idToUpdate || idToUpdate === null) idToUpdate = 0
-            if (idToUpdate == 0) {
-                if (!entitiesToInsert[table]) entitiesToInsert[table] = {
-                    cells: {},
-                    foreignEntity: foreignEntity,
-                    foreignKey: foreignKey,
-                }
-                entitiesToInsert[table].cells[property.column] = value
-            }
+            if (!property) cellsToReject[propertyId] = "unknown"
+            //else if (property.type == "primary") cellsToReject[propertyId] = "primary"
             else {
-                if (!entitiesToUpdate[table]) entitiesToUpdate[table] = { 
-                    rowId: idToUpdate,
-                    cells: {}
-                }
-                entitiesToUpdate[table].cells[property.column] = value
+                let value = row[propertyId]
+                if (property.type == "int" && !Number.isInteger(value)) cellsToReject[propertyId] = "type"
+                else if (property.type == "float" && typeof(value) != "number") cellsToReject[propertyId] = "type"
+                else cellsToStore[propertyId] = value    
             }
-        }
+        }    
+        rowsToStore.push(cellsToStore)
+        if (Object.keys(cellsToReject).length !== 0) rowsToReject.push(cellsToReject)
     }
 
-    return { "entitiesToInsert": entitiesToInsert, "entitiesToUpdate": entitiesToUpdate }
+    return { "rowsToStore": rowsToStore, "rowsToReject": rowsToReject }
 }
 
-const storeEntities = async (context, mainEntity, entitiesToInsert, entitiesToUpdate, model, db) => {
+const entitiesToStore = (mainEntity, model, rowsToStore, audit) => {
 
-    const insertEntity = async (table, entity) => {
-        const entityToInsert = entitiesToInsert[table]
-        const insertModel = context.config[`${table}/model`]
-        const [insertedRow] = (await db.execute(insert(context, table, entityToInsert.cells, insertModel)))
-        entityToInsert.rowId = insertedRow.insertId
-        if (entity.foreignEntity) {
-            if (entitiesToInsert[entity.foreignEntity]) {
-                entitiesToInsert[entity.foreignEntity].cells[entity.foreignKey] = insertedRow.insertId
+    for (let row of rowsToStore) {
+        const data = {}
+
+        if (row.id) data.id = row.id
+
+        /**
+         * Retrieve foreign keys on already existing joined entities
+         */
+        for (let entityId of Object.keys(model.entities)) {
+            const entity = model.entities[entityId]
+            if (row[entity.foreignKey]) data[entity.foreignKey] = row[entity.foreignKey]
+        }
+    
+        const entitiesToInsert = {}, entitiesToUpdate = {}
+        for (let propertyId of Object.keys(row)) {
+            if (model.properties[propertyId]) {
+                const value = row[propertyId], property = model.properties[propertyId], entityId = property.entity
+    
+                const { table, foreignEntity, foreignKey } = 
+                    (model.entities[property.entity])
+                    ? { 
+                        table: model.entities[entityId].table,
+                        foreignEntity: model.entities[entityId].foreignEntity,
+                        foreignKey: model.entities[entityId].foreignKey
+                    }
+                    : { table: mainEntity, foreignKey: "id" }
+    
+                let idToUpdate = data[foreignKey]
+                if (!idToUpdate || idToUpdate === null) idToUpdate = 0
+                if (idToUpdate == 0) {
+                    if (!entitiesToInsert[entityId]) entitiesToInsert[entityId] = {
+                        table: table,
+                        cells: {},
+                        foreignEntity: foreignEntity,
+                        foreignKey: foreignKey,
+                    }
+                    entitiesToInsert[entityId].cells[property.column] = value
+                }
+                else {
+                    if (!entitiesToUpdate[table]) entitiesToUpdate[table] = { 
+                        rowId: idToUpdate,
+                        cells: {}
+                    }
+                    if (property.column != "id") entitiesToUpdate[table].cells[property.column] = value
+                }
             }
+        }
+        row.entitiesToInsert = entitiesToInsert
+        row.entitiesToUpdate = entitiesToUpdate
+    }
 
-            if (entitiesToUpdate[entity.foreignEntity]) {
-                entitiesToUpdate[entity.foreignEntity].cells[entity.foreignKey] = insertedRow.insertId
+    return rowsToStore
+}
+
+const storeEntities = async (context, mainEntity, rowsToStore, model, db) => {
+
+    const columnsToUpdate = {}
+
+    for (let row of rowsToStore) {
+        const entitiesToInsert = row.entitiesToInsert, entitiesToUpdate = row.entitiesToUpdate
+        const insertEntity = async (entityId, entity) => {
+            const entityToInsert = entitiesToInsert[entityId]
+            const insertModel = context.config[`${entity.table}/model`]
+            const [insertedRow] = (await db.execute(insert(context, entity.table, entityToInsert.cells, insertModel)))
+            entityToInsert.rowId = insertedRow.insertId
+            if (entity.foreignEntity) {
+                if (entitiesToInsert[entity.foreignEntity]) {
+                    entitiesToInsert[entity.foreignEntity].cells[entity.foreignKey] = insertedRow.insertId
+                }
+    
+                if (entitiesToUpdate[entity.foreignEntity]) {
+                    entitiesToUpdate[entity.foreignEntity].cells[entity.foreignKey] = insertedRow.insertId
+                }
+            }
+        }
+    
+        /**
+         * Insert new entities in order defined in the model and propagate the foreign keys
+         */
+        for (let entityId of Object.keys(model.entities).reverse()) {
+            const entity = model.entities[entityId]
+            if (entitiesToInsert[entityId]) await insertEntity(entityId, entity)
+        }
+        if (entitiesToInsert[mainEntity]) await insertEntity(mainEntity, { table: mainEntity })
+    
+        /**
+         * Perfs: Pivot the per row basis update vector to per column basis vectors
+         * (update case is a scalable approach in SQL)
+         */
+        for (let entityId of Object.keys(entitiesToUpdate)) {
+            if (entitiesToUpdate[entityId]) {
+                const entity = model.entities[entityId], table = (entity) ? entity.table : entityId, entityToUpdate = entitiesToUpdate[entityId]
+                const updateModel = context.config[`${entityId}/model`]
+                for (let columnId of Object.keys(entityToUpdate.cells)) {
+                    const value = entityToUpdate.cells[columnId]
+                    if (!columnsToUpdate[entityId]) columnsToUpdate[entityId] = {}
+                    if (!columnsToUpdate[entityId][columnId]) columnsToUpdate[entityId][columnId] = {}
+                    columnsToUpdate[entityId][columnId][entityToUpdate.rowId] = value
+                }
+                await db.execute(update(context, table, [entityToUpdate.rowId], entityToUpdate.cells, updateModel))
             }
         }
     }
-
-    /**
-     * Insert new entities in order defined in the model and propagate the foreign keys
-     */
-    for (let entityId of Object.keys(model.entities).reverse()) {
-        const entity = model.entities[entityId]
-        if (entitiesToInsert[entity.table]) await insertEntity(entity.table, entity)
-    }
-    if (entitiesToInsert[mainEntity]) await insertEntity(mainEntity, {})
-
+    
     /**
      * Update existing entities
      */
-    for (let entityId of Object.keys(entitiesToUpdate)) {
-        if (entitiesToUpdate[entityId]) {
-            const entity = model.entities[entityId], entityToUpdate = entitiesToUpdate[entityId]
-            const updateModel = context.config[`${entityId}/model`]
-            await db.execute(update(context, entity.table, [entityToUpdate.rowId], entityToUpdate.cells, updateModel))
+    for (let table of Object.keys(columnsToUpdate)) {
+        const columns = columnsToUpdate[table]
+        for (let column of Object.keys(columns)) {
+            const pairs = columns[column]
+            await db.execute(updateCase(context, table, column, pairs))
         }
     }
-    console.log(entitiesToInsert, entitiesToUpdate)
 }
 
-const auditCells = async (context, insertedEntities, updatedEntities, db) => {
+const auditCells = async (context, rowsToStore, db) => {
 
-    const insertAudit = async (entity, data, model) => {
-        const auditTable = (model.audit) ? model.audit : "audit", auditModel = context.config[`${auditTable}/model`]
-        for (let propertyId of Object.keys(data.cells)) {
-            const property = model.properties[propertyId]
-            if (property.audit) {
-                const value = data.cells[propertyId]
-                const auditToInsert = {
-                    entity: entity,
-                    row_id: data.rowId,
-                    property: propertyId,
-                    value: value
+    for (let row of rowsToStore) {
+        const insertedEntities = row.entitiesToInsert, updatedEntities = row.entitiesToUpdate
+
+        const insertAudit = async (entity, data, model) => {
+            const auditTable = (model.audit) ? model.audit : "audit", auditModel = context.config[`${auditTable}/model`]
+            for (let propertyId of Object.keys(data.cells)) {
+                const property = model.properties[propertyId]
+                if (property.audit) {
+                    const value = data.cells[propertyId]
+                    const auditToInsert = {
+                        entity: entity,
+                        row_id: data.rowId,
+                        property: propertyId,
+                        value: value
+                    }
+                    await db.execute(insert(context, auditTable, auditToInsert, auditModel))
                 }
-                await db.execute(insert(context, auditTable, auditToInsert, auditModel))
-                console.log(auditTable, auditToInsert)
             }
         }
-    }
-
-    for (let entity of Object.keys(insertedEntities)) {
-        const insertedEntity = insertedEntities[entity], model = context.config[`${entity}/model`]
-        await insertAudit(entity, insertedEntity, model)
-    }
-
-    for (let entity of Object.keys(updatedEntities)) {
-        const updatedEntity = updatedEntities[entity], model = context.config[`${entity}/model`]
-        await insertAudit(entity, updatedEntity, model)
+    
+        for (let entity of Object.keys(insertedEntities)) {
+            const insertedEntity = insertedEntities[entity], model = context.config[`${entity}/model`]
+            await insertAudit(entity, insertedEntity, model)
+        }
+    
+        for (let entity of Object.keys(updatedEntities)) {
+            const updatedEntity = updatedEntities[entity], model = context.config[`${entity}/model`]
+            await insertAudit(entity, updatedEntity, model)
+        }
     }
 }
 
@@ -164,23 +204,21 @@ const postAction = async ({ req }, context, db) => {
     /**
      * Find out the data to actually store in the database 
      */
-    let { cellsToStore, cellsToReject } = dataToStore(entity, model, form)
+    let { rowsToStore, rowsToReject } = dataToStore(entity, model, form)
 
-    if (Object.keys(cellsToReject).length !== 0) {
-        return JSON.stringify({ "status": "ko", "errors": cellsToReject })
+    if (rowsToReject.length > 0) {
+        return JSON.stringify({ "status": "ko", "errors": rowsToReject })
     }
     
     /**
      * Find out the entities to insert vs update in the database 
      */
-    let { entitiesToInsert, entitiesToUpdate } = entitiesToStore(entity, model, cellsToStore, {})
-
-    await storeEntities(context, entity, entitiesToInsert, entitiesToUpdate, model, db)
-    await auditCells(context, entitiesToInsert, entitiesToUpdate, db)
+    rowsToStore = entitiesToStore(entity, model, rowsToStore)
+    await storeEntities(context, entity, rowsToStore, model, db)
+    await auditCells(context, rowsToStore, db)
 
     await db.commit()
-
-    return JSON.stringify({ "status": "ok", "inserted": cellsToStore })
+    return JSON.stringify({ "status": "ok", "stored": rowsToStore })
 }
 
 module.exports = {

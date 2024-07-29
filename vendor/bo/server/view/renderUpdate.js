@@ -81,7 +81,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             if (id && immutable) readonly = true
     
             if (options.consistency) {
-                html.push(`<input type="hidden" id="update_time" value="${value}" />`)
+                html.push(`<input type="hidden" id="touched_at" value="${value}" />`)
             }
 
             else if (propertyType == "title") {

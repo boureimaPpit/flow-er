@@ -4,7 +4,7 @@ const moment = require("moment")
 const compression = require("compression")
 const cookieParser = require("cookie-parser")
 
-const startServer = async (context, config, logger, renderer) => {
+const startServer = async (context, config, logger) => {
     if (!context || !config || ! config.server || !logger) {
         throw new Error("Missing server configuration")
     }
@@ -23,7 +23,7 @@ const startServer = async (context, config, logger, renderer) => {
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(loggerMiddleware(logger))
 
-    await registerMiddlewares(context, config, logger, app, renderer)
+    await registerMiddlewares(context, config, logger, app)
 
     logger.info("starting server...")
     app.listen(listenPort, bindAddress, () => {
@@ -31,7 +31,7 @@ const startServer = async (context, config, logger, renderer) => {
     })
 }
 
-const registerMiddlewares = async (context, config, logger, app, renderer) => {
+const registerMiddlewares = async (context, config, logger, app) => {
     const middlewares = config.server.middlewares
     if (!middlewares) {
         return
@@ -42,7 +42,7 @@ const registerMiddlewares = async (context, config, logger, app, renderer) => {
         if (typeof middleware.register === "function") {
             app.use(`${middlewares[key].prefix}cli/`, express.static(`./vendor${middlewares[key].prefix}client/`))
             app.use(`${middlewares[key].prefix}cli/`, express.static(`./module${middlewares[key].prefix}public/`))
-            await middleware.register({context, config: middlewares[key], logger, app, renderer})
+            await middleware.register({context, config: middlewares[key], logger, app})
         }
         else {
             throw new Error(`invalid middleware for key ${key}, please check for function "register"`)

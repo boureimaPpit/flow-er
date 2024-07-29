@@ -65,7 +65,7 @@ const postTab = async (tab, id, searchParams) => {
                 // Create a new FormData object.
                 var formData = new FormData()
                 formData.append("formJwt", $("#formJwt").val())
-                formData.append("update_time", $("#update_time").val())
+                formData.append("touched_at", $("#touched_at").val())
 
                 $(".updateInput").each(function () {
                     const propertyId = $(this).attr("id")
@@ -215,7 +215,7 @@ const postTab = async (tab, id, searchParams) => {
 const submitDelete = (id) => {
     const formData = new FormData()
     formData.append("formJwt", $("#formJwt").val())
-    formData.append("update_time", $("#update_time").val())
+    formData.append("touched_at", $("#touched_at").val())
 
     const xhttp = new XMLHttpRequest()
     const route = $(`#deleteRoute-${id}`).val()

@@ -1,5 +1,3 @@
-const { renderHead } = require("./renderHead")
-const { renderCore } = require("./renderCore")
 const moment = require("moment")
 
 const renderForm = (context, entity, view, properties, where, formJwt) => {

@@ -5,7 +5,11 @@
             "id": { "entity": "tag", "column": "id" },
             "status": { "entity": "tag", "column": "status" },
             "name": { "entity": "tag", "column": "name" },
-            "vector": { "entity": "tag", "column": "vector" }
+            "vector": { "entity": "tag", "column": "vector" },
+
+            "visibility": { "entity": "tag", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "tag", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "tag", "column": "touched_by", "type": "int" }
         }
     },
 

@@ -37,7 +37,7 @@ const renderConfigShortcuts = (context, entity, view, id, properties, row, isDel
             if (id && immutable) readonly = true
     
             if (options.consistency) {
-                html.push(`<input type="hidden" id="update_time" value="${value}" />`)
+                html.push(`<input type="hidden" id="touched_at" value="${value}" />`)
             }
 
             else if (propertyType == "title") {

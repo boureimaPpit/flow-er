@@ -14,10 +14,9 @@
             "place_id": { "entity": "config", "column": "place_id", "type": "int" },
             "place_name": { "entity": "place", "column": "name" },
 
-            "creation_time": { "entity": "config", "column": "creation_time", "type": "datetime" },
-            "creation_user": { "entity": "config", "column": "creation_user", "type": "int" },
-            "update_time": { "entity": "config", "column": "update_time", "type": "datetime" },
-            "update_user": { "entity": "config", "column": "update_user", "type": "int" }
+            "visibility": { "entity": "config", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "config", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "config", "column": "touched_by", "type": "int" }
        }
     },
 
@@ -112,7 +111,7 @@
 		}
     },
 
-    "config/property/update_time": {
+    "config/property/touched_at": {
         "definition": "inline",
         "type": "datetime",
         "labels": {
@@ -140,7 +139,7 @@
             "name": {},
             "level": { "restriction": ["count"] },
             "key": {},
-            "update_time": {}
+            "touched_at": {}
         }
     },
 
@@ -164,7 +163,7 @@
 	"config/update/default": {
         "layout": {
             "unique": {
-                "properties": ["name", "status", "entity", "level", "key", "value", "place_id", "update_time"]
+                "properties": ["name", "status", "entity", "level", "key", "value", "place_id", "touched_at"]
             }
         },
         "properties": {
@@ -175,14 +174,14 @@
             "key": { "mandatory": true },
             "value": { "mandatory": true },
             "place_id": {},
-            "update_time": { "readonly": true }
+            "touched_at": { "readonly": true }
         }
     },
 
 	"config/add/default": {
         "layout": {
             "unique": {
-                "properties": ["name", "status", "entity", "level", "key", "value", "place_id", "update_time"]
+                "properties": ["name", "status", "entity", "level", "key", "value", "place_id", "touched_at"]
             }
         },
         "properties": {
@@ -205,7 +204,7 @@
             "key": {},
             "value": {},
             "place_id": {},
-            "update_time": {}
+            "touched_at": {}
         }
     }
 }

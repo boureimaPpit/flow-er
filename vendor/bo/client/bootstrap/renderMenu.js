@@ -1,18 +1,18 @@
-const renderMenu = (context, entity, view) => {
+const renderMenu = (context, entity, view, menu) => 
+{
     return `<div id="main_menu">
 		<ul class="nav nav-pills nav-justified flex-column flex-sm-row">
-			${renderEntries(context, view)}
+			${renderEntries(context, view, menu)}
 		</ul>
 	</div>`
 }
 
-const renderEntries = (context, view) => {
-    const tab = context.config[`tab/${view}`], menuDef = tab.menu
-    const menu = context.config[menuDef]
+const renderEntries = (context, view, menu) => 
+{
     const html = []
-    for (let menuTabId of menu.tabs) {
-        const menuTab = context.config[menuTabId]
-        if (context.isAllowed(menuTab.route)) {
+    for (let menuTabId of Object.keys(menu)) {
+        const menuTab = menu[menuTabId]
+        //if (context.isAllowed(menuTab.route)) {
             const query = menuTab.urlParams
             const active = (menuTabId == `tab/${view}`)
 
@@ -21,11 +21,7 @@ const renderEntries = (context, view) => {
 					${context.localize(menuTab.labels)}
 				</a>
 			</li>`)
-        }
+        //}
     }
     return html.join("\n")
-}
-
-module.exports = {
-    renderMenu
 }

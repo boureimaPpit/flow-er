@@ -37,15 +37,15 @@ const renderShortcuts = (context, entity, view) => {
         const html = []
         if (countConfig) {
             for (let countId of Object.keys(countConfig)) { 
-                const count = countConfig[countId], params = {}
+                const count = countConfig[countId], params = []
                 for (let propertyId of Object.keys(count["filters"])) {
                     const value = count["filters"][propertyId]
-                    params[propertyId] = value
+                    params.push(`${propertyId}:${value}`)
                 }
-                html.push(`<input type="hidden" class="shortcutsParams" id="shortcutsParams-${countId}" value="${JSON.stringify(params)}" />
+                html.push(`<input type="hidden" class="shortcutsParams" id="shortcutsParams-${countId}" value="${ params.join("|") }" />
                     <div class="col-md-2 mb-2 text-center">
                       <a type="button" class="btn btn-sm btn-light position-relative" id="anchor-${countId}">
-                          ${context.localize(count.labels)}&nbsp;&nbsp;<span class="badge bg-success" style="font-size: 11px" id="badge-${countId}">12</span>
+                          ${context.localize(count.labels)}&nbsp;&nbsp;<span class="flBadge position-absolute top-0 start-100 translate-middle badge bg-secondary" style="font-size: 11px" id="flBadge-${countId}">?</span>
                       </a>
                     </div>`)
             }

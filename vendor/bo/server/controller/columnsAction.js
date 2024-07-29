@@ -35,7 +35,7 @@ const columnsAction = async ({ req }, context, db) => {
     const propertyDefs = columnsConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
     const propertyList = []
-    for (let propertyId of properties) {
+    for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
         if (property.type != "tags") propertyList.push(propertyId)
     }
@@ -44,7 +44,7 @@ const columnsAction = async ({ req }, context, db) => {
     columns = columns.concat(["id"])
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
-    return renderColumns(context, entity, view, data, order, limit)
+    return renderColumns(context, entity, view, data, order, limit, columnsConfig, properties)
 }
 
 module.exports = {

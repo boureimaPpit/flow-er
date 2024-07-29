@@ -2,12 +2,12 @@ const { noCacheMiddleware, notFoundMiddleware, handleCorsMiddleware } = require(
 const { registerBo } = require("./server/controller/index")
 const { registerBoUnitTest } = require("./unitTest")
 
-const register = async ({ context, config, logger, app, renderer }) => {
+const register = async ({ context, config, logger, app }) => {
 
     app.use(`${config.prefix}/*`, noCacheMiddleware)
     app.use(`${config.prefix}/*`, handleCorsMiddleware)
 
-    registerBo({ context, config, logger, app, renderer })
+    registerBo({ context, config, logger, app })
     registerBoUnitTest({ context, config, logger, app })
 
     // fallback : send 404

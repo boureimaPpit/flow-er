@@ -23,7 +23,7 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
             else orderTags[propertyId] = direction
         }    
     }
-
+    
     const model = context.config[`${entity}/model`]
     const rows = (await db.execute(select(context, entity, columns, where, order, limit, model)))[0]
     if (rows.length > 0) {
@@ -43,12 +43,11 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
                 }
                 
                 const tags = property.tags
-
                 for (let row of rows) row[propertyId] = []
                 for (let tag of tags) {
                     tag.rowCache = []
-                    const vectorId = (property.vector) ? property.vector : "ids"
-                    const vector = tag[vectorId].split(",")
+                    const vectorId = (property.vector) ? property.vector : "vector"
+                    const vector = tag[vectorId]
                     for (let rowKey of vector) {
                         if (dictRows[rowKey]) {
                             for (let row of dictRows[rowKey]) {

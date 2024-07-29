@@ -3,6 +3,8 @@ const { join } = require("./join")
 
 const select = (context, table, columns, where, order = [], limit = null, model = [], debug = false) => {
 
+    if (!where.visibility || where.visibility == 'deleted' /* deleted never visible */) where.visibility = 'active'
+
     if (!columns) {
         columns = []
         for (let propertyId of Object.keys(model.properties)) {
@@ -58,10 +60,10 @@ const select = (context, table, columns, where, order = [], limit = null, model 
     request += `${Object.values(joins).join("\n")}\n`
 
     const predicates = []
-    if (model.properties.status) predicates.push(`${qTable}.${qi("status")} != 'deleted'`)
+    if (model.properties.status) predicates.push(`${qTable}.${qi("visibility")} != 'deleted'`)
     
     for (let propertyId of Object.keys(where)) {
-        if (!["instance_id", "creation_time", "creation_user", "update_time", "update_user"].includes(propertyId)) {
+        if (!["instance_id", "touched_at", "touched_by"].includes(propertyId)) {
             if (propertyId == "id" || model.properties[propertyId]) {
                 const property = model.properties[propertyId]
 
@@ -85,7 +87,7 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                 let value = where[propertyId]
 
                 if (Array.isArray(value)) {
-                    if (!["in", "ni", "between", "like", "contains", "startsWith", "endsWith", "eq", "ne", "gt", "ge", "lt", "le", "null", "not_null"].includes(value[0])) {
+                    if (!["in", "ni", "between", "like", "contains", "startsWith", "endsWith", "=", "!=", ">", ">=", "<lt>", "<=>", "null", "not_null"].includes(value[0])) {
                         value = ["in"].concat(value)
                     }
                     const operator = value[0]
@@ -117,22 +119,22 @@ const select = (context, table, columns, where, order = [], limit = null, model 
                     else if (operator == "endsWith") {
                         predicates.push(`${qEntity}${qColumn} LIKE ${qv(`%${value[1]}`)}`)
                     }
-                    else if (operator == "eq") {
+                    else if (operator == "=") {
                         predicates.push(`${qEntity}${qColumn} = ${qv(`${value[1]}`)}`)
                     }
-                    else if (operator == "ne") {
+                    else if (operator == "!=") {
                         predicates.push(`${qEntity}${qColumn} != ${qv(`${value[1]}`)}`)
                     }
-                    else if (operator == "gt") {
+                    else if (operator == ">") {
                         predicates.push(`${qEntity}${qColumn} > ${qv(`${value[1]}`)}`)
                     }
-                    else if (operator == "ge") {
+                    else if (operator == ">=") {
                         predicates.push(`${qEntity}${qColumn} >= ${qv(`${value[1]}`)}`)
                     }
-                    else if (operator == "lt") {
+                    else if (operator == "<") {
                         predicates.push(`${qEntity}${qColumn} < ${qv(`${value[1]}`)}`)
                     }
-                    else if (operator == "le") {
+                    else if (operator == "<=>") {
                         predicates.push(`${qEntity}${qColumn} <= ${qv(`${value[1]}`)}`)
                     }
                     else if (operator == "null") {
@@ -168,14 +170,16 @@ const select = (context, table, columns, where, order = [], limit = null, model 
     if (predicates.length > 0) request += `WHERE ${predicates.join("\nAND ")}\n`
 
     if (groupBy) request += `GROUP BY ${groupBy.join(", ")}\n`
-
+    
     if (order != null) {
         request += "ORDER BY "
         const orderArray = []
         for (let orderSpecifier of Object.keys(order)) {
             const direction = order[orderSpecifier]
-            const qColumn = qi(model.properties[orderSpecifier].column)
-            orderArray.push(`${qColumn} ${direction}`)
+            const orderProperty = model.properties[orderSpecifier]
+            const orderTable = (model.entities[orderProperty.entity]) ? model.entities[orderProperty.entity].table : table
+            const qColumn = qi(orderProperty.column)
+            orderArray.push(`${qi(orderTable)}.${qColumn} ${direction}`)
         }
         request += orderArray.join(", ")
         request += "\n"

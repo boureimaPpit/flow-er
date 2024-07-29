@@ -5,7 +5,11 @@
             "id": { "entity": "place", "column": "id" },
             "status": { "entity": "place", "column": "status", "audit": true },
             "name": { "entity": "place", "column": "name" },
-            "region": { "entity": "place", "column": "region" }
+            "region": { "entity": "place", "column": "region" },
+
+            "visibility": { "entity": "place", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "place", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "place", "column": "touched_by", "type": "int" }
         }
     },
 

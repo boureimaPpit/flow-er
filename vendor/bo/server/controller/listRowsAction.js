@@ -3,20 +3,31 @@ const { getProperties } = require("./getProperties")
 const { getList } = require("./getList")
 const { getMeasure } = require("./getMeasure")
 const { getDistribution } = require("./getDistribution")
+const { renderList } = require("../view/renderList")
 
-const listRowsAction = async ({ req }, context, db, renderer) => {
+const listRowsAction = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const where = (req.query.where) ? req.query.where : null
     const order = (req.query.order) ? req.query.order : null
     const limit = (req.query.limit) ? req.query.limit : 1000
 
+    const whereParam = (where != null) ? where.split("|") : []
+
     let listConfig = context.config[`${entity}/list/${view}`]
     if (!listConfig) listConfig = context.config[`${entity}/list/default`]
+    const propertyDefs = listConfig.properties
+    const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
 
-    let columns = Object.keys(listConfig.properties)
-
-    const whereParam = (where != null) ? where.split("|") : []
+    /**
+     * List of DB columns to retrieve
+     */
+    let columns = []
+    for (let propertyId of Object.keys(properties)) {
+        const property = properties[propertyId]
+        if (property.type != "tag") columns.push(propertyId)
+    }
+    columns.push("id")
 
     let orderArray = null
     if (order != null) {
@@ -35,8 +46,6 @@ const listRowsAction = async ({ req }, context, db, renderer) => {
         }    
     }
 
-    const propertyDefs = listConfig.properties
-    const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
     const propertyList = []
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
@@ -54,8 +63,7 @@ const listRowsAction = async ({ req }, context, db, renderer) => {
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
     
-    const listRenderer = renderer.retrieve("renderList")
-    return listRenderer(context, entity, view, data, order, limit, listConfig, properties)
+    return renderList(context, entity, view, data, order, limit, listConfig, properties)
 }
 
 module.exports = {

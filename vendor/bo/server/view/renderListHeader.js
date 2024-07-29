@@ -1,14 +1,8 @@
-const renderListHeader = (context, entity, view, measure, distribution, orderParam) => {
+const { renderOrderSelect } = require("./renderOrderSelect")
+
+const renderListHeader = (context, entity, view, measure, orderParam, properties) => {
 
     const listConfig = context.config[`${entity}/list/${view}`]
-    const properties = {}
-    for (let propertyId of Object.keys(listConfig.properties)) {
-        const options = listConfig.properties[propertyId]
-        let property = context.config[`${entity}/property/${propertyId}`]
-        if (property.definition != "inline") property = context.config[property.definition]
-        properties[propertyId] = Object.assign({}, property)
-        properties[propertyId].options = options 
-    }
 
     let major = "n_last", dir = "ASC"
     if (orderParam) {
@@ -21,7 +15,7 @@ const renderListHeader = (context, entity, view, measure, distribution, orderPar
             break
         }    
     }
-
+    
     let measureValues = (measure) ? Object.values(measure) : false, count = (measure) ? measureValues[0] : false, sum = (measure) ? parseFloat(measureValues[1]) : false
     const average = (sum && count) ? Math.round(sum / count * 10) / 10 : false
 
@@ -31,51 +25,79 @@ const renderListHeader = (context, entity, view, measure, distribution, orderPar
         for (let modality of Object.keys(property.distribution)) {
             const { code, value } = property.distribution[modality]
             let label
-            if (["select", "source", "tag"].includes(property.type)) label = context.localize(property.modalities[code])
+            if (["select"].includes(property.type)) label = context.localize(property.modalities[code])
             else if (property.type == "date") label = context.decodeDate(code)
             else if (property.type == "number") label = parseFloat(code).toLocaleString("fr-FR")
             else label = code
-            options.push(`<option value="${modality}">${ (modality) ? label : "Vide" } (${value})</option>`)
+            options.push(`<option value="${modality}" title="${ (modality) ? label : "Vide" } (${value})">${ (modality) ? label : "Vide" } (${value})</option>`)
         }
         return options.join("\n")
     }
 
-    const head = [`<thead class="table-info">
-    <th colspan="2">
-        <a type="button" class="btn btn-sm sort_anchor" role="button">
-            <b id="listCount" title="Nombre de lignes">${count}</b>
-            ${ (sum) ? `<br><b id="listCount" title="Somme">${sum.toLocaleString("fr-FR")}</b>` : "" }
-            ${ (average) ? `<br><em id="listAverage" title="Moyenne">${average.toLocaleString("fr-FR")}</em>`: "" }
-        </a>
+    const renderDatalist = (propertyId) => {
+        const property = properties[propertyId]
+        const options = []
+        for (let modality of Object.keys(property.distribution)) {
+            const { code, value } = property.distribution[modality]
+            options.push(`<option value="${code}">${code} (${value})</option>`)
+        }
+        return options.join("\n")
+    }
+
+    const head = [`<th>
+        <div class="text-center">
+            <small>
+                <b id="listCount" title="Nombre de lignes">${count}</b>
+                ${ (sum) ? `<br><b id="listCount" title="Somme">${sum.toLocaleString("fr-FR")}</b>` : "" }
+                ${ (average) ? `<br><em id="listAverage" title="Moyenne">${average.toLocaleString("fr-FR")}</em>`: "" }
+            </small>
+        </div>
+    </th>
+    <th class="text-center">
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Order the list")}" id="flOrderButton">
+            <i class="fas fa-arrow-down-a-z"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Refresh the list")}" id="flRefreshButton">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Cancel the filters")}" id="flEraseButton">
+            <i class="fas fa-times"></i>
+        </button>
     </th>`]
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
+        const forms = []
+        if (["select", "tag"].includes(property.type)) {
+            forms.push(`<select class="form-select form-select-sm px-0 searchInput searchInputSelect" size="${ Math.min(4, Object.keys(property.distribution).length) }" id="search-${propertyId}" multiple>${renderSelectOption(propertyId)}</select>`)
+        }
+        else if (["input", "email", "phone", "source"].includes(property.type)) {
+            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}" />
+                <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId)}</datalist>`)
+        }
+        else if (["date", "datetime"].includes(property.type)) {
+            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputDate searchInputDateMin" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />`)
+            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputDate searchInputDateMax" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />`)
+        }
+        else if (["time", "number"].includes(property.type)) {
+            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMin" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />`)
+            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMax" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />`)
+        }
+
         head.push(`<th>
-            <a type="button" class="btn btn-sm listSortAnchor ${(major == propertyId) ? `btn-secondary active ${(dir == "ASC") ? "sortAnchorUp" : "sortAnchorDown"}` : "" }" role="button" id="listSortAnchor-${propertyId}">
-
-                <span>${ context.localize(property.labels) }</span>
-
-                ${(major == propertyId) ? `<i class="fas fa-caret-${(dir == "ASC") ? "up" : "down"}"></i>` : ""}
-            </a>
+            <div data-bs-toggle="collapse" href="#listSortCollapse-${propertyId}" role="button" id="listSortAnchor-${propertyId}" aria-expanded="false" aria-controls="listSortCollapse-${propertyId}">
+                <span class="listHeaderLabel" id="listHeaderLabel-${propertyId}">${ context.localize(property.labels) }</span>
+                <i class="fa fa-filter listHeaderIcon" id="listHeaderIcon-${propertyId}"></i>
+            </div>
+            <div class="collapse" id="listSortCollapse-${propertyId}">
+                ${ forms.join("") }
+            </div>
         </th>`)
     }
-    head.push("</thead>")
-    head.push(`<input type="hidden" id="caption_0" value="${context.translate("Add")}" />
-    <tr>
-        <td>
-          <input type="checkbox" class="listCheckAll" data-toggle="tooltip" data-placement="top" title="${context.translate("Check all")}"></input>
-        </td>
 
-        <td style="text-align: center">
-            <div class="input-group input-group-sm">
-                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Add")}" id="listDetailButton-0">
-                    <span class="fas fa-plus"></span>
-                </button>
-            </div>
-        </td>
+    head.push(`<thead class="table-light text-center listOrderHead"><th colspan="${ Object.keys(properties).length + 2 }">`)
+    head.push(renderOrderSelect(context, entity, view, orderParam, properties))
+    head.push("</th></thead>")
 
-        <td colspan="${Object.keys(properties).length + 2}"></td>
-    </tr>`)
     return head.join("\n")
 }
 

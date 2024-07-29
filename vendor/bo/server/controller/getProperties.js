@@ -8,10 +8,10 @@ const getProperties = async (db, context, entity, view, propertyDefs, whereParam
         propertyList.push(keyValue[0])
     }
     
-    for (let propertyId of propertyList) {
+    for (let propertyId of propertyList) { console.log(propertyId)
         const options = propertyDefs[propertyId]
         let property = context.config[`${entity}/property/${propertyId}`]
-        if (!property) property = {}
+        if (property.definition != "inline") property = context.config[property.definition]
 
         /**
          * Tags

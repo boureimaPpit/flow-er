@@ -1,106 +1,152 @@
-const { renderHead } = require("./renderHead")
-const { renderHeader } = require("./renderHeader")
-const { renderMenu } = require("./renderMenu")
-const { renderFooter } = require("./renderFooter")
-const { renderCore } = require("./renderCore")
+const renderIndex = (context, entity, view, user, tab, indexConfig) => {
 
-const renderIndex = (context, entity, view, data) => {
-
-    const indexView = context.config[`${entity}/index/${view}`]
-    const listView = (indexView && indexView.listView) ? (indexView.listView) : "dataview"
-    
     return `<!DOCTYPE html>
-    <html lang="fr">
+    <html lang="fr" ${ (tab.darkMode) ? "data-bs-theme=\"dark\"" : "" }>
     
     <!-- Head -->
-    ${renderHead(context, entity, view)}
-    
-    <body>
-    
-      <!-- Header -->
-      <div id="headerDiv">
-          ${renderHeader(context, entity, view)}
-      </div>
-    
-    <div class="card">
+    <head><title>${context.localize(tab.labels)}</title>
+        <meta charset="utf-8">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <link href="/bo/cli/resources/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/bo/cli/resources/jquery-ui-1.13.2/jquery-ui.css">
+        <link rel="stylesheet" href="/bo/cli/resources/jquery.timepicker/jquery.timepicker.css">
+        <link rel="stylesheet" href="/bo/cli/resources/toastr/build/toastr.min.css" rel="stylesheet" />
+        <link rel='stylesheet' href="/bo/cli/resources/json-viewer/jquery.json-viewer.css" />
+        <link rel='stylesheet' href="/bo/cli/resources/fullcalendar/fullcalendar.css" />
+        <link rel='stylesheet' href="/bo/cli/resources/fontawesome/css/fontawesome.css" />
+        <link rel='stylesheet' href="/bo/cli/resources/fontawesome/css/brands.css" />
+        <link rel='stylesheet' href="/bo/cli/resources/fontawesome/css/solid.css" />
+          
+        <style>
+        .chip {
+            display: inline-block;
+            padding: 0 10px;
+            height: 25px;
+            font-size: 11px;
+            line-height: 25px;
+            border-radius: 25px;
+        }
 
-      <div class="card-header">
-          ${renderMenu(context, entity, view)}
-      </div>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
 
-      <div class="card-body">
+        /* Recommended icon sizes */
+        span.size-20 {
+            font-size: 20px;
+            font-variation-settings: 'OPSZ' 20;
+        }
+        span.size-24 {
+            font-size: 24px;
+            font-variation-settings: 'OPSZ' 24;
+        }
+        span.size-40 {
+            font-size: 40px;
+            font-variation-settings: 'OPSZ' 40;
+        }
+        span.size-48 {
+            font-size: 48px;
+            font-variation-settings: 'OPSZ' 48;
+        }
 
-        <input type="hidden" id="instanceCaption" value="${context.instance.caption}" />
-
-    <!-- Indicators section-->
+        /* Rules for using icons as black on a light background. */
+        .dark {
+            background: black;
+            color: rgba(255, 255, 255, 1);
+            font-variation-settings: 'GRAD' -25;
+        }
+        .dark-inactive {
+            background: black;
+            color: rgba(255, 255, 255, 0.3);
+            font-variation-settings: 'GRAD' -25;
+        }
+        </style>
+    </head>
     
-        <input type="hidden" id="shortcutsRoute" value="/bo/shortcuts/${entity}?view=${view}" />
-        <input type="hidden" id="countRoute" value="generic/${entity}/count?view=${view}" />
-        <div class="section" id="shortcutsPanel"></div>
-    
-    <!-- Search section-->
-    
-        <input type="hidden" id="searchRoute" value="/bo/search/${entity}?view=${view}">
-        <div class="section" id="searchPanel"></div>
-    
-    <!-- List section-->
-        
-        <input type="hidden" id="listRoute" value="/bo/${listView}/${entity}?view=${view}" />
-        <input type="hidden" id="listGroupRoute" value="generic/${entity}/groupUpdate?view=${view}" />
-      
-        <input type="hidden" id="listWhereHidden" value="${data.where}" />
-        <input type="hidden" id="listOrderHidden" value="${data.order}" />
-        <input type="hidden" id="listLimitHidden" value="${data.limit}" />
-    
-        <div class="section" id="dataView"></div>
-    
-        <input type="hidden" id="detailRoute" value="/bo/detail/${entity}" />
-        <input type="hidden" id="groupRoute" value="bo/group/${entity}" />
-    
-      </div>
-    </div>
-    
-    <div class="modal fade" id="listDetailModalForm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="listDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="listDetailModalLabel"></h5>
-            <div>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </div>
-          <div class="modal-body" id="listDetailModal">
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="modal fade" id="groupModalForm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="listGroupModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">${context.localize("Grouped actions")}</h5>
-            <div>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </div>
-          <div class="modal-body" id="groupModal">
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Footer -->
-    ${renderFooter(context)}
-    
-    </body>
+    <body></body>
 
     <!-- Scripts -->
-    ${renderCore(context, entity, view)}
+    <script src="/bo/cli/resources/jquery/jquery-3.6.3.min.js" ></script>
+    <script src="/bo/cli/resources/popper/popper.min.js"></script>
+    <script src="/bo/cli/resources/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/bo/cli/resources/jquery-ui-1.13.2/jquery-ui.js"></script>
+    <script src="/bo/cli/resources/jquery.timepicker/jquery.timepicker.js"></script>
+    <script src="/bo/cli/resources/toastr/build/toastr.min.js"></script>
+    <script src="/bo/cli/resources/json-viewer/jquery.json-viewer.js"></script>
+
+    <script>
+    $.datepicker.regional['fr'] = {
+        prevText: "${context.translate("Previous")}",
+        nextText: "${context.translate("Next")}",
+        monthNames: [
+            "${context.translate("January")}",
+            "${context.translate("February")}",
+            "${context.translate("March")}",
+            "${context.translate("April")}",
+            "${context.translate("May")}",
+            "${context.translate("June")}",
+            "${context.translate("July")}",
+            "${context.translate("August")}",
+            "${context.translate("September")}",
+            "${context.translate("October")}",
+            "${context.translate("November")}",
+            "${context.translate("December")}"
+        ],
+        dayNamesMin: [
+            "${context.translate("Su")}",
+            "${context.translate("Mo")}",
+            "${context.translate("Tu")}",
+            "${context.translate("We")}",
+            "${context.translate("Th")}",
+            "${context.translate("Fr")}",
+            "${context.translate("Sa")}"
+        ],
+        dateFormat: "dd/mm/yy",
+        firstDay: 1,
+        isRTL: false,
+        yearSuffix: ""
+    }
+    
+    ${(user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
+    </script>
+
+    <!-- FullCalendar -->
+    <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
+    <script src="/bo/cli/resources/fullcalendar/fullcalendar.js"></script>
+
+    <!-- ZingChart -->
+    <script src="/bo/cli/resources/zingchart/zingchart.min.js"></script>
+    
+    <!-- Flow-ER -->
+    <script src="/bo/cli/controller/check-form.js"></script>
+    <script src="/bo/cli/controller/index.js"></script>
+    <script src="/bo/cli/controller/getSearchParams.js"></script>
+    <script src="/bo/cli/controller/loadView.js"></script>
+    <script src="/bo/cli/controller/triggerCount.js"></script>
+    <script src="/bo/cli/controller/triggerList.js"></script>
+    <script src="/bo/cli/controller/triggerOrder.js"></script>
+    <script src="/bo/cli/controller/triggerSearch.js"></script>
+    <script src="/bo/cli/controller/triggerShortcuts.js"></script>
+    <script src="/bo/cli/controller/getListRows.js"></script>
+    <script src="/bo/cli/controller/calendar.js"></script>
+    <script src="/bo/cli/controller/chart.js"></script>
+    <script src="/bo/cli/controller/detail.js"></script>
+
+    <script src="/bo/cli/view/search.js"></script>
+    <script src="${ (indexConfig && indexConfig.header) ? indexConfig.header : "/bo/cli/bootstrap/renderHeader.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.footer) ? indexConfig.footer : "/bo/cli/bootstrap/renderFooter.js" }"></script>
+
+    <script>
+    loadPage("${entity}", "${view}")
+    </script>
 
     </html>`
 }

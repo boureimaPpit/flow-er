@@ -8,6 +8,7 @@
 /module/
 /vendor/*
 !/vendor/bo/
+!/vendor/dashboard/
 #!/vendor/finance/
 !/vendor/studio/
 !/vendor/user/

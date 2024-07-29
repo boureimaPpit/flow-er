@@ -6,7 +6,11 @@
             "status": { "entity": "config_property", "column": "status" },
             "entity": { "entity": "config_property", "column": "entity" },
             "property_id": { "entity": "config_property", "column": "property_id" },
-            "definition": { "entity": "config_property", "column": "definition", "type": "json" }
+            "definition": { "entity": "config_property", "column": "definition", "type": "json" },
+
+            "visibility": { "entity": "config_property", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "config_property", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "config_property", "column": "touched_by", "type": "int" }
         }
     },
 

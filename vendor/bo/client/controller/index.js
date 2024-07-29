@@ -34,8 +34,10 @@ const loadPage = async (entity, view) => {
         }
     }
 
-    getShortcuts()
-    //getSearch(context, entity, view)
-    getList(context, entity, view, {})
+    await loadView(context, entity, view)
+
+    const shortcutsRoute = $("#shortcutsRoute").val()
+    if (shortcutsRoute) triggerShortcuts(context, entity, view, shortcutsRoute)
+    triggerList(context, entity, view, {})
 }
 

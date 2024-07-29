@@ -16,10 +16,9 @@
             "email": { "entity": "address", "column": "email", "audit": true },
             "tel": { "entity": "address", "column": "tel", "audit": true },
 
-            "creation_time": { "entity": "address", "column": "creation_time", "type": "datetime" },
-            "creation_user": { "entity": "address", "column": "creation_user", "type": "int" },
-            "update_time": { "entity": "address", "column": "update_time", "type": "datetime" },
-            "update_user": { "entity": "address", "column": "update_user", "type": "int" }
+            "visibility": { "entity": "address", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "address", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "address", "column": "touched_by", "type": "int" }
        },
        "audit": "audit"
     }

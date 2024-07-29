@@ -7,7 +7,7 @@ const { renderDataview } = require("../view/renderDataview")
 
 const util = require('util')
 
-const dataviewAction = async ({ req }, context, db, renderer) => {
+const dataviewAction = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const where = (req.query.where) ? req.query.where : null
@@ -21,9 +21,10 @@ const dataviewAction = async ({ req }, context, db, renderer) => {
      */
     let listConfig = context.config[`${entity}/list/${view}`]
     if (!listConfig) listConfig = context.config[`${entity}/list/default`]
+    console.log(`${entity}/list/default`)
     const propertyDefs = listConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
-
+    
     let major = false
     if (order != null) {
         major = order.split(",")[0]
@@ -31,16 +32,9 @@ const dataviewAction = async ({ req }, context, db, renderer) => {
     }
 
     /**
-     * List of DB columns to retrieve
-     */
-    const columns = Object.keys(propertyDefs).concat("id")
-    
-    const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
-
-    /**
      * Measure the data as a tuplet [count, sum]
      */
-    const measure = (listConfig.measure) ? await getMeasure(db, context, entity, view, listConfig.measure, whereParam) : false
+    const measure = await getMeasure(db, context, entity, view, (listConfig.measure) ? listConfig.measure : false, whereParam)
 
     /**
      * Retrieve distributions of the data
@@ -50,8 +44,7 @@ const dataviewAction = async ({ req }, context, db, renderer) => {
         property.distribution = await getDistribution(db, context, entity, view, propertyId, properties, whereParam)
     }
     
-    const listRenderer = renderer.retrieve((listConfig.view) ? listConfig.view : "renderDataviewB5")
-    return listRenderer(context, entity, view, data, order, limit, measure, listConfig, properties)
+    return renderDataview(context, entity, view, order, limit, measure, listConfig, properties)
 }
 
 module.exports = {

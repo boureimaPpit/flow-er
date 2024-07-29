@@ -1,4 +1,4 @@
-const renderCoreB5 = (context, entity, view) => {
+const renderCore = (context, entity, view, user) => {
     return `
     <script src="/bo/cli/resources/jquery/jquery-3.6.3.min.js" ></script>
     <script src="/bo/cli/resources/popper/popper.min.js"></script>
@@ -42,7 +42,7 @@ const renderCoreB5 = (context, entity, view) => {
         yearSuffix: ""
     }
     
-    ${(context.user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
+    ${(user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
     </script>
 
     <!-- FullCalendar -->
@@ -55,24 +55,26 @@ const renderCoreB5 = (context, entity, view) => {
     <!-- Flow-ER -->
     <script src="/bo/cli/controller/check-form.js"></script>
     <script src="/bo/cli/controller/index.js"></script>
-    <script src="/bo/cli/controller/search.js"></script>
     <script src="/bo/cli/controller/getSearchParams.js"></script>
-    <script src="/bo/cli/controller/shortcuts.js"></script>
-    <script src="/bo/cli/controller/list.js"></script>
+    <script src="/bo/cli/controller/triggerHeader.js"></script>
+    <script src="/bo/cli/controller/triggerCount.js"></script>
+    <script src="/bo/cli/controller/triggerList.js"></script>
+    <script src="/bo/cli/controller/triggerOrder.js"></script>
     <script src="/bo/cli/controller/triggerSearch.js"></script>
+    <script src="/bo/cli/controller/triggerShortcuts.js"></script>
     <script src="/bo/cli/controller/getListRows.js"></script>
     <script src="/bo/cli/controller/calendar.js"></script>
     <script src="/bo/cli/controller/chart.js"></script>
     <script src="/bo/cli/controller/detail.js"></script>
 
     <script src="/bo/cli/view/search.js"></script>
+    <script src="/bo/cli/bootstrap/renderHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderMenu.js"></script>
+    <script src="/bo/cli/bootstrap/renderFooter.js"></script>
+    <script src="/bo/cli/bootstrap/renderCore.js"></script>
 
     <script>
     loadPage("${entity}", "${view}")
     </script>
     `
-}
-
-module.exports = {
-    renderCoreB5
 }

@@ -1,6 +1,8 @@
 const { qv } = require("./quote")
 
-const updateCase = (context, table, column, pairs) => {
+const updateCase = (context, table, column, pairs, model) => {
+
+    const type = (model && model.properties[column].type) ? model.properties[column].type : "text"
 
     const request = []
     request.push(`UPDATE ${table}`)
@@ -8,15 +10,18 @@ const updateCase = (context, table, column, pairs) => {
     const ids = []
     for (let id of Object.keys(pairs)) {
         let value = pairs[id]
-        if (typeof(value) == "string") value = qv(value)
-        ids.push(id)
-        request.push(`WHEN id = ${id} THEN ${value}`)
+        if (column != "visibility" || value != "deleted") {
+            if (typeof(value) == "string") value = qv(value)
+            else if (type == "json") value = qv(JSON.stringify(value))
+            ids.push(id)
+            request.push(`WHEN id = ${id} THEN ${value}`)
+        }
     }
     request.push("END,")
-    const update_time = `${new Date().toISOString().slice(0, 19).replace("T", " ")}`
-    request.push(`update_time = '${update_time}',`)
+    const touched_at = `${new Date().toISOString().slice(0, 19).replace("T", " ")}`
+    request.push(`touched_at = '${touched_at}',`)
     const user_id = context.user.id
-    request.push(`update_user = ${user_id}`)
+    request.push(`touched_by = ${user_id}`)
     request.push(`WHERE id IN (${ids.join(",")})`)
     return request.join("\n")
 }

@@ -10,10 +10,9 @@
             "end_time": { "entity": "event", "column": "end_time", "type": "time" },
             "location": { "entity": "event", "column": "location" },
 
-            "creation_time": { "entity": "event", "column": "creation_time", "type": "datetime" },
-            "creation_user": { "entity": "event", "column": "creation_user", "type": "int" },
-            "update_time": { "entity": "event", "column": "update_time", "type": "datetime" },
-            "update_user": { "entity": "event", "column": "update_user", "type": "int" }
+            "visibility": { "entity": "event", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "event", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "event", "column": "touched_by", "type": "int" }
        }
     },
 

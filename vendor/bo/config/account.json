@@ -18,7 +18,10 @@
             "n_last": { "entity": "vcard", "column": "n_last" },
             "email": { "entity": "vcard", "column": "email", "type": "email" },
             "tel_cell": { "entity": "vcard", "column": "tel_cell" },
-            "update_time": { "entity": "account", "column": "update_time" }
+
+            "visibility": { "entity": "account", "column": "visibility", "audit": true },
+            "touched_at": { "entity": "account", "column": "touched_at", "type": "datetime" },
+            "touched_by": { "entity": "account", "column": "touched_by", "type": "int" }
         }
     },
 

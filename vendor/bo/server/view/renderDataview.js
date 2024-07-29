@@ -1,7 +1,6 @@
 const { renderListHeader } = require("./renderListHeader")
-const { renderList } = require("./renderList")
 
-const renderDataview = (context, entity, view, rows, orderParam, limit, measure, distribution, properties) => {
+const renderDataview = (context, entity, view, orderParam, limit, measure, listConfig, properties) => {
 
     return `<style>
     table td { 
@@ -10,11 +9,12 @@ const renderDataview = (context, entity, view, rows, orderParam, limit, measure,
     </style>
     <div class="row">
         <div class="table-responsive">
-            <div class="fixTableHead col-md-12">
+            <div class="col-md-12">
                 <table class="table table-sm table-hover" id="listPanel">
-                    ${ renderListHeader(context, entity, view, measure, distribution, orderParam, properties) }
-                    <input type="hidden" id="listCount" value="${rows.length}" />
-                    ${ renderList(context, entity, view, rows, orderParam, limit) }
+                    <thead class="table-light">
+                        ${ renderListHeader(context, entity, view, measure, orderParam, properties) }
+                    </thead>
+                    <tbody class="table-group-divider" id="listTbody"></tbody>
                 </table>
             </div>
         </div>

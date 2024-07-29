@@ -1,5 +1,5 @@
 /** List to transform to cards */
-const renderColumns = (context, entity, view, rows, orderParam, limit, columnsConfig, properties) => {
+const renderColumns = (context, entity, view, rows, columnsConfig, properties) => {
 
     const pipe = {}
     for (let modality of columnsConfig.distribution.modalities.split(",")) {
@@ -138,8 +138,4 @@ const renderProperties = (context, row, properties) => {
         }
     }
     return html.join("\n")
-}
-
-module.exports = {
-    renderColumns
 }

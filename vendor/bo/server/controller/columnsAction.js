@@ -45,6 +45,14 @@ const columnsAction = async ({ req }, context, db) => {
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
     return renderColumns(context, entity, view, data, order, limit, columnsConfig, properties)
+
+    // const result = {
+    //     rows: data,
+    //     columnsConfig: columnsConfig,
+    //     properties: properties
+    // }
+
+    // return result
 }
 
 module.exports = {

@@ -20,7 +20,7 @@ Retrieve flow-er's code from github as a new node application:
     cd flow-er/
 	git init
     git remote add origin https://github.com/p-pit-sas/flow-er
-    git pull origin master
+    git pull origin main
 
 From now on, any path reference is relative to this new flow-er directory.
 First we have to define a few settings and environment variables. Create the files etc/settings.json and .env 

@@ -20,6 +20,16 @@
                     "password": "$DB_PASSWORD"
                 }
             },
+            "dashboard": {
+                "dir": "../vendor/dashboard",
+                "prefix": "/dashboard/",
+                "db" : {
+                    "host": "$DB_HOST",
+                    "port": "$DB_PORT",
+                    "user": "$DB_USER",    
+                    "password": "$DB_PASSWORD"
+                }
+            },
             "studio": {
                 "dir": "../vendor/studio",
                 "prefix": "/studio/",

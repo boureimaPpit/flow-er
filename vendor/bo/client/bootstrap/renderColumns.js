@@ -1,5 +1,5 @@
 /** List to transform to cards */
-const renderColumns = (context, entity, view, rows, columnsConfig, properties) => {
+const renderColumns = (context, entity, view, orderParam, rows, columnsConfig, properties) => {
 
     const pipe = {}
     for (let modality of columnsConfig.distribution.modalities.split(",")) {

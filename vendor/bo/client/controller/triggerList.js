@@ -40,7 +40,8 @@ const triggerList = async (context, entity, view, searchParams) => {
         }
     }
 
-    $("#dataView").html(await response.text())
+    const data = await response.json()
+    $("#dataView").html(listRenderer(context, entity, view, data.orderParam, data.rows, data.config, data.properties))
     
     getListRows(context, entity, view, getSearchParams())
 

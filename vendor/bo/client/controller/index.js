@@ -23,6 +23,19 @@ const loadPage = async (entity, view) => {
             else return str
         },
 
+        decodeDate: (str) => {
+            if (str) {
+                return new moment(str).format("DD/MM/YYYY")
+            }
+            return ""
+        },
+
+        decodeTime: (str) => {
+            if (str) {
+                return str
+            }
+        },
+
         isAllowed: (route) => {
             if (config.guard[route]) {
                 for (let role of user.roles) {

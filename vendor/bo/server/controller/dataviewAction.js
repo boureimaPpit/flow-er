@@ -3,7 +3,6 @@ const { getProperties } = require("./getProperties")
 const { getList } = require("./getList")
 const { getMeasure } = require("./getMeasure")
 const { getDistribution } = require("./getDistribution")
-const { renderDataview } = require("../view/renderDataview")
 
 const util = require('util')
 
@@ -43,8 +42,15 @@ const dataviewAction = async ({ req }, context, db) => {
         const property = properties[propertyId]
         property.distribution = await getDistribution(db, context, entity, view, propertyId, properties, whereParam)
     }
-    
-    return renderDataview(context, entity, view, order, limit, measure, listConfig, properties)
+
+    const result = {
+        orderParam: order,
+        rows: measure,
+        config: listConfig,
+        properties: properties
+    }
+
+    return result
 }
 
 module.exports = {

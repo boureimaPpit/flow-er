@@ -4,8 +4,6 @@ const multer = require("multer");
 const { executeService, assert } = require("../../../../core/api-utils")
 const { createDbClient2 } = require("../../../utils/db-client")
 
-const { columnsAction } = require("./columnsAction")
-
 const { renderIndex } = require("../view/renderIndex")
 
 const registerDashboard = async ({ context, config, logger, app }) => {
@@ -15,7 +13,6 @@ const registerDashboard = async ({ context, config, logger, app }) => {
     const upload = multer()
     app.use(upload.array())
     app.get(`${config.prefix}index/:entity`, execute(index, context, db))
-    app.get(`${config.prefix}columns/:entity`, execute(columnsAction, context, db))
 }
 
 const index = async ({ req }, context, db) => {
@@ -33,7 +30,13 @@ const index = async ({ req }, context, db) => {
     const where = (indexConfig && indexConfig.where) ? indexConfig.where : ""
     const order = (indexConfig && indexConfig.order) ? indexConfig.order : ""
     const limit = (indexConfig && indexConfig.limit) ? indexConfig.limit : 1000
-    return renderIndex(context, entity, view, context.user, menu[`tab/${view}`], context.config[`${entity}/index/${view}`])
+
+    const data = {
+        user: context.user, 
+        tab: menu[`tab/${view}`], 
+        indexConfig: context.config[`${entity}/index/${view}`]
+    }
+    return renderIndex({ context, entity, view }, data)
 }
 
 module.exports = {

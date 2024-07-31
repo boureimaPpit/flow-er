@@ -1,7 +1,6 @@
 const { assert } = require("../../../../core/api-utils")
 const { getProperties } = require("../../../bo/server/controller/getProperties")
 const { getList } = require("../../../bo/server/controller/getList")
-const { renderColumns } = require("../view/renderColumns")
 
 const columnsAction = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
@@ -44,7 +43,14 @@ const columnsAction = async ({ req }, context, db) => {
     columns = columns.concat(["id"])
 
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
-    return renderColumns(context, entity, view, data, order, limit, columnsConfig, properties)
+
+    const result = {
+        rows: data,
+        config: columnsConfig,
+        properties: properties
+    }
+
+    return result
 }
 
 module.exports = {

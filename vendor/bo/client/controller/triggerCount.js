@@ -42,10 +42,10 @@ const refreshBadges = () => {
     })
 }
 
-const getCount = (context, entity, view, id, route, params) => {
+const getCount = ({ context, entity, view }, id, route, params) => {
     
     $(`#anchor-${id}`).click(function () {
-        triggerList(context, entity, view, params)
+        triggerList({ context, entity, view }, params)
         if (route) {
             getCountCallback(id, route, params)()
         }

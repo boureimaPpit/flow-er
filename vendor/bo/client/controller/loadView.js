@@ -1,4 +1,4 @@
-const loadView = async (context, entity, view) => {
+const loadView = async ({ context, entity, view }) => {
 
     // Fetch body
 
@@ -16,6 +16,6 @@ const loadView = async (context, entity, view) => {
 
     const data = await response.json()
 
-    const body = renderBody(context, entity, view, data)
+    const body = renderBody({ context, entity, view }, data)
     $("body").html(body)
 }

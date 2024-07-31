@@ -1,7 +1,8 @@
 /** List to transform to cards */
-const renderColumns = (context, entity, view, rows, orderParam, limit, columnsConfig, properties) => {
+const renderColumns = ({ context }, data) => {
 
-    const pipe = {}
+    const rows = data.rows, columnsConfig = data.config, properties = data.properties, pipe = {}
+
     for (let modality of columnsConfig.distribution.modalities.split(",")) {
         pipe[modality] = { count: 0, sum : 0, rows: [] }
     }
@@ -24,7 +25,7 @@ const renderColumns = (context, entity, view, rows, orderParam, limit, columnsCo
                     <strong>${modality.count} ${context.localize(property.modalities[key])}</strong> <em>(${modality.sum} €)</em>
                 </div>
             </div>
-            ${renderRows(context, columnsConfig, properties, modality.rows)}
+            ${renderCards({ context }, columnsConfig, properties, modality.rows)}
         </div>`)
     }
 
@@ -32,7 +33,7 @@ const renderColumns = (context, entity, view, rows, orderParam, limit, columnsCo
     return result.join("\n")
 }
 
-const renderRows = (context, columnsConfig, properties, rows) => {
+const renderCards = ({ context }, columnsConfig, properties, rows) => {
 
     const result = []
 
@@ -46,7 +47,7 @@ const renderRows = (context, columnsConfig, properties, rows) => {
                         </button>
                     </div>
                 </p>
-                ${renderLayout(context, columnsConfig, properties, row)}
+                ${renderLayout({ context }, columnsConfig, properties, row)}
             </div>
         </div>`)
     }
@@ -54,7 +55,7 @@ const renderRows = (context, columnsConfig, properties, rows) => {
     return result.join("\n")
 }
 
-const renderLayout = (context, columnsConfig, properties, row) => {
+const renderLayout = ({ context }, columnsConfig, properties, row) => {
 
     const result = []
 
@@ -90,56 +91,4 @@ const renderLayout = (context, columnsConfig, properties, row) => {
     }
 
     return result.join("\n")
-}
-
-const renderProperties = (context, row, properties) => {
-
-    const html = []
-
-    for (let propertyId of Object.keys(properties)) {
-        const property = properties[propertyId]
-
-        if (property.type == "select") {
-            html.push(`<td class="${(property.options.class) ? property.options.class[row[propertyId]] : ""}">
-                ${(row[propertyId]) ? context.localize(property.modalities[row[propertyId]]) : ""}
-            </td>`)
-        }
-        
-        else if (property.type == "multiselect") {
-            const captions = []
-            for (let modalityId of row[propertyId].split(",")) {
-                captions.push(context.localize(property.modalities[modalityId]))
-            }
-            html.push(`<td>${captions.join(",")}</td>`)                  
-        }
-
-        else if (property.type == "date") {
-            html.push(`<td>${context.decodeDate(row[propertyId])}</td>`)
-        }
-      
-        else if (property.type == "datetime") {
-            html.push(`<td>${context.decodeTime(row[propertyId])}</td>`)
-        }
-
-        else if (property.type == "email") {
-            html.push(`<td><a href="mailto:${row[propertyId]}">${row[propertyId]}</a></td>`)
-        }              
-
-        else if (property.type == "phone") {
-            html.push(`<td><a href="tel:${row[propertyId]}">${row[propertyId]}</a></td>`)
-        }
-
-        else if (property.type == "tags") {
-            html.push(`<td class="listTagsName" id="listTagsName-${propertyId}-${row.id}">${row[propertyId]}</td>`)
-        }
-
-        else {
-            html.push(`<td>${row[propertyId]}</td>`)                  
-        }
-    }
-    return html.join("\n")
-}
-
-module.exports = {
-    renderColumns
 }

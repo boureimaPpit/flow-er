@@ -3,9 +3,8 @@ const { getProperties } = require("./getProperties")
 const { getList } = require("./getList")
 const { getMeasure } = require("./getMeasure")
 const { getDistribution } = require("./getDistribution")
-const { renderList } = require("../view/renderList")
 
-const listRowsAction = async ({ req }, context, db) => {
+const listAction = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const where = (req.query.where) ? req.query.where : null
@@ -29,23 +28,6 @@ const listRowsAction = async ({ req }, context, db) => {
     }
     columns.push("id")
 
-    let orderArray = null
-    if (order != null) {
-        orderArray = {}
-        for (let orderer of order.split(",")) {
-            let propertyId, direction
-            if (orderer[0] == "-") {
-                propertyId = orderer.substring(1)
-                direction = "DESC"
-            }
-            else {
-                propertyId = orderer
-                direction = "ASC"
-            }
-            orderArray[propertyId] = direction    
-        }    
-    }
-
     const propertyList = []
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
@@ -61,11 +43,15 @@ const listRowsAction = async ({ req }, context, db) => {
     if (!columns) columns = propertyList
     columns = columns.concat(["id"])
 
-    const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
-    
-    return renderList(context, entity, view, data, order, limit, listConfig, properties)
+    const rows = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
+    return {
+        rows : rows, 
+        limit: limit, 
+        config: listConfig,
+        properties: properties 
+    }
 }
 
 module.exports = {
-    listRowsAction,
+    listAction,
 }

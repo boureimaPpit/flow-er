@@ -1,8 +1,8 @@
-const triggerList = async (context, entity, view, searchParams) => {		
+const triggerList = async ({ context, entity, view }, searchParams) => {		
 
     // Route with params
 
-    let route = `${$("#listRoute").val()}`
+    let route = `${$("#searchRoute").val()}`
 
     const columns = $("#columns").val()
     if (columns) route += "columns=" + columns
@@ -41,7 +41,7 @@ const triggerList = async (context, entity, view, searchParams) => {
     }
 
     const data = await response.json()
-    $("#dataView").html(listRenderer(context, entity, view, data.orderParam, data.rows, data.config, data.properties))
+    $("#dataView").html(searchRenderer({ context, entity, view }, data))
     
     getListRows(context, entity, view, getSearchParams())
 

@@ -1,4 +1,6 @@
-const renderIndex = (context, entity, view, user, tab, indexConfig) => {
+const renderIndex = ({ context, entity, view }, data) => {
+
+    const user = data.user, tab = data.tab, indexConfig = data.indexConfig
 
     return `<!DOCTYPE html>
     <html lang="fr" ${ (tab.darkMode) ? "data-bs-theme=\"dark\"" : "" }>
@@ -30,7 +32,50 @@ const renderIndex = (context, entity, view, user, tab, indexConfig) => {
     <script src="/bo/cli/resources/jquery.timepicker/jquery.timepicker.js"></script>
     <script src="/bo/cli/resources/toastr/build/toastr.min.js"></script>
     <script src="/bo/cli/resources/json-viewer/jquery.json-viewer.js"></script>
-   
+
+    <script>
+    $.datepicker.regional['fr'] = {
+        prevText: "${context.translate("Previous")}",
+        nextText: "${context.translate("Next")}",
+        monthNames: [
+            "${context.translate("January")}",
+            "${context.translate("February")}",
+            "${context.translate("March")}",
+            "${context.translate("April")}",
+            "${context.translate("May")}",
+            "${context.translate("June")}",
+            "${context.translate("July")}",
+            "${context.translate("August")}",
+            "${context.translate("September")}",
+            "${context.translate("October")}",
+            "${context.translate("November")}",
+            "${context.translate("December")}"
+        ],
+        dayNamesMin: [
+            "${context.translate("Su")}",
+            "${context.translate("Mo")}",
+            "${context.translate("Tu")}",
+            "${context.translate("We")}",
+            "${context.translate("Th")}",
+            "${context.translate("Fr")}",
+            "${context.translate("Sa")}"
+        ],
+        dateFormat: "dd/mm/yy",
+        firstDay: 1,
+        isRTL: false,
+        yearSuffix: ""
+    }
+    
+    ${(user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
+    </script>
+
+    <!-- FullCalendar -->
+    <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
+    <script src="/bo/cli/resources/fullcalendar/fullcalendar.js"></script>
+
+    <!-- ZingChart -->
+    <script src="/bo/cli/resources/zingchart/zingchart.min.js"></script>
+    
     <!-- Flow-ER -->
     <script src="/bo/cli/controller/check-form.js"></script>
     <script src="/bo/cli/controller/index.js"></script>
@@ -51,9 +96,17 @@ const renderIndex = (context, entity, view, user, tab, indexConfig) => {
     <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody.js" }"></script>
     <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
     <script src="${ (indexConfig && indexConfig.footer) ? indexConfig.footer : "/bo/cli/bootstrap/renderFooter.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.shortcuts) ? indexConfig.shortcuts : "/bo/cli/bootstrap/renderShortcuts.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.search) ? indexConfig.search : "/bo/cli/bootstrap/renderSearch.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.listHeader) ? indexConfig.listHeader : "/bo/cli/bootstrap/renderListHeader.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.list) ? indexConfig.list : "/bo/cli/bootstrap/renderList.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/bo/cli/bootstrap/renderColumns.j" }s"></script>
 
+    <script>const shortcutsRenderer = ${ (indexConfig && indexConfig.shortcutsRenderer) ? indexConfig.shortcutsRenderer : "renderShortcuts" }</script>
+    <script>const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }</script>
+    <script>const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }</script>
     <script>
-    loadPage("${entity}", "${view}")
+    loadPage({ entity: "${entity}", view: "${view}" })
     </script>
 
     </html>`

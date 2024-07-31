@@ -6,7 +6,7 @@ const { getDistribution } = require("./getDistribution")
 
 const util = require('util')
 
-const dataviewAction = async ({ req }, context, db) => {
+const searchAction = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const where = (req.query.where) ? req.query.where : null
@@ -20,7 +20,6 @@ const dataviewAction = async ({ req }, context, db) => {
      */
     let listConfig = context.config[`${entity}/list/${view}`]
     if (!listConfig) listConfig = context.config[`${entity}/list/default`]
-    console.log(`${entity}/list/default`)
     const propertyDefs = listConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
     
@@ -44,7 +43,6 @@ const dataviewAction = async ({ req }, context, db) => {
     }
 
     const result = {
-        orderParam: order,
         rows: measure,
         config: listConfig,
         properties: properties
@@ -54,5 +52,5 @@ const dataviewAction = async ({ req }, context, db) => {
 }
 
 module.exports = {
-    dataviewAction,
+    searchAction,
 }

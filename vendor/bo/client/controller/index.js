@@ -1,4 +1,4 @@
-const loadPage = async (entity, view) => {
+const loadPage = async ({ entity, view }) => {
     let response = await fetch("/bo/config")
     const config = await response.json()
     response = await fetch("/bo/language")
@@ -47,10 +47,10 @@ const loadPage = async (entity, view) => {
         }
     }
 
-    await loadView(context, entity, view)
+    await loadView({ context, entity, view })
 
     const shortcutsRoute = $("#shortcutsRoute").val()
-    if (shortcutsRoute) triggerShortcuts(context, entity, view, shortcutsRoute)
-    triggerList(context, entity, view, {})
+    if (shortcutsRoute) triggerShortcuts({ context, entity, view }, shortcutsRoute)
+    triggerList({ context, entity, view }, {})
 }
 

@@ -1,6 +1,4 @@
-const moment = require("moment")
-
-const renderShortcuts = (context, entity, view) => {
+const renderShortcuts = ({ context, entity, view }, data) => {
 
     const countConfig = context.config[`${entity}/count/${view}`]
     if (countConfig) {
@@ -60,8 +58,4 @@ const renderShortcuts = (context, entity, view) => {
     }
 
     return `<div class="row mb-3">${renderCounts()}</div>`
-}
-
-module.exports = {
-    renderShortcuts
 }

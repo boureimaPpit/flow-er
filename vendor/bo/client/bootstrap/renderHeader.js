@@ -1,4 +1,4 @@
-const renderHeader = (context, data) => {
+const renderHeader = ({ context }, data) => {
 
 	const headerParams = data.headerParams, instance = data.instance, user = data.user, applications = data.applications, applicationName = data.applicationName
 

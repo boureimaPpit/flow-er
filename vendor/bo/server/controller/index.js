@@ -13,9 +13,8 @@ const { countAction } = require("./countAction")
 const { postAction } = require("./postAction")
 
 const { shortcutsAction } = require("./shortcutsAction")
-const { dataviewAction } = require("./dataviewAction")
-const { listRowsAction } = require("./listRowsAction")
-const { columnsAction } = require("./columnsAction")
+const { searchAction } = require("./searchAction")
+const { listAction } = require("./listAction")
 const { addAction, postAddAction } = require("./addAction")
 const { detailAction } = require("./detailAction")
 const { updateAction, postUpdateAction } = require("./updateAction")
@@ -47,9 +46,8 @@ const registerBo = async ({ context, config, logger, app }) => {
     app.get(`${config.prefix}dashboard/:entity`, execute(dashboardAction, context, db))
     
     app.get(`${config.prefix}shortcuts/:entity`, execute(shortcutsAction, context, db))
-    app.get(`${config.prefix}dataview/:entity`, execute(dataviewAction, context, db))
-    app.get(`${config.prefix}listRows/:entity`, execute(listRowsAction, context, db))
-    app.get(`${config.prefix}columns/:entity`, execute(columnsAction, context, db))
+    app.get(`${config.prefix}search/:entity`, execute(searchAction, context, db))
+    app.get(`${config.prefix}list/:entity`, execute(listAction, context, db))
     app.get(`${config.prefix}detail/:entity/:id`, execute(detailAction, context, db))
     app.get(`${config.prefix}add/:entity`, execute(addAction, context, db))
     app.post(`${config.prefix}add/:entity`, execute(postAddAction, context, db))
@@ -91,7 +89,13 @@ const index = async ({ req }, context, db) => {
     const where = (indexConfig && indexConfig.where) ? indexConfig.where : ""
     const order = (indexConfig && indexConfig.order) ? indexConfig.order : ""
     const limit = (indexConfig && indexConfig.limit) ? indexConfig.limit : 1000
-    return renderIndex(context, entity, view, context.user, menu[`tab/${view}`], context.config[`${entity}/index/${view}`])
+
+    const data = {
+        user: context.user, 
+        tab: menu[`tab/${view}`], 
+        indexConfig: context.config[`${entity}/index/${view}`]
+    }
+    return renderIndex({ context, entity, view }, data)
 }
 
 module.exports = {

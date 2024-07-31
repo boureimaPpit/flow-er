@@ -1,4 +1,6 @@
-const renderIndex = (context, entity, view, user, tab, indexConfig) => {
+const renderIndex = ({ context, entity, view }, data) => {
+
+    const user = data.user, tab = data.tab, indexConfig = data.indexConfig
 
     return `<!DOCTYPE html>
     <html lang="fr" ${ (tab.darkMode) ? "data-bs-theme=\"dark\"" : "" }>
@@ -143,12 +145,17 @@ const renderIndex = (context, entity, view, user, tab, indexConfig) => {
     <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody.js" }"></script>
     <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
     <script src="${ (indexConfig && indexConfig.footer) ? indexConfig.footer : "/bo/cli/bootstrap/renderFooter.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.shortcuts) ? indexConfig.shortcuts : "/bo/cli/bootstrap/renderShortcuts.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.search) ? indexConfig.search : "/bo/cli/bootstrap/renderSearch.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.listHeader) ? indexConfig.listHeader : "/bo/cli/bootstrap/renderListHeader.js" }"></script>
     <script src="${ (indexConfig && indexConfig.list) ? indexConfig.list : "/bo/cli/bootstrap/renderList.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/bo/cli/bootstrap/renderColumns.j" }s"></script>
+    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/dashboard/cli/bootstrap/renderColumns.j" }s"></script>
 
+    <script>const shortcutsRenderer = ${ (indexConfig && indexConfig.shortcutsRenderer) ? indexConfig.shortcutsRenderer : "renderShortcuts" }</script>
+    <script>const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }</script>
     <script>const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }</script>
     <script>
-    loadPage("${entity}", "${view}")
+    loadPage({ entity: "${entity}", view: "${view}" })
     </script>
 
     </html>`

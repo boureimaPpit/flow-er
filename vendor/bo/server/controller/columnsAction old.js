@@ -12,23 +12,6 @@ const columnsAction = async ({ req }, context, db) => {
 
     const whereParam = (where != null) ? where.split("|") : []
 
-    let orderArray = null
-    if (order != null) {
-        orderArray = {}
-        for (let orderer of order.split(",")) {
-            let propertyId, direction
-            if (orderer[0] == "-") {
-                propertyId = orderer.substring(1)
-                direction = "DESC"
-            }
-            else {
-                propertyId = orderer
-                direction = "ASC"
-            }
-            orderArray[propertyId] = direction    
-        }    
-    }
-
     let columnsConfig = context.config[`${entity}/columns/${view}`]
     if (!columnsConfig) columnsConfig = context.config[`${entity}/columns`]
     const propertyDefs = columnsConfig.properties
@@ -45,7 +28,6 @@ const columnsAction = async ({ req }, context, db) => {
     const data = await getList(db, context, entity, view, columns, properties, whereParam, order, limit)
 
     const result = {
-        orderParam: order,
         rows: data,
         config: columnsConfig,
         properties: properties

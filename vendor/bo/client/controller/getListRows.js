@@ -2,7 +2,7 @@ const getListRows = (context, entity, view, searchParams) => {
 
     // Execute the ajax request
     const xhttp = new XMLHttpRequest()
-    let route = `/bo/listRows/${entity}?view=${view}`
+    let route = `/bo/list/${entity}?view=${view}`
 
     let params = []
     for (const key of Object.keys(searchParams)) {
@@ -33,7 +33,8 @@ const getListRows = (context, entity, view, searchParams) => {
                     document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
                 }
 
-                $("#listTbody").html(xhttp.responseText)
+                const data = JSON.parse(xhttp.responseText)
+                $("#listParent").html(listRenderer({ context, entity, view }, data))
 
                 $("#listGroupButton-0").hide()
                 $("#listGroupButton-1").prop("disabled", true)

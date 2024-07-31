@@ -1,4 +1,4 @@
-const triggerShortcuts = async (context, entity, view, route) => {
+const triggerShortcuts = async ({ context, entity, view }, route) => {
 
     // Fetch
 
@@ -14,7 +14,8 @@ const triggerShortcuts = async (context, entity, view, route) => {
         }
     }
 
-    $("#shortcutsPanel").html(await response.text())
+    const data = await response.json()
+    $("#shortcutsPanel").html(shortcutsRenderer({ context, entity, view }, data))
 
     $(".flBadge").hide()
 
@@ -27,7 +28,7 @@ const triggerShortcuts = async (context, entity, view, route) => {
             params[pair[0]] = pair[1]
         }
 
-        getCount(context, entity, view, id, route, params)
+        getCount({ context, entity, view }, id, route, params)
         getCountCallback(id, route, params)()
     })
     $("#badgeRefreshButton").click(refreshBadges)

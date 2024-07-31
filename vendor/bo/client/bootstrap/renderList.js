@@ -1,152 +1,133 @@
-const renderList = (context, entity, view, orderParam, measure, listConfig, properties) => {
+const renderList = ({ context, entity, view }, data) => {
 
-    return `<style>
-    table td { 
-        font-size: 0.9rem;
-    }
-    </style>
-    <div class="row">
-        <div class="table-responsive">
-            <div class="col-md-12">
-                <table class="table table-sm table-hover" id="listPanel">
-                    <thead class="table-light">
-                        ${ renderListHeader(context, entity, view, measure, orderParam, properties) }
-                    </thead>
-                    <tbody class="table-group-divider" id="listTbody"></tbody>
-                </table>
+    const rows = data.rows, orderParam = data.orderParam, limit = data.limit, listConfig = data.config, properties = data.properties
+
+    return `<tr>
+        <td>
+            <div class="text-center">
+                <input type="checkbox" class="listCheckAll" data-toggle="tooltip" data-placement="top" title="${context.translate("Check all")}"></input>
             </div>
-        </div>
-    </div>`
+        </td>
+
+        <td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Add")}" id="listDetailButton-0">
+                <span class="fas fa-plus"></span>
+            </button>
+        </td>
+    </tr>
+
+    ${renderRows(context, listConfig, properties, rows)}
+
+    <tr class="listRow">
+        <td>
+            <div class="text-center">
+                <input type="checkbox" class="listCheckAll" title="${context.translate("Check all")}"></input>
+            </div>
+        </td>
+
+        <td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-primary index-btn listGroupButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Grouped actions")}" id="listGroupButton-1">
+                <span class="fas fa-list"></span>
+            </button>
+        </td>
+
+        ${(rows.length == limit) ?`<td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-primary listMoreButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Display the entire list")}">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+        </td>` : "<td>&nbsp;</td>"}
+
+        <td colspan="${Object.keys(properties).length}" />
+    </tr>`
 }
 
-const renderListHeader = (context, entity, view, measure, orderParam, properties) => {
+const renderRows = (context, listConfig, properties, rows) => {
 
-    const listConfig = context.config[`${entity}/list/${view}`]
+    const result = []
 
-    let major = "n_last", dir = "ASC"
-    if (orderParam) {
-        for (let orderer of orderParam.split(",")) {
-            if (orderer.charAt(0) == "-") {
-                major = orderer.substring(1)
-                dir = "DESC"
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i]
+
+        const listCheckIds = []
+        if (listConfig.checkIds) {
+            for (let checkId of listConfig.checkIds) {
+                listCheckIds.push(`<input type="hidden" class="listCheckId-${row.id}" id="listCheckId-${row.id}-${checkId}" value="${row[checkId]}"></input>`)
             }
-            else major = orderer
-            break
-        }    
-    }
-    
-    let measureValues = (measure) ? Object.values(measure) : false, count = (measure) ? measureValues[0] : false, sum = (measure) ? parseFloat(measureValues[1]) : false
-    const average = (sum && count) ? Math.round(sum / count * 10) / 10 : false
-
-    const renderSelectOption = (propertyId) => {
-        const property = properties[propertyId]
-        const options = []
-        for (let modality of Object.keys(property.distribution)) {
-            const { code, value } = property.distribution[modality]
-            let label
-            if (["select"].includes(property.type)) label = context.localize(property.modalities[code])
-            else if (property.type == "date") label = context.decodeDate(code)
-            else if (property.type == "number") label = parseFloat(code).toLocaleString("fr-FR")
-            else label = code
-            options.push(`<option value="${modality}" title="${ (modality) ? label : "Vide" } (${value})">${ (modality) ? label : "Vide" } (${value})</option>`)
         }
-        return options.join("\n")
+
+        result.push(`
+        <tr class="listRow">
+            <td>
+                <div class="text-center">
+                    <input type="checkbox" class="listCheck" id="listCheck-${row.id}-${i}"></input>
+                    ${listCheckIds.join("\n")}
+                </div>
+            </td>
+
+            <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
+                  <i class="fas fa-search"></i>
+                </button>
+            </td>
+
+            ${renderProperties(context, row, properties)}
+        </tr>`)
     }
 
-    const renderDatalist = (propertyId) => {
-        const property = properties[propertyId]
-        const options = []
-        for (let modality of Object.keys(property.distribution)) {
-            const { code, value } = property.distribution[modality]
-            options.push(`<option value="${code}">${code} (${value})</option>`)
-        }
-        return options.join("\n")
-    }
+    return result.join("\n")
+}
 
-    const head = [`<th>
-        <div class="text-center">
-            <small>
-                <b id="listCount" title="Nombre de lignes">${count}</b>
-                ${ (sum) ? `<br><b id="listCount" title="Somme">${sum.toLocaleString("fr-FR")}</b>` : "" }
-                ${ (average) ? `<br><em id="listAverage" title="Moyenne">${average.toLocaleString("fr-FR")}</em>`: "" }
-            </small>
-        </div>
-    </th>
-    <th class="text-center">
-        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Order the list")}" id="flOrderButton">
-            <i class="fas fa-arrow-down-a-z"></i>
-        </button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Refresh the list")}" id="flRefreshButton">
-            <i class="fas fa-sync-alt"></i>
-        </button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Cancel the filters")}" id="flEraseButton">
-            <i class="fas fa-times"></i>
-        </button>
-    </th>`]
+const renderProperties = (context, row, properties) => {
+
+    const html = []
+
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
-        const forms = []
-        if (["select", "tag"].includes(property.type)) {
-            forms.push(`<select class="form-select form-select-sm px-0 searchInput searchInputSelect" size="${ Math.min(4, Object.keys(property.distribution).length) }" id="search-${propertyId}" multiple>${renderSelectOption(propertyId)}</select>`)
+
+        if (property.type == "select") {
+            html.push(`<td class="${(property.options.class) ? property.options.class[row[propertyId]] : ""}">
+                ${(row[propertyId]) ? context.localize(property.modalities[row[propertyId]]) : ""}
+            </td>`)
         }
-        else if (["input", "email", "phone", "source"].includes(property.type)) {
-            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}" />
-                <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId)}</datalist>`)
-        }
-        else if (["date", "datetime"].includes(property.type)) {
-            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputDate searchInputDateMin" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />`)
-            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputDate searchInputDateMax" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />`)
-        }
-        else if (["time", "number"].includes(property.type)) {
-            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMin" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />`)
-            forms.push(`<input type="text" class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMax" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />`)
+        
+        else if (property.type == "multiselect") {
+            const captions = []
+            for (let modalityId of row[propertyId].split(",")) {
+                captions.push(context.localize(property.modalities[modalityId]))
+            }
+            html.push(`<td>${captions.join(",")}</td>`)                  
         }
 
-        head.push(`<th>
-            <div data-bs-toggle="collapse" href="#listSortCollapse-${propertyId}" role="button" id="listSortAnchor-${propertyId}" aria-expanded="false" aria-controls="listSortCollapse-${propertyId}">
-                <span class="listHeaderLabel" id="listHeaderLabel-${propertyId}">${ context.localize(property.labels) }</span>
-                <i class="fa fa-filter listHeaderIcon" id="listHeaderIcon-${propertyId}"></i>
-            </div>
-            <div class="collapse" id="listSortCollapse-${propertyId}">
-                ${ forms.join("") }
-            </div>
-        </th>`)
+        else if (property.type == "date") {
+            html.push(`<td>${context.decodeDate(row[propertyId])}</td>`)
+        }
+      
+        else if (property.type == "datetime") {
+            html.push(`<td>${context.decodeTime(row[propertyId])}</td>`)
+        }
+
+        else if (property.type == "number") {
+            html.push(`<td class="text-right">${ parseFloat(row[propertyId]).toLocaleString("fr-FR", { minimumFractionDigits: 2 }) }</td>`)
+        }
+
+        else if (property.type == "email") {
+            html.push(`<td>${(row[propertyId]) ? `<a href="mailto:${row[propertyId]}">${row[propertyId]}</a>` : ""}</td>`)
+        }              
+
+        else if (property.type == "phone") {
+            html.push(`<td><a href="tel:${row[propertyId]}">${row[propertyId]}</a></td>`)
+        }
+
+        else if (property.type == "tags") {
+            html.push(`<td class="listTagsName" id="listTagsName-${propertyId}-${row.id}">${row[propertyId]}</td>`)
+        }
+
+        else {
+            if (property.options.detailCaption) {
+                html.push(`<input type="hidden" id="detailCaption-${row.id}" value="${row[propertyId]}" />`)
+            }
+            html.push(`<td>${(row[propertyId] !== null) ? row[propertyId] : ""}</td>`)                  
+        }
     }
-
-    head.push(`<thead class="table-light text-center listOrderHead"><th colspan="${ Object.keys(properties).length + 2 }">`)
-    head.push(renderOrderSelect(context, entity, view, orderParam, properties))
-    head.push("</th></thead>")
-
-    return head.join("\n")
-}
-
-const renderOrderSelect = (context, entity, view, orderParam, properties) => {
-    const columns = Object.keys(properties)
-    const renderSelectOption = () => {
-        const options = []
-        for (let propertyId of columns) {
-            const property = properties[propertyId]
-            options.push(`<option value="${propertyId}">${ context.localize(property.labels) }</option>`)
-        }
-        return options.join("\n")
-    }
-
-    return `<div class="row justify-content-md-center">
-        <div class="col-md-4">
-            <div class="input-group">
-                <select class="form-select form-select-sm flOrderSelect" id="flOrderSelect">
-                    <option value=""></option>
-                    ${renderSelectOption()}
-                </select>
-                <span class="input-group-text">
-                    <span class="form-check">
-                        <input type="checkbox" class="form-check-input flDescendingCheck" id="flDescendingCheck">
-                        <label class="form-check-label" for="flDescendingCheck">
-                            ${ context.translate("Descending order") }
-                        </label>
-                    </span>
-                </span>
-            </div>
-        </div>
-    </div>`
+    return html.join("\n")
 }

@@ -1,16 +1,16 @@
-const renderBody = (context, entity, view, data) => {
+const renderBody = ({ context, entity, view }, data) => {
 
     return `
     
       <!-- Header -->
       <div id="headerDiv">
-          ${renderHeader(context, data)}
+          ${renderHeader({ context, entity, view }, data)}
       </div>
     
     <div class="card">
 
       <div class="card-header">
-          ${renderMenu(context, entity, view, data.menu)}
+          ${renderMenu({ context, entity, view }, data)}
       </div>
 
       <div class="card-body">
@@ -23,9 +23,13 @@ const renderBody = (context, entity, view, data) => {
         <input type="hidden" id="countRoute" value="/bo/v1/${entity}/count" />
         <div class="section" id="shortcutsPanel"></div>
     
+    <!-- Search section-->
+        
+        <input type="hidden" id="searchRoute" value="${ (data.indexConfig && data.indexConfig.searchView) ? data.indexConfig.searchView : "/bo/search" }/${entity}?view=${view}" />
+    
     <!-- List section-->
         
-        <input type="hidden" id="listRoute" value="${ (data.indexConfig && data.indexConfig.listView) ? data.indexConfig.listView : "/bo/dataview" }/${entity}?view=${view}" />
+        <input type="hidden" id="listRoute" value="${ (data.indexConfig && data.indexConfig.listView) ? data.indexConfig.listView : "/bo/list" }/${entity}?view=${view}" />
         <input type="hidden" id="listGroupRoute" value="generic/${entity}/groupUpdate?view=${view}" />
       
         <input type="hidden" id="listWhereHidden" value="${data.where}" />
@@ -71,5 +75,5 @@ const renderBody = (context, entity, view, data) => {
     </div>
     
     <!-- Footer -->
-    ${renderFooter(context, data.footer)}`
+    ${renderFooter({ context, entity, view }, data)}`
 }

@@ -1,13 +1,15 @@
-const renderMenu = (context, entity, view, menu) => 
+const renderMenu = ({ context, view }, data) => 
 {
+    const menu = data.menu
+
     return `<div id="main_menu">
 		<ul class="nav nav-pills nav-justified flex-column flex-sm-row">
-			${renderEntries(context, view, menu)}
+			${renderEntries({ context, view }, menu)}
 		</ul>
 	</div>`
 }
 
-const renderEntries = (context, view, menu) => 
+const renderEntries = ({ context, view }, menu) => 
 {
     const html = []
     for (let menuTabId of Object.keys(menu)) {

@@ -65,8 +65,8 @@
 
     "place/list/default": {
         "distribution": {
-            "variable": "region",
-            "modalities": "grand_est,hauts_de_france,idf,paca"
+            "variable": "status",
+            "modalities": "new,archived"
         },
         "properties": {
             "status": {},
@@ -75,7 +75,7 @@
         },
         "layout": [ 
             { "format": "<h5 class=\"card-title\">%s</h5>", "params": "name" },
-            { "format": "<p>%s</p>", "params": "status" }
+            { "format": "<p>%s</p>", "params": "region" }
         ]
     },
 

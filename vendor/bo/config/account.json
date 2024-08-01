@@ -133,6 +133,11 @@
         }
     },
 
+    "account/index/account": {
+        "searchRenderer": "renderSearch",
+        "listRenderer": "renderColumns"
+    }, 
+
     "account/count/default": [
         {
             "filters": {
@@ -160,6 +165,29 @@
     "account/list/default": {
         "where": "status:new",
         "order": "n_last",
+        "properties": {
+            "status": {},
+            "place_region": {},
+            "place_name": {},
+            "n_last": {},
+            "email": {},
+            "tel_cell": {}
+        }
+    },
+
+    "account/list/account": {
+        "distribution": {
+            "variable": "status",
+            "modalities": "new,active"
+        },
+        "title": [
+            { "format": "<h5 class=\"card-title align-self-center mb-0\">%s</h5>", "params": "n_last" }
+        ],
+        "layout": [ 
+            { "format": "<p class=\"card-text\">%s (%s)</p>", "params": "place_name,place_region" },
+            { "format": "<a href=\"mailto:%s\">%s</a><br>", "params": "email,email" },
+            { "format": "<a href=\"tel:%s\">%s</a>", "params": "tel_cell,tel_cell" }
+        ],
         "properties": {
             "status": {},
             "place_region": {},

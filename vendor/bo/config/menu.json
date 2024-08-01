@@ -31,5 +31,18 @@
         "route": "/bo/index/tag",
         "urlParams": "view=tag",
         "labels": { "default": "Tags", "fr_FR": "Tags" }
+    },
+
+    "menu/contact": {
+        "tabs": ["tab/account"],
+        "defaultTab": "tab/account",
+        "labels": { "default": "Contacts" }
+    },
+
+    "tab/account": {
+        "menu": "menu/contact",
+        "route": "/bo/index/account",
+        "urlParams": "view=account",
+        "labels": { "default": "Accounts", "fr_FR": "Comptes" }
     }
 }

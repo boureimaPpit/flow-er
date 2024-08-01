@@ -14,7 +14,13 @@ const renderLayout = ({ context }, { config, properties, row }) => {
             }
             else if (property.type == "datetime") {
                 args.push(context.decodeTime(row[param]))
-            }        
+            }
+            else if (property.type == "email") {
+                args.push(`<a href=\"mailto:${row[param]}\" class=\"card-link\">${row[param]}</a>`)
+            }
+            else if (property.type == "phone") {
+                args.push(`<a href=\"tel:${row[param]}\" class=\"card-link\">${row[param]}</a>`)
+            }
             else {
                 args.push(row[param])
             }

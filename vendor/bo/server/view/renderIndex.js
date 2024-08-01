@@ -1,3 +1,6 @@
+
+const { renderCore } = require("./renderCore")
+
 const renderIndex = ({ context, entity, view }, data) => {
 
     const user = data.user, tab = data.tab, indexConfig = data.indexConfig
@@ -117,6 +120,9 @@ const renderIndex = ({ context, entity, view }, data) => {
     
     ${(user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
     </script>
+    
+    <!-- Flow-ER -->
+    ${ renderCore({ context, entity, view }, data) }
 
     <!-- FullCalendar -->
     <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
@@ -124,23 +130,8 @@ const renderIndex = ({ context, entity, view }, data) => {
 
     <!-- ZingChart -->
     <script src="/bo/cli/resources/zingchart/zingchart.min.js"></script>
-    
-    <!-- Flow-ER -->
-    <script src="/bo/cli/controller/check-form.js"></script>
-    <script src="/bo/cli/controller/index.js"></script>
-    <script src="/bo/cli/controller/getSearchParams.js"></script>
-    <script src="/bo/cli/controller/loadView.js"></script>
-    <script src="/bo/cli/controller/triggerCount.js"></script>
-    <script src="/bo/cli/controller/triggerList.js"></script>
-    <script src="/bo/cli/controller/triggerOrder.js"></script>
-    <script src="/bo/cli/controller/triggerSearch.js"></script>
-    <script src="/bo/cli/controller/triggerShortcuts.js"></script>
-    <script src="/bo/cli/controller/getListRows.js"></script>
-    <script src="/bo/cli/controller/calendar.js"></script>
-    <script src="/bo/cli/controller/chart.js"></script>
-    <script src="/bo/cli/controller/detail.js"></script>
 
-    <script src="/bo/cli/view/search.js"></script>
+    <!-- Pluggable renderers by index config -->
     <script src="${ (indexConfig && indexConfig.header) ? indexConfig.header : "/bo/cli/bootstrap/renderHeader.js" }"></script>
     <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody.js" }"></script>
     <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
@@ -149,7 +140,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="${ (indexConfig && indexConfig.search) ? indexConfig.search : "/bo/cli/bootstrap/renderSearch.js" }"></script>
     <script src="${ (indexConfig && indexConfig.listHeader) ? indexConfig.listHeader : "/bo/cli/bootstrap/renderListHeader.js" }"></script>
     <script src="${ (indexConfig && indexConfig.list) ? indexConfig.list : "/bo/cli/bootstrap/renderList.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/dashboard/cli/bootstrap/renderColumns.j" }s"></script>
+    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/bo/cli/bootstrap/renderColumns.j" }s"></script>
 
     <script>const shortcutsRenderer = ${ (indexConfig && indexConfig.shortcutsRenderer) ? indexConfig.shortcutsRenderer : "renderShortcuts" }</script>
     <script>const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }</script>

@@ -117,7 +117,7 @@ const getList = (context, entity, view, searchParams) => {
                 createCalendar(context, entity, view)
                 displayChart(context, entity, view)
 
-                triggerSearch(context, entity, view)
+                triggerSearch({ context, entity, view })
 
                 $(".searchSelectTagsIds").each(function () {
                     const propertyId = $(this).attr("id").split("-")[1]

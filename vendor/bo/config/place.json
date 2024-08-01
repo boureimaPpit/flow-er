@@ -73,7 +73,10 @@
             "region": {},
             "name": {}
         },
-        "layout": [ 
+        "title": [
+            { "format": "<h5 class=\"card-title mb-0\">%s</h5>", "params": "n_last" }
+        ],
+        "layout": [
             { "format": "<h5 class=\"card-title\">%s</h5>", "params": "name" },
             { "format": "<p>%s</p>", "params": "region" }
         ]

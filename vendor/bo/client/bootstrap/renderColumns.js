@@ -1,16 +1,18 @@
-/** List to transform to cards */
-const renderColumns = ({ context }, data) => {
+/** 
+ * List to render as cards dispatched by columns 
+ */
+const renderColumns = ({ context }, { config, properties, rows }) => {
 
-    const rows = data.rows, columnsConfig = data.config, properties = data.properties, pipe = {}
+    const pipe = {}
 
-    for (let modality of columnsConfig.distribution.modalities.split(",")) {
+    for (let modality of config.distribution.modalities.split(",")) {
         pipe[modality] = { count: 0, sum : 0, rows: [] }
     }
     for (let row of rows) {
-        if (pipe[row[columnsConfig.distribution.variable]]) {
-            pipe[row[columnsConfig.distribution.variable]].count ++
-            pipe[row[columnsConfig.distribution.variable]].sum += parseFloat(row[columnsConfig.distribution.sum])
-            pipe[row[columnsConfig.distribution.variable]].rows.push(row)    
+        if (pipe[row[config.distribution.variable]]) {
+            pipe[row[config.distribution.variable]].count ++
+            pipe[row[config.distribution.variable]].sum += parseFloat(row[config.distribution.sum])
+            pipe[row[config.distribution.variable]].rows.push(row)    
         }
     }
 
@@ -18,14 +20,14 @@ const renderColumns = ({ context }, data) => {
     
     for (let key of Object.keys(pipe)) {
         const modality = pipe[key]
-        const property = properties[columnsConfig.distribution.variable]
+        const property = properties[config.distribution.variable]
         result.push(`<div class="col-md-3">
             <div class="card border-secondary">
                 <div class="card-header text-center">
                     <strong>${modality.count} ${context.localize(property.modalities[key])}</strong> <em>(${modality.sum} €)</em>
                 </div>
             </div>
-            ${renderCards({ context }, columnsConfig, properties, modality.rows)}
+            ${renderCards({ context }, { config, properties, rows: modality.rows })}
         </div>`)
     }
 
@@ -33,12 +35,12 @@ const renderColumns = ({ context }, data) => {
     return result.join("\n")
 }
 
-const renderCards = ({ context }, columnsConfig, properties, rows) => {
+const renderCards = ({ context }, { config, properties, rows }) => {
 
     const result = []
 
     for (let row of rows) {
-        result.push(`<div class="card" draggable="true">
+        result.push(`<div class="card mt-3" draggable="true">
             <div class="card-body">
                 <p>
                     <div class="input-group input-group-sm">
@@ -47,47 +49,9 @@ const renderCards = ({ context }, columnsConfig, properties, rows) => {
                         </button>
                     </div>
                 </p>
-                ${renderLayout({ context }, columnsConfig, properties, row)}
+                ${renderLayout({ context }, { config, properties, row })}
             </div>
         </div>`)
-    }
-
-    return result.join("\n")
-}
-
-const renderLayout = ({ context }, columnsConfig, properties, row) => {
-
-    const result = []
-
-    for (let propertyId of Object.keys(columnsConfig.layout)) {
-        const value = row[columnsConfig.distribution.variable]
-        const markup = columnsConfig.layout[propertyId]
-        const modalities = (markup.modalities) ? markup.modalities.split(",") : false
-        if (!modalities || modalities.includes(value)) {
-            const args = []
-            for (let param of markup.params.split(",")) {
-                const property = properties[param]
-                if (property.type == "select") {
-                    args.push((row[param]) ? context.localize(property.modalities[row[param]]) : "")
-                }
-                else if (property.type == "date") {
-                    args.push(context.decodeDate(row[param]))
-                }
-                else if (property.type == "datetime") {
-                    args.push(context.decodeTime(row[param]))
-                }        
-                else {
-                    args.push(row[param])
-                }
-            }
-            const format = markup.format.split("%s")
-            const text = []
-            for (let i = 0; i < format.length; i++) {
-                text.push(format[i])
-                if (i < args.length) text.push(args[i])
-            }
-            result.push(text.join(""))
-        }
     }
 
     return result.join("\n")

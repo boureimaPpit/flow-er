@@ -41,7 +41,8 @@
         "modalities": {
             "grand_est": { "default": "Grand Est" },
             "hauts_de_france": { "default": "Hauts de France" },
-            "idf": { "default": "Île de France" }
+            "idf": { "default": "Île de France" },
+            "paca": { "default": "PACA" }
         },
         "labels": {
             "default": "Region",
@@ -50,7 +51,8 @@
     },
 		
 	"place/index/place": {
-        "view": "renderIndexB5"
+        "searchRenderer": "renderSearch",
+        "listRenderer": "renderColumns"
     }, 
 
     "place/search/default": {
@@ -62,12 +64,19 @@
     },
 
     "place/list/default": {
-        "view": "renderDataviewB5",
+        "distribution": {
+            "variable": "region",
+            "modalities": "grand_est,hauts_de_france,idf,paca"
+        },
         "properties": {
             "status": {},
             "region": {},
             "name": {}
-        }
+        },
+        "layout": [ 
+            { "format": "<h5 class=\"card-title\">%s</h5>", "params": "name" },
+            { "format": "<p>%s</p>", "params": "status" }
+        ]
     },
 
     "place/detail/default": {

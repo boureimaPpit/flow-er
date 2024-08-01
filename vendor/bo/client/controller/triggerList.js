@@ -47,7 +47,7 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
 
     // Trigger search request
 
-    triggerSearch(context, entity, view)
+    triggerSearch({ context, entity, view })
 
     $(".searchSelectTagsIds").each(function () {
         const propertyId = $(this).attr("id").split("-")[1]

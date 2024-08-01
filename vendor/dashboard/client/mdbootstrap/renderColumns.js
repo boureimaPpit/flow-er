@@ -42,7 +42,14 @@ const renderCards = ({ context }, { config, properties, rows }) => {
     for (let row of rows) {
         result.push(`<div class="card mt-3" draggable="true">
             <div class="card-body">
-                ${renderLayout({ context }, { config, properties, row })}
+                <div class=\"d-flex justify-content-between align-items-center mb-3\">
+                    ${ renderLayout({ context }, { config: config.title, properties, row }) }
+                    <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
+                    <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <hr>
+                ${renderLayout({ context }, { config: config.layout, properties, row })}
             </div>
         </div>`)
     }

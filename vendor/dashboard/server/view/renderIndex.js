@@ -36,6 +36,7 @@ const renderIndex = ({ context, entity, view }, data) => {
 
     <!-- MDB -->
     <script type="text/javascript" src="/bo/cli/resources/mdbootstrap/js/mdb.umd.min.js"></script>
+    <!-- MDB -->
     
     <!-- Flow-ER -->
     ${ renderCore({ context, entity, view }, data) }

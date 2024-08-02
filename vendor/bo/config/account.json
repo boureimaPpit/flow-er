@@ -134,6 +134,8 @@
     },
 
     "account/index/account": {
+        "body": "/bo/cli/bootstrap/renderBody10.js",
+        "search": "/dashboard/cli/mdbootstrap/renderSearch.js",
         "searchRenderer": "renderSearch",
         "listRenderer": "renderColumns"
     }, 

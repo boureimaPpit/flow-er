@@ -1,7 +1,5 @@
 const triggerOrder = (context, entity, view) => {
 
-    new bootstrap.Tooltip($("#flOrderButton").get(0))
-
     $(".listOrderHead").hide()
     $(".flDescendingCheck").prop("disabled", true)
     triggerDirection(context, entity, view)

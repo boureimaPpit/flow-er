@@ -1,9 +1,6 @@
 
 const triggerSearch = ({ context, entity, view }) => {
 
-    new bootstrap.Tooltip($("#flRefreshButton").get(0))
-    new bootstrap.Tooltip($("#flEraseButton").get(0))
-
     $("#flRefreshButton").hide()
     $("#flEraseButton").hide()
 

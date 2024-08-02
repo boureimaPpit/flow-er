@@ -41,7 +41,7 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
     }
 
     const data = await response.json()
-    $("#dataView").html(searchRenderer({ context, entity, view }, data))
+    $("#dataview").html(searchRenderer({ context, entity, view }, data))
     
     getListRows(context, entity, view, getSearchParams())
 

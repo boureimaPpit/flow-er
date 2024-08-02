@@ -11,13 +11,16 @@ const renderSearch = ({ context, entity, view }, data) => {
 
                     ${renderFilters(context, entity, view, properties, data)}
         
-                    <div class="col-md-3">    
+                    <div class="col-md-12">    
                         <div class="input-group input-group-sm mb-2 mr-sm-2">
-                            <button type="button" class="btn btn-default" disabled title="<?php echo $this->translate('Refresh the list', 'ppit-core', $context->getLocale()) ?>" id="refreshButton">
-                            <i class="fa fa-sync-alt text-center"></i>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="${context.translate("Order the list")}" id="flOrderButton">
+                                <i class="fas fa-arrow-down-a-z"></i>
                             </button>
-                            <button type="button" class="btn btn-default input-group-text" disabled title="<?php echo $this->translate('Erase', 'ppit-core', $context->getLocale()) ?>" id="eraseButton">
-                            <i class="fa fa-times text-center"></i>
+                            <button type="button" class="btn btn-default" disabled title="<?php echo $this->translate('Refresh the list', 'ppit-core', $context->getLocale()) ?>" id="flRefreshButton">
+                                <i class="fa fa-sync-alt text-center"></i>
+                            </button>
+                            <button type="button" class="btn btn-default input-group-text" disabled title="<?php echo $this->translate('Erase', 'ppit-core', $context->getLocale()) ?>" id="flEraseButton">
+                                <i class="fa fa-times text-center"></i>
                             </button>
                 
                             ${renderButtons(context, entity, view)}
@@ -28,9 +31,6 @@ const renderSearch = ({ context, entity, view }, data) => {
                 </div>
             </form>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-12" id="listParent"></div>
     </div>`
 }
 
@@ -68,10 +68,10 @@ const renderFilters = (context, entity, view, properties, data) => {
         }        
 
         else {
-            input = renderFilterInput(context, propertyId, property, options, data)
+            input = renderFilterInput(context, propertyId, property, options, properties)
         }        
 
-        filters.push(`<div class="col-md-3">${input}</div>`)
+        filters.push(`<div class="col-md-12">${input}</div>`)
     }
 
     return filters.join("\n")
@@ -142,11 +142,9 @@ const renderFilterSelect = (context, propertyId, property, options) => {
 
     return `${(property.options.value) ? `<input type="hidden" class="searchInputValue" id="searchInputValue-${propertyId}" value="${property.options.value}" />` : ""}
     <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
-    <div class="input-group input-group-sm mb-2 mr-sm-2 ${(property["source"]) ? "searchSelectDynamic" : ""} id="searchSelectDiv-${propertyId}">
-        <div class="input-group-prepend">
-            <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
-        </div>
-        <select class="form-control searchInput searchInputSelect ${(multiple) ? "selectpicker searchSelectpicker" : ""} ${(options.restrictionParent) ? `restrictionParent restrictionParent-${propertyId}` : ""}" id="search-${propertyId}" ${(multiple) ? "data-none-selected-text multiple" : ""}>
+    <div class="mb-3">
+        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
+        <select class="form-control form-control-sm searchInput searchInputSelect" id="search-${propertyId}" ${(multiple) ? "multiple" : ""}>
             ${(multiple) ? `<option value="empty">-- ${context.translate("Not provided")} --</option>` : ""}
             ${(!multiple) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
             ${renderModalities(modalities)}
@@ -179,22 +177,22 @@ const renderFilterNumber = (context, propertyId, property) => {
     </div>`
 }
 
-const renderFilterInput = (context, propertyId, property, options, data) => {
-    const datalist = []
-    if (options.completion) {
-        for (let value of data[propertyId]) {
-            datalist.push(`<option value="${value}" />`)
-        }
+const renderDatalist = (propertyId, properties) => {
+    const property = properties[propertyId]
+    const options = []
+    for (let modality of Object.keys(property.distribution)) {
+        const { code, value } = property.distribution[modality]
+        options.push(`<option value="${code}">${code} (${value})</option>`)
     }
+    return options.join("\n")
+}
+
+const renderFilterInput = (context, propertyId, property, options, properties) => {
+    const datalist = []
     return `<div class="input-group input-group-sm mb-2 mr-sm-2">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
-        <div class="input-group-prepend">
-            <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
-        </div>
-        <input class="form-control searchInput searchInputText" ${(options.completion) ? `list="searchDatalist-${propertyId}"` : "" } id="search-${propertyId}">
-        ${(options.completion) ? `<datalist id="searchDatalist-${propertyId}">
-            ${datalist.join("\n")}
-        </datalist>` : ""}
+        <input class="form-control form-control-sm searchInput searchInputText" placeholder="${context.localize(property.labels)}" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}">
+        <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
     </div>`
 }
 

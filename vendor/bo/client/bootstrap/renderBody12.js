@@ -7,13 +7,15 @@ const renderBody = ({ context, entity, view }, data) => {
           ${renderHeader({ context, entity, view }, data)}
       </div>
     
-    <div class="card">
+    <div class="m-3">
 
-      <div class="card-header">
+      <div class="row">
+
           ${renderMenu({ context, entity, view }, data)}
+      
       </div>
 
-      <div class="card-body">
+      <div class="row">
 
         <input type="hidden" id="instanceCaption" value="${data.instance.caption}" />
 
@@ -21,7 +23,7 @@ const renderBody = ({ context, entity, view }, data) => {
     
         <input type="hidden" id="shortcutsRoute" value="/bo/shortcuts/${entity}?view=${view}" />
         <input type="hidden" id="countRoute" value="/bo/v1/${entity}/count" />
-        <div class="section" id="shortcutsPanel"></div>
+        <div class="section mt-3" id="shortcutsPanel"></div>
     
     <!-- Search section-->
         
@@ -36,7 +38,7 @@ const renderBody = ({ context, entity, view }, data) => {
         <input type="hidden" id="listOrderHidden" value="${data.order}" />
         <input type="hidden" id="listLimitHidden" value="${data.limit}" />
     
-        <div class="section" id="dataView"></div>
+        <div class="section" id="dataview"></div>
     
         <input type="hidden" id="detailRoute" value="/bo/detail/${entity}" />
         <input type="hidden" id="groupRoute" value="bo/group/${entity}" />

@@ -133,7 +133,7 @@ const renderIndex = ({ context, entity, view }, data) => {
 
     <!-- Pluggable renderers by index config -->
     <script src="${ (indexConfig && indexConfig.header) ? indexConfig.header : "/bo/cli/bootstrap/renderHeader.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody.js" }"></script>
+    <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody12.js" }"></script>
     <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
     <script src="${ (indexConfig && indexConfig.footer) ? indexConfig.footer : "/bo/cli/bootstrap/renderFooter.js" }"></script>
     <script src="${ (indexConfig && indexConfig.shortcuts) ? indexConfig.shortcuts : "/bo/cli/bootstrap/renderShortcuts.js" }"></script>
@@ -142,6 +142,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="${ (indexConfig && indexConfig.list) ? indexConfig.list : "/bo/cli/bootstrap/renderList.js" }"></script>
     <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/bo/cli/bootstrap/renderColumns.j" }s"></script>
 
+    <!-- Alternative renderers by design block -->
     <script>const shortcutsRenderer = ${ (indexConfig && indexConfig.shortcutsRenderer) ? indexConfig.shortcutsRenderer : "renderShortcuts" }</script>
     <script>const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }</script>
     <script>const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }</script>

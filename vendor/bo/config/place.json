@@ -51,6 +51,7 @@
     },
 		
 	"place/index/place": {
+        "body": "/bo/cli/bootstrap/renderBody10.js",
         "searchRenderer": "renderSearch",
         "listRenderer": "renderColumns"
     }, 

@@ -53,15 +53,7 @@ const renderFilters = (context, entity, view, properties, data) => {
 
         else if (["select", "multiselect", "tags"].includes(propertyType)) {
             input = renderFilterSelect(context, propertyId, property, options)
-        }        
-
-        else if (["source"].includes(propertyType)) {
-            input = renderFilterSource(context, propertyId, property, options)
-        }        
-
-        else if (["tag"].includes(propertyType)) {
-            input = renderFilterTag(context, propertyId, property, options)
-        }        
+        }
 
         else if (["number"].includes(propertyType)) {
             input = renderFilterNumber(context, propertyId, property, options)
@@ -79,13 +71,13 @@ const renderFilters = (context, entity, view, properties, data) => {
 
 const renderFilterDateTime = (context, propertyId, property) => {
 
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2">
+    return `<div class="mb-3">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
-        <div class="input-group-prepend">
-            <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
+        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
+        <div class="input-group input-group-sm mb-2 mr-sm-2">
+            <input class="form-control form-control-sm searchInput searchInputDate searchInputDateMin" type="text" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />
+            <input class="form-control form-control-sm searchInput searchInputDate searchInputDateMax" type="text" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />
         </div>
-        <input class="form-control searchInput searchInputDate searchInputDateMin" type="text" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />
-        <input class="form-control searchInput searchInputDate searchInputDateMax" type="text" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />
     </div>`
 } 
 
@@ -96,8 +88,8 @@ const renderFilterAge = (context, propertyId, property) => {
         <div class="input-group-prepend">
             <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
         </div>
-        <input class="form-control searchInput searchInputAge searchInputAgeMin" type="text" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />
-        <input class="form-control searchInput searchInputAge searchInputAgeMax" type="text" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />
+        <input class="form-control form-control-sm searchInput searchInputAge searchInputAgeMin" type="text" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />
+        <input class="form-control form-control-sm searchInput searchInputAge searchInputAgeMax" type="text" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />
     </div>`
 } 
 
@@ -144,36 +136,22 @@ const renderFilterSelect = (context, propertyId, property, options) => {
     <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
     <div class="mb-3">
         <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
-        <select class="form-control form-control-sm searchInput searchInputSelect" id="search-${propertyId}" ${(multiple) ? "multiple" : ""}>
-            ${(multiple) ? `<option value="empty">-- ${context.translate("Not provided")} --</option>` : ""}
-            ${(!multiple) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
+        <select class="form-control form-control-sm searchInput searchInputSelect" size="3" id="search-${propertyId}" multiple>
+            <option value="empty">-- ${context.translate("Not provided")} --</option>
             ${renderModalities(modalities)}
         </select>
     </div>`
 }
 
-const renderFilterSource = (context, propertyId, property) => {
-
-    return `${(property.options.value) ? `<input type="hidden" class="searchInputValue" id="searchInputValue-${propertyId}" value="${property.options.value}" />` : ""}
-    <div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
-    </div>`
-} 
-
-const renderFilterTag = (context, propertyId, property) => {
-
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2 searchSelectDynamic" id="searchSelectDiv-${propertyId}">
-    </div>`
-} 
-
 const renderFilterNumber = (context, propertyId, property) => {
 
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2">
+    return `<div class="mb-3">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-<${propertyId}" />
-        <div class="input-group-prepend">
-            <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
+        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
+        <div class="input-group input-group-sm mb-2 mr-sm-2">
+            <input class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMin" type="text" id="search_min-${propertyId}" placeholder="${context.translate("Min")}" />
+            <input class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMax" type="text" id="search_max-${propertyId}" placeholder="${context.translate("Max")}" />
         </div>
-        <input class="form-control searchInput searchInputNumber searchInputNumberMin" type="text" id="search_min-${propertyId}" placeholder="${context.translate("Min")}" />
-        <input class="form-control searchInput searchInputNumber searchInputNumberMax" type="text" id="search_max-${propertyId}" placeholder="${context.translate("Max")}" />
     </div>`
 }
 
@@ -189,9 +167,10 @@ const renderDatalist = (propertyId, properties) => {
 
 const renderFilterInput = (context, propertyId, property, options, properties) => {
     const datalist = []
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2">
+    return `<div class="mb-3">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
-        <input class="form-control form-control-sm searchInput searchInputText" placeholder="${context.localize(property.labels)}" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}">
+        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
+        <input class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}">
         <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
     </div>`
 }

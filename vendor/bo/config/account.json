@@ -185,8 +185,8 @@
         ],
         "layout": [ 
             { "format": "<p class=\"card-text\">%s (%s)</p>", "params": "place_name,place_region" },
-            { "format": "<a href=\"mailto:%s\">%s</a><br>", "params": "email,email" },
-            { "format": "<a href=\"tel:%s\">%s</a>", "params": "tel_cell,tel_cell" }
+            { "format": "%s<br>", "params": "email" },
+            { "format": "%s", "params": "tel_cell" }
         ],
         "properties": {
             "status": {},

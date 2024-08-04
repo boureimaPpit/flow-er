@@ -15,12 +15,14 @@ const triggerShortcuts = async ({ context, entity, view }, route) => {
     }
 
     const data = await response.json()
-    $("#shortcutsPanel").html(shortcutsRenderer({ context, entity, view }, data))
+    document.getElementById("shortcutsPanel").innerHtml = shortcutsRenderer({ context, entity, view }, data)
 
-    $(".flBadge").hide()
+    for (let badge of document.getElementsByClassName("flBadge")) {
+        badge.style.visibility = "hidden"
+    }
 
-    $('.shortcutsParams').each(function () {
-        const id = $(this).attr('id').split('-')[1], route = $("#countRoute").val()
+    for (let param of document.getElementsByClassName("shortcutsParams")) {
+        const id = param.attributes.getNamedItem("id").value.split('-')[1], route = document.getElementById("countRoute").value
         const where = $(this).val()
         const params = {}
         for (let param of where.split("|")) {
@@ -30,6 +32,7 @@ const triggerShortcuts = async ({ context, entity, view }, route) => {
 
         getCount({ context, entity, view }, id, route, params)
         getCountCallback(id, route, params)()
-    })
-    $("#badgeRefreshButton").click(refreshBadges)
+    }
+    const badgeRefreshButton = document.getElementById("badgeRefreshButton")
+    if (badgeRefreshButton) badgeRefreshButton.onClick = refreshBadges
 }

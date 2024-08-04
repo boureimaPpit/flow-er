@@ -49,7 +49,7 @@ const loadPage = async ({ entity, view }) => {
 
     await loadView({ context, entity, view })
 
-    const shortcutsRoute = $("#shortcutsRoute").val()
+    const shortcutsRoute = document.getElementById("shortcutsRoute").value
     if (shortcutsRoute) triggerShortcuts({ context, entity, view }, shortcutsRoute)
     triggerList({ context, entity, view }, {})
 }

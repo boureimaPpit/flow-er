@@ -2,10 +2,10 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
 
     // Route with params
 
-    let route = `${$("#searchRoute").val()}`
+    let route = `${document.getElementById("searchRoute").value}`
 
-    const columns = $("#columns").val()
-    if (columns) route += "columns=" + columns
+    const columns = document.getElementById("columns")
+    if (columns) route += "columns=" + columns.value
 
     let params = []
     for (const key of Object.keys(searchParams)) {
@@ -20,10 +20,10 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
     const where = params.join("|")
     if (where) route += "&where=" + where
 
-    const order = $("#listOrderHidden").val()
+    const order = document.getElementById("listOrderHidden").value
     if (order) route += "&order=" + order
 
-    const limit = $("#listLimitHidden").val()
+    const limit = document.getElementById("listLimitHidden").value
     if (limit) route += "&limit=" + limit
 
     // Fetch
@@ -41,7 +41,7 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
     }
 
     const data = await response.json()
-    $("#dataview").html(searchRenderer({ context, entity, view }, data))
+    document.getElementById("dataview").innerHTML = searchRenderer({ context, entity, view }, data)
     
     getListRows(context, entity, view, getSearchParams())
 
@@ -49,20 +49,21 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
 
     triggerSearch({ context, entity, view })
 
-    $(".searchSelectTagsIds").each(function () {
-        const propertyId = $(this).attr("id").split("-")[1]
-        const tagId = $(this).attr("id").split("-")[2]
-        const name = $(`#searchSelectTagsName-${propertyId}-${tagId}`).val()
-        const ids = $(this).val().split(",")
+    for (let tag of document.getElementsByClassName("searchSelectTagsIds")) {
+        const id = tag.attributes.getNamedItem("id").value
+        const propertyId = id.split("-")[1]
+        const tagId = id.split("-")[2]
+        const name = document.getElementById(`searchSelectTagsName-${propertyId}-${tagId}`).value
+        const ids = tag.value.split(",")
         for (const id of ids) {
-            const td = $(`#listTagsName-${propertyId}-${id}`)
+            const td = document.getElementById(`listTagsName-${propertyId}-${id}`)
             if (td) {
-                let label = (td.html()) ? td.html().split(",") : []
+                let label = (td.innerHtml) ? td.innerHtml.split(",") : []
                 label.push(name)
-                $(`#listTagsName-${propertyId}-${id}`).html(label.join(","))
+                td.innerHTML = label.join(",")
             }
         }
-    })
+    }
 
     // Trigger order request
     
@@ -70,110 +71,122 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
 
     // Extend the displayed list
 
-    $(".listMoreButton").click(function () {
-        $("#listLimitHidden").val("")
-        triggerList(context, entity, view, getSearchParams())
-    })
+    for (let button of document.getElementsByClassName("listMoreButton")) {
+        button.onclick = function () {
+            document.getElementById("listLimitHidden").value = ""
+            triggerList(context, entity, view, getSearchParams())
+        }
+    }
 
     // Enable group action
 
-    $("#listGroupButton-0").hide()
-    $("#listGroupButton-1").prop("disabled", true)
-    $("#listGroupTr").hide()
+    for (let badge of document.getElementsByClassName("flBadge")) {
+        badge.style.visibility = "hidden"
+    }
+    if (document.getElementById("listGroupButton-0")) {
+        document.getElementById("listGroupButton-0").style.visibility = "hidden"
+        document.getElementById("listGroupButton-1").disabled = true
+        document.getElementById("listGroupTr").style.visibility = "hidden"    
+    }
 
     // Trigger checking rows for group action
 
-    $(".listCheck").click(function (e) {
-        if (e.shiftKey) {
-            const max = $(this).attr("id").split("-")[2], state = $(this).prop("checked")
-            let min = 0
-            $(".listCheck").each(function () {
-                const i = parseInt($(this).attr("id").split("-")[2])
-                if ($(this).prop("checked") && i < max) min = i
-            })
-            $(".listCheck").each(function () {
-                const i = parseInt($(this).attr("id").split("-")[2])
-                if (i >= min && i <= max) $(this).prop("checked", state)
-            })
-        } 
-        else {
-            const id = parseInt($(this).attr("id").split("-")[1])
-        }
-
-        let count = 0, checked = 0, sum = 0, sumChecked = 0
-        $(".listCheck").each(function () {
-            count++
-            const id = parseInt($(this).attr("id").split("-")[1]), amount = parseFloat($(`#listAmount-${id}`).val())
-            if (amount) sum += amount
-            if ($(this).prop("checked")) {
-                checked++
-                sumChecked += amount
+    for (let check of document.getElementsByClassName("listCheck")) {
+        check.onclick = function (e) {
+            if (e.shiftKey) {
+                const max = check.attributes.getNamedItem("id").value.split("-")[2], state = check.checked
+                let min = 0
+                for (let check of document.getElementsByClassName("listCheck")) {
+                    const i = parseInt(check.attributes.getNamedItem("id").value.split("-")[2])
+                    if (check.checked && i < max) min = i
+                }
+                for (let check of document.getElementsByClassName("listCheck")) {
+                    const i = parseInt(check.attributes.getNamedItem("id").value.split("-")[2])
+                    if (i >= min && i <= max) check.checked = state
+                }
             } 
-        })
-        if (checked > 0) {
-            $(".listGroupButton").show()
-            $("#listGroupButton-1").prop("disabled", false)
-            $("#listDetailButton-0").hide()
-            $("#listGroupTr").show()
-            $("#listCount").text(checked)
-            if (sumChecked) $("#listSum").text((Math.round(sumChecked * 100) / 100).toFixed(2))
+            else {
+                const id = parseInt(check.attributes.getNamedItem("id").value.split("-")[1])
+            }
+
+            let count = 0, checked = 0, sum = 0, sumChecked = 0
+            for (let check of document.getElementsByClassName("listCheck")) {
+                count++
+                const id = parseInt(check.attributes.getNamedItem("id").value.split("-")[1]), amount = parseFloat(document.getElementById(`listAmount-${id}`).value)
+                if (amount) sum += amount
+                if (check.checked) {
+                    checked++
+                    sumChecked += amount
+                } 
+            }
+            if (checked > 0) {
+                for (let badge of document.getElementsByClassName("listGroupButton")) {
+                    badge.style.visibility = "initial"
+                }
+                document.getElementById("listGroupButton-1").disabled = false
+                document.getElementById("listDetailButton-0").style.visibility = "hidden"
+                document.getElementById("listGroupTr").style.visibility = "initial"
+                document.getElementById("listCount").innerText = checked
+                if (sumChecked) document.getElementById("listSum").innerText = (Math.round(sumChecked * 100) / 100).toFixed(2)
+            }
+            else {
+                document.getElementById("listGroupButton-0").style.visibility = "hidden"
+                document.getElementById("listGroupButton-1").disabled = true
+                document.getElementById("listDetailButton-0").style.visibility = "initial"
+                document.getElementById("listGroupTr").style.visibility = "hidden"
+                document.getElementById("listCount").innerText = count
+                if (sum) document.getElementById("listSum").innerText = (Math.round(sum * 100) / 100).toFixed(2)
+            }
         }
-        else {
-            $("#listGroupButton-0").hide()
-            $("#listGroupButton-1").prop("disabled", true)
-            $("#listDetailButton-0").show()
-            $("#listGroupTr").hide()
-            $("#listCount").text(count)
-            if (sum) $("#listSum").text((Math.round(sum * 100) / 100).toFixed(2))
-        }
-    })
+    }
 
     // Trigger checking all
 
-    $(".listCheckAll").click(function () {
-        const state = $(this).prop("checked")
-        $(".listCheck").prop("checked", state)
-        $(".listCheckAll").prop("checked", state)
+    for (let checkAll of document.getElementsByClassName("listCheckAll")) {
+        const state = checkAll.checked
+        for (let check of document.getElementsByClassName("listCheck")) check.checked = state
+        for (let checkAll of document.getElementsByClassName("listCheckAll")) checkAll.checked = state
 
         if (state) {
-            $("#listGroupButton-0").show()
-            $("#listGroupButton-1").prop("disabled", false)
-            $("#listDetailButton-0").hide()
+            document.getElementById("listGroupButton-0").style.visibility = "initial"
+            document.getElementById("listGroupButton-1").disabled = false
+            document.getElementById("listDetailButton-0").style.visibility = "hidden"
         }
         else {
-            $("#listGroupButton-0").hide()
-            $("#listGroupButton-1").prop("disabled", true)
-            $("#listDetailButton-0").show()
+            document.getElementById("listGroupButton-0").style.visibility = "hidden"
+            document.getElementById("listGroupButton-1").disabled = true
+            document.getElementById("listDetailButton-0").style.visibility = "initial"
         }
 
         let count = 0, sum = 0
-        $(".listCheck").each(function () {
+        for (let check of document.getElementsByClassName("listCheck")) {
             count++
-            const id = parseInt($(this).attr("id").split("-")[1]), amount = parseFloat($(`#listAmount-${id}`).val())
+            const id = parseInt(check.attributes.getNamedItem("id").value.split("-")[1]), amount = parseFloat(document.getElementById(`listAmount-${id}`).value)
             if (amount) sum += amount
-        })
-        $("#listCount").text(count)
-        if (sum) $("#listSum").text((Math.round(sum * 100) / 100).toFixed(2))
-    })
+        }
+        document.getElementById("listCount").innerText = count
+        if (sum) document.getElementById("listSum").innerText = (Math.round(sum * 100) / 100).toFixed(2)
+    }
 
     // Widgets
     
-    $(".datepicker").datepicker()
-    $(".timepicker").timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
+    for (let dateInput of document.getElementsByClassName("datepicker")) dateInput.datepicker()
+    for (let dateInput of document.getElementsByClassName("timepicker")) dateInput.timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
 
     // Connect the grouped actions anchors
-    $(".listGroupButton").click(function () {
-        $("#listGroupModal").html("")
-        $("#groupModalForm").modal("show")
+    for (let button of document.getElementsByClassName("listGroupButton")) {
+        document.getElementById("listGroupModal").innerHtml = ""
+        document.getElementById("groupModalForm").showModal()
         getGroup()
-    });
+    }
 
     // Connect the detail anchors
-    $(".listDetailButton").click(function () {
-        const id = $(this).attr("id").split("-")[1]
-        $(this).removeClass("btn-outline-primary").addClass("btn-primary")
-        $("#listDetailModal").html("")
-        $("#listDetailModalForm").modal("show")
+    for (let button of document.getElementsByClassName("listDetailButton")) {
+        const id = button.attributes.getNamedItem("id").value.split("-")[1]
+        button.classList.remove("btn-outline-primary")
+        button.classList.add("btn-primary")
+        document.getElementById("listDetailModal").innerHtml = ""
+        document.getElementById("listDetailModalForm").showModal()
         getDetail(context, entity, view, id, searchParams)
-    })
+    }
 }

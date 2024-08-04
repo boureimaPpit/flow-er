@@ -17,10 +17,10 @@ const getListRows = (context, entity, view, searchParams) => {
     const where = params.join("|")
     if (where) route += "&where=" + where
 
-    const order = $("#listOrderHidden").val()
+    const order = document.getElementById("listOrderHidden").value
     if (order) route += "&order=" + order
 
-    const limit = $("#listLimitHidden").val()
+    const limit = document.getElementById("listLimitHidden").value
     if (limit) route += "&limit=" + limit
 
     xhttp.open("GET", route, true)
@@ -30,159 +30,210 @@ const getListRows = (context, entity, view, searchParams) => {
             else if (xhttp.status == 200) {
 
                 if (xhttp.statusText.substring(0, 3) == "jwt") {
-                    document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
+                    document.cookie = `JWT-${document.getElementById("instanceCaption").value}${xhttp.statusText.substring(4)};path=/`
                 }
 
                 const data = JSON.parse(xhttp.responseText)
-                $("#listParent").html(listRenderer({ context, entity, view }, data))
+                document.getElementById("listParent").innerHTML = listRenderer({ context, entity, view }, data)
 
-                $("#listGroupButton-0").hide()
-                $("#listGroupButton-1").prop("disabled", true)
-                $("#listGroupTr").hide()
+                if (document.getElementById("listGroupButton-0")) {
+                    document.getElementById("listGroupButton-0").style.visibility = "hidden"
+                    document.getElementById("listGroupButton-1").disabled = true
+                    document.getElementById("llistGroupTr").style.visibility = "hidden"
+                }
 
                 // Connect the more anchor
-                $(".listMoreButton").click(function () {
-                    $("#listLimitHidden").val("")
-                    getListRows(context, entity, view, getSearchParams())
-                })
+                if (document.getElementById("listMoreButton")) {
+                    document.getElementById("listMoreButton").onClick = function () {
+                        document.getElementById("listLimitHidden").value = ""
+                        getListRows(context, entity, view, getSearchParams())
+                    }
+                }
 
                 // Able the group action button
 
                 const manageInputs = () => {
                     let selected = false
-                    $(".listGroupCheck").each(function () {
-                        if ($(this).prop("checked")) selected = true
-                    })
-                    if (selected) $(".listEditButton").removeClass("btn-outline-primary").addClass("btn-warning")
-                    else $(".listEditButton").removeClass("btn-warning").addClass("btn-outline-primary")
+                    for (let check of document.getElementsByClassName("listGroupCheck")) {
+                        if (check.checked) selected = true
+                    }
+                    if (selected) {
+                        for (let button of document.getElementsByClassName("listEditButton")) {
+                            button.classList.remove("btn-outline-primary")
+                            button.classList.add("btn-warning")
+                        }
+                    }
+                    else {
+                        for (let button of document.getElementsByClassName("listEditButton")) {
+                            button.classList.remove("btn-warning")
+                            button.classList.add("btn-outline-primary")
+                        }
+                    }
                 }
 
-                $(".listCheck").click(function (e) {
+                for (let check of document.getElementsByClassName("listCheck")) {
                     if (e.shiftKey) {
-                        const max = $(this).attr("id").split("-")[2], state = $(this).prop("checked")
+                        const max = check.attributes.getNamedItem("id").value.split("-")[2], state = check.checked
                         let min = 0
-                        $(".listCheck").each(function () {
-                            const i = parseInt($(this).attr("id").split("-")[2])
-                            if ($(this).prop("checked") && i < max) min = i
-                        })
-                        $(".listCheck").each(function () {
-                            const i = parseInt($(this).attr("id").split("-")[2])
-                            if (i >= min && i <= max) $(this).prop("checked", state)
-                        })
+                        for (let check of document.getElementsByClassName("listCheck")) {
+                            const i = parseInt(check.attributes.getNamedItem("id").value.split("-")[2])
+                            if (check.checked && i < max) min = i
+                        }
+                        for (let check of document.getElementsByClassName("listCheck")) {
+                            const i = parseInt(check.attributes.getNamedItem("id").value.split("-")[2])
+                            if (i >= min && i <= max) check.checked = state
+                        }
                     } 
                     else {
-                        const id = parseInt($(this).attr("id").split("-")[1])
+                        const id = parseInt(check.attributes.getNamedItem("id").value.split("-")[1])
                     }
 
                     let count = 0, checked = 0, sum = 0, sumChecked = 0
-                    $(".listCheck").each(function () {
+                    for (let check of document.getElementsByClassName("listCheck")) {
                         count++
-                        const id = parseInt($(this).attr("id").split("-")[1]), amount = parseFloat($(`#listAmount-${id}`).val())
+                        const id = parseInt(check.attributes.getNamedItem("id").value.split("-")[1]), amount = parseFloat(document.getElementById(`listAmount-${id}`).value)
                         if (amount) sum += amount
-                        if ($(this).prop("checked")) {
+                        if (check.checked) {
                             checked++
                             sumChecked += amount
                         } 
-                    })
+                    }
                     if (checked > 0) {
-                        $(".listGroupButton").show()
-                        $("#listGroupButton-1").prop("disabled", false)
-                        $("#listDetailButton-0").hide()
-                        $("#listGroupTr").show()
-                        $("#listCount").text(checked)
-                        if (sumChecked) $("#listSum").text((Math.round(sumChecked * 100) / 100).toFixed(2))
+                        document.getElementById("listGroupButton-0").style.visibility = "initial"
+                        document.getElementById("listGroupButton-1").disabled = false
+                        document.getElementById("listDetailButton-0").style.visibility = "hidden"
+                        document.getElementById("listGroupTr").style.visibility = "initial"
+                        document.getElementById("listCount").innerText = checked
+                        if (sumChecked) document.getElementById("listSum").innerText = (Math.round(sumChecked * 100) / 100).toFixed(2)
                     }
                     else {
-                        $("#listGroupButton-0").hide()
-                        $("#listGroupButton-1").prop("disabled", true)
-                        $("#listDetailButton-0").show()
-                        $("#listGroupTr").hide()
-                        $("#listCount").text(count)
-                        if (sum) $("#listSum").text((Math.round(sum * 100) / 100).toFixed(2))
+                        document.getElementById("listGroupButton-0").style.visibility = "hidden"
+                        document.getElementById("listGroupButton-1").disabled = true
+                        document.getElementById("listDetailButton-0").style.visibility = "initial"
+                        document.getElementById("listGroupTr").style.visibility = "hidden"
+                        document.getElementById("listCount").innerText = count
+                        if (sum) document.getElementById("listSum").innerText = (Math.round(sum * 100) / 100).toFixed(2)
                     }
-                })
+                }
 
                 // Connect the check all checkbox
-                $(".listCheckAll").click(function () {
-                    const state = $(this).prop("checked")
-                    $(".listCheck").prop("checked", state)
-                    $(".listCheckAll").prop("checked", state)
-        
-                    if (state) {
-                        $("#listGroupButton-0").show()
-                        $("#listGroupButton-1").prop("disabled", false)
-                        $("#listDetailButton-0").hide()
+                for (let check of document.getElementsByClassName("listCheckAll")) {
+                    const state = check.checked
+                    for (let check of document.getElementsByClassName("listCheck")) {
+                        check.checked = state
                     }
-                    else {
-                        $("#listGroupButton-0").hide()
-                        $("#listGroupButton-1").prop("disabled", true)
-                        $("#listDetailButton-0").show()
+                    for (let check of document.getElementsByClassName("listCheckAll")) {
+                        check.checked = state
+                    }
+        
+                    if (document.getElementById("listGroupButton-0")) {
+                        if (state) {
+                            document.getElementById("listGroupButton-0").style.visibility = "initial"
+                            document.getElementById("listGroupButton-1").disabled = false
+                            document.getElementById("listDetailButton-0").style.visibility = "hidden"
+                        }
+                        else {
+                            document.getElementById("listGroupButton-0").style.visibility = "hidden"
+                            document.getElementById("listGroupButton-1").disabled = true
+                            document.getElementById("listDetailButton-0").style.visibility = "initial"
+                        }    
                     }
 
                     let count = 0, sum = 0
-                    $(".listCheck").each(function () {
+                    for (let check of document.getElementsByClassName("listCheck")) {
                         count++
-                        const id = parseInt($(this).attr("id").split("-")[1]), amount = parseFloat($(`#listAmount-${id}`).val())
+                        const id = parseInt(check.attributes.getNamedItem("id").value.split("-")[1]), amount = parseFloat($(`#listAmount-${id}`).val())
                         if (amount) sum += amount
-                    })
-                    $("#listCount").text(count)
-                    if (sum) $("#listSum").text((Math.round(sum * 100) / 100).toFixed(2))
-                })
+                    }
+                    document.getElementById("listCount").innerText = count
+                    if (sum) document.getElementById("listSum").innerText = (Math.round(sum * 100) / 100).toFixed(2)
+                }
 
-                $(".listInput").change(function () {
-                    let propertyId = $(this).attr("name")
-                    $("#listGroupCheck-" + propertyId).prop("checked", "checked")
-            
-                    let selected = false
-                    $(".listGroupCheck").each(function () {
-                        if ($(this).prop("checked")) selected = true
-                    })
-                    if (selected) {
-                        $(".listEditButton").prop("disabled", false)
-                        $(".listEditButton").removeClass("btn-outline-primary").addClass("btn-warning")
+                for (let check of document.getElementsByClassName("listInput")) {
+                    check.onchange = function () {
+                        let propertyId = check.attributes.getNamedItem("name")
+                        document.getElementById(`listGroupCheck-${propertyId}`).checked = true
+                
+                        let selected = false
+                        for (let check of document.getElementsByClassName("listGroupCheck")) {
+                            if (check.checked) selected = true
+                        }
+                        if (selected) {
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.disabled = false
+                            }
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.classList.remove("btn-outline-primary")
+                                button.classList.add("btn-warning")
+                            }
+                        } 
+                        else {
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.disabled = true
+                            }
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.classList.remove("btn-warning")
+                                button.classList.add("btn-outline-primary")
+                            }
+                        } 
+                        manageInputs()    
                     } 
-                    else {
-                        $(".listEditButton").prop("disabled", true)
-                        $(".listEditButton").removeClass("btn-warning").addClass("btn-outline-primary")
-                    } 
-                    manageInputs()
-                })
+                }
 
-                $(".listGroupCheck").change(function () {
-                    let selected = false
-                    $(".listGroupCheck").each(function () {
-                        if ($(this).prop("checked")) selected = true
-                    })
-                    if (selected) {
-                        $(".listEditButton").prop("disabled", false)
-                        $(".listEditButton").removeClass("btn-outline-primary").addClass("btn-warning")
-                    } 
-                    else {
-                        $(".listEditButton").prop("disabled", true)
-                        $(".listEditButton").removeClass("btn-warning").addClass("btn-outline-primary")
-                    } 
-                    manageInputs()
-                });
+                for (let input of document.getElementsByClassName("listInput")) {
+                    input.onchange = function () {
+                        let selected = false
+                        for (let input of document.getElementsByClassName("listGroupCheck")) {
+                            if (check.checked) selected = true
+                        }
+                        if (selected) {
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.disabled = false
+                            }
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.classList.remove("btn-outline-primary")
+                                button.classList.add("btn-warning")
+                            }
+                        } 
+                        else {
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.disabled = true
+                            }
+                            for (let button of document.getElementsByClassName("listEditButton")) {
+                                button.classList.remove("btn-warning")
+                                button.classList.add("btn-outline-primary")
+                            }
+                        } 
+                        manageInputs()
+                    }
+                }
 
-                $(".listEditButton").click(function () {
-                    getListGroupUpdate()
-                })
+                for (let button of document.getElementsByClassName("listEditButton")) {
+                    button.onclick = function () {
+                        getListGroupUpdate()
+                    }
+                }
 
                 // Connect the grouped actions anchors
-                $(".listGroupButton").click(function () {
-                    $("#listGroupModal").html("")
-                    $("#groupModalForm").modal("show")
-                    getGroup()
-                });
+                for (let button of document.getElementsByClassName("listGroupButton")) {
+                    button.onclick = function () {
+                        document.getElementById("listGroupModal").innerHTML = ""
+                        document.getElementById("groupModalForm").showModal()
+                        getGroup()
+                    }
+                }
 
                 // Connect the detail anchors
-                $(".listDetailButton").click(function () {
-                    const id = $(this).attr("id").split("-")[1]
-                    $(this).removeClass("btn-outline-primary").addClass("btn-primary")
-                    $("#listDetailModal").html("")
-                    $("#listDetailModalForm").modal("show")
-                    getDetail(context, entity, view, id, searchParams)
-                })
+                for (let button of document.getElementsByClassName("listDetailButton")) {
+                    button.onclick = function () {
+                        const id = button.attributes.getNamedItem("id").value.split("-")[1]
+                        button.classList.remove("btn-outline-primary")
+                        button.classList.add("btn-warning")
+                        document.getElementById("listDetailModal").innerHTML = ""
+                        document.getElementById("listDetailModalForm").showModal()
+                        getDetail(context, entity, view, id, searchParams)
+                    }
+                }
             }
             else toastr.error("A technical error has occured. PLease try again later")
         }

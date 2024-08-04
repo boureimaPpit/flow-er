@@ -149,8 +149,8 @@ const renderFilterNumber = (context, propertyId, property) => {
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-<${propertyId}" />
         <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
         <div class="input-group input-group-sm mb-2 mr-sm-2">
-            <input class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMin" type="text" id="search_min-${propertyId}" placeholder="${context.translate("Min")}" />
-            <input class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMax" type="text" id="search_max-${propertyId}" placeholder="${context.translate("Max")}" />
+            <input class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMin" type="text" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />
+            <input class="form-control form-control-sm searchInput searchInputNumber searchInputNumberMax" type="text" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />
         </div>
     </div>`
 }
@@ -167,11 +167,11 @@ const renderDatalist = (propertyId, properties) => {
 
 const renderFilterInput = (context, propertyId, property, options, properties) => {
     const datalist = []
-    return `<div class="mb-3">
+    return `<div class="form-outline mb-3" data-mdb-input-init>
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
-        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
         <input class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}">
         <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
+        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
     </div>`
 }
 

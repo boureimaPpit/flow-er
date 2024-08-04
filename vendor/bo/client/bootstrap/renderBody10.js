@@ -41,7 +41,7 @@ const renderBody = ({ context, entity, view }, data) => {
         <div class="section">
           <div class="row">
             <div class="col-10" id="listParent"></div>
-            <div class="col-2" id="dataview"></div>
+            <div class="col-2" id="dataview></div>
           </div>
         </div>
     

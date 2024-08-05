@@ -16,6 +16,6 @@ const loadView = async ({ context, entity, view }) => {
 
     const data = await response.json()
 
-    const body = renderBody({ context, entity, view }, data)
+    const body = bodyRenderer({ context, entity, view }, data)
     $("body").html(body)
 }

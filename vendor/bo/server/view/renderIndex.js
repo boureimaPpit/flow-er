@@ -132,21 +132,24 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/resources/zingchart/zingchart.min.js"></script>
 
     <!-- Pluggable renderers by index config -->
-    <script src="${ (indexConfig && indexConfig.header) ? indexConfig.header : "/bo/cli/bootstrap/renderHeader.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody12.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.footer) ? indexConfig.footer : "/bo/cli/bootstrap/renderFooter.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.shortcuts) ? indexConfig.shortcuts : "/bo/cli/bootstrap/renderShortcuts.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.search) ? indexConfig.search : "/bo/cli/bootstrap/renderSearch.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.listHeader) ? indexConfig.listHeader : "/bo/cli/bootstrap/renderListHeader.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.list) ? indexConfig.list : "/bo/cli/bootstrap/renderList.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/bo/cli/bootstrap/renderColumns.j" }s"></script>
+    <script src="/bo/cli/bootstrap/renderHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderBody10.js"></script>
+    <script src="/bo/cli/bootstrap/renderBody12.js"></script>
+    <script src="/bo/cli/bootstrap/renderMenu.js"></script>
+    <script src="/bo/cli/bootstrap/renderFooter.js"></script>
+    <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
+    <script src="/bo/cli/bootstrap/renderSearch.js"></script>
+    <script src="/bo/cli/bootstrap/renderListHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderList.js"></script>
+    <script src="/bo/cli/bootstrap/renderColumns.js"></script>
 
     <!-- Alternative renderers by design block -->
-    <script>const shortcutsRenderer = ${ (indexConfig && indexConfig.shortcutsRenderer) ? indexConfig.shortcutsRenderer : "renderShortcuts" }</script>
-    <script>const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }</script>
-    <script>const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }</script>
     <script>
+    const bodyRenderer = ${ (indexConfig && indexConfig.bodyRenderer) ? indexConfig.bodyRenderer : "renderBody12" }
+    const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }
+    searchCallback = ({ context, entity, view }) => {}
+    listCallback = ({ context, entity, view }) => {}
+    const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>
 

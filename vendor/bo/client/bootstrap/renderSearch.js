@@ -167,7 +167,7 @@ const renderDatalist = (propertyId, properties) => {
 
 const renderFilterInput = (context, propertyId, property, options, properties) => {
     const datalist = []
-    return `<div class="form-outline mb-3" data-mdb-input-init>
+    return `<div class="form-outline mb-3 searchFormOutline" data-mdb-input-init>
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
         <input class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}">
         <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>

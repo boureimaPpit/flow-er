@@ -3,9 +3,9 @@ const { renderCore } = require("../../../bo/server/view/renderCore")
 const renderIndex = ({ context, entity, view }, data) => {
 
     const user = data.user, tab = data.tab, indexConfig = data.indexConfig
-
+    console.log(tab)
     return `<!DOCTYPE html>
-    <html lang="fr" ${ (tab.darkMode) ? "data-bs-theme=\"dark\"" : "" }>
+    <html lang="fr" ${ (tab.darkMode) ? "data-mdb-theme=\"dark\"" : "" }>
     
     <!-- Head -->
     <head><title>${context.localize(tab.labels)}</title>
@@ -32,6 +32,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/resources/jquery/jquery-3.6.3.min.js" ></script>
     <script src="/bo/cli/resources/jquery-ui-1.13.2/jquery-ui.js"></script>
     <script src="/bo/cli/resources/jquery.timepicker/jquery.timepicker.js"></script>
+    <script src="/bo/cli/resources/toastr/build/toastr.min.js"></script>
     <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
 
     <!-- MDB -->
@@ -41,21 +42,27 @@ const renderIndex = ({ context, entity, view }, data) => {
     ${ renderCore({ context, entity, view }, data) }
 
     <!-- Pluggable renderers by index config -->
-    <script src="${ (indexConfig && indexConfig.header) ? indexConfig.header : "/bo/cli/bootstrap/renderHeader.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.body) ? indexConfig.body : "/bo/cli/bootstrap/renderBody12.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.menu) ? indexConfig.menu : "/bo/cli/bootstrap/renderMenu.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.footer) ? indexConfig.footer : "/bo/cli/bootstrap/renderFooter.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.shortcuts) ? indexConfig.shortcuts : "/bo/cli/bootstrap/renderShortcuts.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.search) ? indexConfig.search : "/bo/cli/bootstrap/renderSearch.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.listHeader) ? indexConfig.listHeader : "/bo/cli/bootstrap/renderListHeader.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.list) ? indexConfig.list : "/bo/cli/bootstrap/renderList.js" }"></script>
-    <script src="${ (indexConfig && indexConfig.columns) ? indexConfig.columns : "/dashboard/cli/mdbootstrap/renderColumns.j" }s"></script>
+    <script src="/bo/cli/bootstrap/renderHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderBody10.js"></script>
+    <script src="/bo/cli/bootstrap/renderBody12.js"></script>
+    <script src="/bo/cli/bootstrap/renderMenu.js"></script>
+    <script src="/bo/cli/bootstrap/renderFooter.js"></script>
+    <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
+    <script src="/bo/cli/bootstrap/renderSearch.js"></script>
+    <script src="/bo/cli/bootstrap/renderListHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderList.js"></script>
+    <script src="/dashboard/cli/mdbootstrap/renderColumns.js"></script>
+
+    <script src="/dashboard/cli/controller/mdbSearchCallback.js"></script>
+    <script src="/dashboard/cli/controller/mdbListCallback.js"></script>
 
     <!-- Alternative renderers by design block -->
-    <script>const shortcutsRenderer = ${ (indexConfig && indexConfig.shortcutsRenderer) ? indexConfig.shortcutsRenderer : "renderShortcuts" }</script>
-    <script>const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }</script>
-    <script>const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }</script>
     <script>
+    const bodyRenderer = ${ (indexConfig && indexConfig.bodyRenderer) ? indexConfig.bodyRenderer : "renderBody12" }
+    const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }
+    searchCallback = mdbSearchCallback
+    listCallback = mdbListCallback
+    const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>
 

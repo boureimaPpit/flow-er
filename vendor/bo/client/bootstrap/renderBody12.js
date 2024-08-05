@@ -1,4 +1,4 @@
-const renderBody = ({ context, entity, view }, data) => {
+const renderBody12 = ({ context, entity, view }, data) => {
 
     return `
     

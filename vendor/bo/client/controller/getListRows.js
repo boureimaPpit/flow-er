@@ -35,6 +35,7 @@ const getListRows = (context, entity, view, searchParams) => {
 
                 const data = JSON.parse(xhttp.responseText)
                 $("#listParent").html(listRenderer({ context, entity, view }, data))
+                listCallback({ context, entity, view })
 
                 $("#listGroupButton-0").hide()
                 $("#listGroupButton-1").prop("disabled", true)
@@ -180,7 +181,7 @@ const getListRows = (context, entity, view, searchParams) => {
                     const id = $(this).attr("id").split("-")[1]
                     $(this).removeClass("btn-outline-primary").addClass("btn-primary")
                     $("#listDetailModal").html("")
-                    $("#listDetailModalForm").modal("show")
+                    //$("#listDetailModalForm").modal("show")
                     getDetail(context, entity, view, id, searchParams)
                 })
             }

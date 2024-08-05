@@ -23,8 +23,10 @@ const renderIndex = ({ context, entity, view }, data) => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
         />
-        <!-- MDB -->
+        <!-- MDB ESSENTIAL -->
         <link rel="stylesheet" href="/bo/cli/resources/mdbootstrap/css/mdb.min.css" />
+        <!-- MDB PLUGINS -->
+        <link rel="stylesheet" href="/bo/cli/resources/mdbootstrap/plugins/css/all.min.css" />
    </head>
     
     <body></body>
@@ -35,9 +37,10 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/resources/toastr/build/toastr.min.js"></script>
     <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
 
-    <!-- MDB -->
+    <!-- MDB ESSENTIAL -->
     <script type="text/javascript" src="/bo/cli/resources/mdbootstrap/js/mdb.umd.min.js"></script>
-    <!-- MDB -->
+    <!-- MDB PLUGINS -->
+    <script type="text/javascript" src="/bo/cli/resources/mdbootstrap/plugins/js/all.min.js"></script>
     
     <!-- Flow-ER -->
     ${ renderCore({ context, entity, view }, data) }
@@ -49,7 +52,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderMenu.js"></script>
     <script src="/bo/cli/bootstrap/renderFooter.js"></script>
     <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
-    <script src="/bo/cli/bootstrap/renderSearch.js"></script>
+    <script src="/dashboard/cli/mdbootstrap/renderSearch.js"></script>
     <script src="/bo/cli/bootstrap/renderListHeader.js"></script>
     <script src="/bo/cli/bootstrap/renderList.js"></script>
     <script src="/dashboard/cli/mdbootstrap/renderColumns.js"></script>

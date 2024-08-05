@@ -4,4 +4,8 @@ const mdbSearchCallback = ({ context, entity, view }) => {
         const formOutline = $(this)
         new mdb.Input(formOutline).init()
     })
+
+    document.querySelectorAll('.searchSelect').forEach((formOutline) => {
+        new mdb.Select(formOutline);
+    });
 }

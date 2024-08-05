@@ -18,4 +18,8 @@ const loadView = async ({ context, entity, view }) => {
 
     const body = bodyRenderer({ context, entity, view }, data)
     $("body").html(body)
+
+    document.querySelectorAll('.form-outline').forEach((formOutline) => {
+        new Input(formOutline).init();
+    });
 }

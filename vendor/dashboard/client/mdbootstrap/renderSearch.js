@@ -143,14 +143,38 @@ const renderFilterSelect = (context, propertyId, property, options) => {
     return `${(property.options.value) ? `<input type="hidden" class="searchInputValue" id="searchInputValue-${propertyId}" value="${property.options.value}" />` : ""}
     <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
     <div class="mb-3">
-        <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
-        <select class="form-control form-control-sm searchInput searchInputSelect" id="search-${propertyId}" ${(multiple) ? "multiple" : ""}>
+        <select class="searchSelect" data-mdb-size="sm" data-mdb-select-init="" multiple="" id="search-${propertyId}" ${(multiple) ? "multiple" : ""}>
             ${(multiple) ? `<option value="empty">-- ${context.translate("Not provided")} --</option>` : ""}
             ${(!multiple) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
             ${renderModalities(modalities)}
         </select>
+        <label class="form-label select-label">${context.localize(property.labels)}</label>
+        
     </div>`
 }
+
+/* 
+<select data-mdb-size="sm" data-mdb-select-init="" multiple="">
+    <option value="1">One</option>
+    <option value="2">Two</option>
+    <option value="3">Three</option>
+    <option value="4">Four</option>
+    <option value="5">Five</option>
+    <option value="6">Six</option>
+    <option value="7">Seven</option>
+    <option value="8">Eight</option>
+</select>
+<label class="form-label select-label">Example label</label>
+*/
+
+/* 
+<select class="form-control form-control-sm searchInput searchInputSelect" id="search-${propertyId}" ${(multiple) ? "multiple" : ""}>
+    ${(multiple) ? `<option value="empty">-- ${context.translate("Not provided")} --</option>` : ""}
+    ${(!multiple) ? `<option value="" class="restrictionParentOption-${propertyId}" id="search-${propertyId}"></option>` : ""}
+    ${renderModalities(modalities)}
+</select> 
+<label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
+*/
 
 const renderFilterSource = (context, propertyId, property) => {
 
@@ -189,16 +213,18 @@ const renderDatalist = (propertyId, properties) => {
 
 const renderFilterInput = (context, propertyId, property, options, properties) => {
     const datalist = []
-    return `<div class="form-outline mb-3" data-mdb-input-init>
-    <input type="email" id="form1Example1" class="form-control" />
-    <label class="form-label" for="form1Example1">${context.localize(property.labels)}</label>
-</div>`
+    return `<div class="form-outline searchFormOutline mb-3" data-mdb-input-init>
+                <input class="form-control form-control-sm" list="searchDatalistOptions-${propertyId}" type="text" />
+                <label class="form-label" for="form12">${context.localize(property.labels)}</label>
+                <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
+            </div>`
 }
 
 /* 
-<div data-mdb-input-init class="form-outline mb-4">
-    <input type="email" id="form1Example1" class="form-control" />
-    <label class="form-label" for="form1Example1">${context.localize(property.labels)}</label>
+<div class="form-outline mb-3 border rounded" data-mdb-input-init>
+    <input class="form-control form-control-sm" list="searchDatalistOptions-${propertyId}" type="text" />
+    <label class="form-label" for="form12">${context.localize(property.labels)}</label>
+    <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
 </div>*/
 
 /*

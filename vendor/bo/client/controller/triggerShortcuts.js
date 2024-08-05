@@ -15,7 +15,7 @@ const triggerShortcuts = async ({ context, entity, view }, route) => {
     }
 
     const data = await response.json()
-    $("#shortcutsPanel").html(shortcutsRenderer({ context, entity, view }, data))
+    $("#shortcutsPanel").html(renderShortcuts({ context, entity, view }, data))
 
     $(".flBadge").hide()
 

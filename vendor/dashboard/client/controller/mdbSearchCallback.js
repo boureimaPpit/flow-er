@@ -2,7 +2,7 @@
 const mdbSearchCallback = ({ context, entity, view }) => {
     $(".searchFormOutline").each(function () {
         const formOutline = $(this)
-        new mdb.Input(formOutline).init()
+        new mdb.Input(formOutline)
     })
 
     document.querySelectorAll('.searchSelect').forEach((formOutline) => {

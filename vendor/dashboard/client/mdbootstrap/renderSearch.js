@@ -213,10 +213,16 @@ const renderDatalist = (propertyId, properties) => {
 
 const renderFilterInput = (context, propertyId, property, options, properties) => {
     const datalist = []
-    return `<div class="form-outline searchFormOutline mb-3" data-mdb-input-init>
-                <input class="form-control form-control-sm" list="searchDatalistOptions-${propertyId}" type="text" />
+    return `<div class="form-outline searchFormOutline mb-1" data-mdb-input-init>
+                <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
+                <input class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" type="text" id="search-${propertyId}"/>
                 <label class="form-label" for="form12">${context.localize(property.labels)}</label>
                 <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
+            </div>
+            <div class="searchInputBadge mb-3" id="searchInputBadge-${propertyId}"></div>
+            <input type="hidden" id="searchInputBadgeValues-${propertyId}" value="[]" />
+            <div class="searchInputBadgeTemplate" id="searchInputBadgeTemplate-${propertyId}">
+                <span class="badge rounded-pill bg-secondary">{value} <i class="fa fa-times text-center searchInputBadgeRefresh" id="searchInputBadgeRefresh-{key}"></i></span>
             </div>`
 }
 

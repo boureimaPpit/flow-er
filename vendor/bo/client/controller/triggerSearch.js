@@ -85,12 +85,54 @@ const triggerSearch = ({ context, entity, view }) => {
     })
 
     // Trigger the keyup event on text inputs and refresh the list
-    $(".searchInputText").keyup(function () {
+    $(".searchInputBadgeTemplate").hide()
+    $(".searchInputText").change(function () {
         var propertyId = $(this).attr("id").split("-")[1]
         $("#flRefreshButton").show()
         $("#flEraseButton").hide()
         $("#searchCheck-" + propertyId).removeClass("btn-default").addClass("btn-secondary").addClass("active")
         $("#searchCheckValue-" + propertyId).val("1")
+
+        const badges = JSON.parse($(`#searchInputBadgeValues-${propertyId}`).val())
+        const newValue = $(`#search-${propertyId}`).val()
+        let keep = true
+        for (let value of badges) {
+            if (value == newValue) {
+                keep = false
+                break
+            }
+        }
+        if (keep) badges.push($(`#search-${propertyId}`).val())
+        $(`#searchInputBadgeValues-${propertyId}`).val(JSON.stringify(badges))
+        $(`#searchInputBadge-${propertyId}`).html(renderSearchInputBadges(propertyId, badges))
+
+        $(".searchInputBadgeRefresh").click(function () { 
+            const badges = JSON.parse($(`#searchInputBadgeValues-${propertyId}`).val())
+            const valueToRemove = decodeURI($(this).attr("id").split("-")[1])
+            const newBadges = []
+            for (let value of badges) {
+                if (value != valueToRemove) {
+                    newBadges.push(value)
+                }
+            }
+            $(`#searchInputBadgeValues-${propertyId}`).val(JSON.stringify(newBadges))
+            $(`#searchInputBadge-${propertyId}`).html(renderSearchInputBadges(propertyId, newBadges))
+        })
+        $(this).val("")
+
         $(".shortcut-chip").removeClass("bg-primary").addClass("bg-light")
     })
+}
+
+const renderSearchInputBadges = (propertyId, badges) => {
+    const result = []
+    const template = $(`#searchInputBadgeTemplate-${propertyId}`).html()
+    for (let value of badges) {
+        let split = template.split("{value}")
+        let badge = [split[0], value, split[1]].join("")
+        split = badge.split("{key}")
+        badge = [split[0], encodeURI(value), split[1]].join("")
+        result.push(badge)    
+    }
+    return result.join("<br>")
 }

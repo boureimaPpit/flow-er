@@ -3,7 +3,7 @@ const renderSearch = ({ context, entity, view }, data) => {
     const properties = data.properties
     data = data.rows
     
-    return `<div class="row mb-3">
+    return `<div class="row mb-3 sticky-top">
         <div class="col-md-12">
             <!-- Filters -->
             <form class="form-inline">
@@ -79,15 +79,33 @@ const renderFilters = (context, entity, view, properties, data) => {
 
 const renderFilterDateTime = (context, propertyId, property) => {
 
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2">
+    return `<div class="form-outline DatePickerOutline mb-1" data-mdb-datepicker-init data-mdb-input-init data-mdb-inline="true">
+                <input type="text" class="form-control form-control-sm" id="exampleDatepicker2" data-mdb-toggle-button="false"/>
+                <label for="exampleDatepicker2" class="form-label">${context.localize(property.labels)} - Min</label>
+            </div>
+            <div class="form-outline DatePickerOutline mb-3" data-mdb-datepicker-init data-mdb-input-init data-mdb-inline="true">
+                <input type="text" class="form-control form-control-sm" id="exampleDatepicker2"/>
+                <label for="exampleDatepicker2" class="form-label">Max</label>
+            </div>`
+} 
+
+/*
+<div class="form-outline" data-mdb-datetimepicker-init data-mdb-input-init>
+  <input type="text" class="form-control" value="22/12/2020, 11:12 PM" id="datetimepickerExample" />
+  <label for="datetimepickerExample" class="form-label">${context.localize(property.labels)}</label>
+</div>
+*/
+
+/*
+<div class="input-group input-group-sm mb-2 mr-sm-2">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
         <div class="input-group-prepend">
             <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
         </div>
         <input class="form-control searchInput searchInputDate searchInputDateMin" type="text" id="searchMin-${propertyId}" placeholder="${context.translate("Min")}" />
         <input class="form-control searchInput searchInputDate searchInputDateMax" type="text" id="searchMax-${propertyId}" placeholder="${context.translate("Max")}" />
-    </div>`
-} 
+    </div>
+*/
 
 const renderFilterAge = (context, propertyId, property) => {
 
@@ -191,15 +209,24 @@ const renderFilterTag = (context, propertyId, property) => {
 
 const renderFilterNumber = (context, propertyId, property) => {
 
-    return `<div class="input-group input-group-sm mb-2 mr-sm-2">
+    return `<div class="input-group mb-3 ps-2 pe-3 border rounded">
+                <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-<${propertyId}" />
+                <label class="form-label mb-1 mt-1 me-2 fs-6" style="font-size: small !important;">${context.localize(property.labels)}</label>
+                <div class="vr me-3"></div>
+                <div class="multi-range-slider" data-mdb-multi-range-slider-init data-mdb-min="0" data-mdb-max="100" data-mdb-tooltip="true"></div>
+            </div>`
+}
+
+/*
+<div class="input-group input-group-sm mb-2 mr-sm-2">
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-<${propertyId}" />
         <div class="input-group-prepend">
             <button type="button" class="btn btn-secondary input-group-text searchCheck" id="searchCheck-${propertyId}">${context.localize(property.labels)}</button>
         </div>
         <input class="form-control searchInput searchInputNumber searchInputNumberMin" type="text" id="search_min-${propertyId}" placeholder="${context.translate("Min")}" />
         <input class="form-control searchInput searchInputNumber searchInputNumberMax" type="text" id="search_max-${propertyId}" placeholder="${context.translate("Max")}" />
-    </div>`
-}
+    </div>
+*/
 
 const renderDatalist = (propertyId, properties) => {
     const property = properties[propertyId]
@@ -214,18 +241,19 @@ const renderDatalist = (propertyId, properties) => {
 const renderFilterInput = (context, propertyId, property, options, properties) => {
     const datalist = []
     return `<div class="form-outline searchFormOutline mb-3" data-mdb-input-init>
+                <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
                 <input class="form-control form-control-sm" list="searchDatalistOptions-${propertyId}" type="text" />
                 <label class="form-label" for="form12">${context.localize(property.labels)}</label>
-                <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
             </div>`
 }
 
 /* 
-<div class="form-outline mb-3 border rounded" data-mdb-input-init>
+<div class="form-outline searchFormOutline mb-3" data-mdb-input-init>
     <input class="form-control form-control-sm" list="searchDatalistOptions-${propertyId}" type="text" />
     <label class="form-label" for="form12">${context.localize(property.labels)}</label>
     <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
-</div>*/
+</div>
+*/
 
 /*
 <div class="input-group input-group-sm mb-2 mr-sm-2">

@@ -8,9 +8,10 @@
 /module/
 /vendor/*
 !/vendor/bo/
-!/vendor/dashboard/
+!/vendor/mdb/
 !/vendor/document/
 !/vendor/my/
 !/vendor/studio/
 !/vendor/user/
 !/vendor/utils/
+/vendor/mdb/client/resources/mdb/

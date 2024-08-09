@@ -136,6 +136,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderBody10.js"></script>
     <script src="/bo/cli/bootstrap/renderBody12.js"></script>
     <script src="/bo/cli/bootstrap/renderCalendar.js"></script>
+    <script src="/bo/cli/bootstrap/renderChart.js"></script>
     <script src="/bo/cli/bootstrap/renderMenu.js"></script>
     <script src="/bo/cli/bootstrap/renderFooter.js"></script>
     <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
@@ -147,6 +148,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <!-- Alternative renderers by design block -->
 
     <script src="/bo/cli/controller/fullcalendarCallback.js"></script>
+    <script src="/bo/cli/controller/zingchartCallback.js"></script>
 
     <script>
     const bodyRenderer = ${ (indexConfig && indexConfig.bodyRenderer) ? indexConfig.bodyRenderer : "renderBody12" }
@@ -154,6 +156,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     searchCallback = ({ context, entity, view }) => {}
     listCallback = ({ context, entity, view }) => {}
     calendarCallback = fullcalendarCallback
+    chartCallback = zingchartCallback
     const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>

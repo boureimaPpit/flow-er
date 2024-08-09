@@ -134,10 +134,10 @@
     },
 
     "account/index/account": {
-        "bodyRenderer": "renderBody10",
+        "body": "/bo/cli/bootstrap/renderBody10.js",
+        "search": "/dashboard/cli/mdbootstrap/renderSearch.js",
         "searchRenderer": "renderSearch",
-        "listRenderer": "renderColumns",
-        "restriction": "status:new,repondeur,a_relancer,candidate"
+        "listRenderer": "renderColumns"
     }, 
 
     "account/count/default": [

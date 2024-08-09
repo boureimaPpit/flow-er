@@ -36,6 +36,7 @@ const getListRows = (context, entity, view, searchParams) => {
                 const data = JSON.parse(xhttp.responseText)
                 $("#listParent").html(listRenderer({ context, entity, view }, data))
                 listCallback({ context, entity, view })
+                calendarCallback({ context, entity, view }, data)
 
                 $("#listGroupButton-0").hide()
                 $("#listGroupButton-1").prop("disabled", true)

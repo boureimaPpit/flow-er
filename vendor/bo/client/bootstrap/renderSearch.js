@@ -166,13 +166,12 @@ const renderDatalist = (propertyId, properties) => {
 }
 
 const renderFilterInput = (context, propertyId, property, options, properties) => {
-    console.log(propertyId, properties[propertyId])
     const datalist = []
     return `<div class="form-outline mb-1 searchFormOutline" data-mdb-input-init>
         <label for="search-${propertyId}" class="form-label">${context.localize(property.labels)}</label>
         <input type="hidden" value="0" class="searchCheckValue" id="searchCheckValue-${propertyId}" />
         <input class="form-control form-control-sm searchInput searchInputText" list="searchDatalistOptions-${propertyId}" id="search-${propertyId}">
-        <datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>
+        ${ (property.options.completion) ? `<datalist id="searchDatalistOptions-${propertyId}">${renderDatalist(propertyId, properties)}</datalist>` : "" }
     </div>
     <div class="searchInputBadge mb-3" id="searchInputBadge-${propertyId}"></div>
     <input type="hidden" id="searchInputBadgeValues-${propertyId}" value="[]" />

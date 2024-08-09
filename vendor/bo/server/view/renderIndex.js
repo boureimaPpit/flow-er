@@ -126,7 +126,7 @@ const renderIndex = ({ context, entity, view }, data) => {
 
     <!-- FullCalendar -->
     <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
-    <script src="/bo/cli/resources/fullcalendar/fullcalendar.js"></script>
+    <script src="/bo/cli/resources/fullcalendar-6.1.15/dist/index.global.min.js"></script>
 
     <!-- ZingChart -->
     <script src="/bo/cli/resources/zingchart/zingchart.min.js"></script>
@@ -135,6 +135,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderHeader.js"></script>
     <script src="/bo/cli/bootstrap/renderBody10.js"></script>
     <script src="/bo/cli/bootstrap/renderBody12.js"></script>
+    <script src="/bo/cli/bootstrap/renderCalendar.js"></script>
     <script src="/bo/cli/bootstrap/renderMenu.js"></script>
     <script src="/bo/cli/bootstrap/renderFooter.js"></script>
     <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
@@ -144,11 +145,15 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderColumns.js"></script>
 
     <!-- Alternative renderers by design block -->
+
+    <script src="/bo/cli/controller/fullcalendarCallback.js"></script>
+
     <script>
     const bodyRenderer = ${ (indexConfig && indexConfig.bodyRenderer) ? indexConfig.bodyRenderer : "renderBody12" }
     const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }
     searchCallback = ({ context, entity, view }) => {}
     listCallback = ({ context, entity, view }) => {}
+    calendarCallback = fullcalendarCallback
     const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>

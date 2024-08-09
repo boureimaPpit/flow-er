@@ -12,7 +12,8 @@ const ddl = async ({ req }, context, db) => {
     const propertyDdl = []
     for (let propertyId of Object.keys(model.properties)) {
         const property = model.properties[propertyId]
-        let type = "VARCHAR(255) DEFAULT ''"
+        const maxLength = (property.max_length) ? property.max_length : 255
+        let type = (property.length) ? `CHAR(${property.length}) DEFAULT ''` : `VARCHAR(${maxLength}) DEFAULT ''`
         if (property.entity == entity && property.type != "tag") {
             if (["primary", "foreign"].includes(property.type)) type = "INT(11) DEFAULT NULL"
             else if (property.type == "date") type = "DATE DEFAULT NULL"

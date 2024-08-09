@@ -10,7 +10,7 @@
             "end_time": { "entity": "event", "column": "end_time", "type": "time" },
             "location": { "entity": "event", "column": "location" },
 
-            "visibility": { "entity": "event", "column": "visibility", "audit": true },
+            "visibility": { "entity": "event", "column": "visibility", "length": 8, "audit": true },
             "touched_at": { "entity": "event", "column": "touched_at", "type": "datetime" },
             "touched_by": { "entity": "event", "column": "touched_by", "type": "int" }
        }
@@ -71,6 +71,9 @@
     },
 	
 	"event/index/event": {
+        "bodyRenderer": "renderBody10",
+        "searchRenderer": "renderSearch",
+        "listRenderer": "renderCalendar"
     }, 
 
 	"event/search/event": { 

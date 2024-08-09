@@ -153,10 +153,10 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script>
     const bodyRenderer = ${ (indexConfig && indexConfig.bodyRenderer) ? indexConfig.bodyRenderer : "renderBody12" }
     const searchRenderer = ${ (indexConfig && indexConfig.searchRenderer) ? indexConfig.searchRenderer : "renderListHeader" }
-    searchCallback = ({ context, entity, view }) => {}
-    listCallback = ({ context, entity, view }) => {}
-    calendarCallback = fullcalendarCallback
-    chartCallback = zingchartCallback
+    const searchCallback = ({ context, entity, view }) => {}
+    const listCallback = ({ context, entity, view }) => {}
+    const calendarCallback = fullcalendarCallback
+    const chartCallback = zingchartCallback
     const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>

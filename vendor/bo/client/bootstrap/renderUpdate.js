@@ -1,10 +1,7 @@
-const moment = require("moment")
-
-const renderUpdate = (context, entity, view, id, properties, row, isDeletable, where, formJwt) => {
+const renderUpdate = ({ context, entity, view }, { id, updateConfig, properties, row, isDeletable, where, formJwt }) => {
 
     const renderSectionMenu = () => {
 
-        let updateConfig = context.config[`${entity}/update/${view}`]
         const html = []
 
         html.push("<nav id=\"sectionMenu\" class=\"nav justify-content-center\"><ul class=\"nav nav-pills\">")
@@ -23,7 +20,6 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
     const renderSection = () => {
 
-        let updateConfig = context.config[`${entity}/update/${view}`]
         const html = []
 
         for (let sectionId of Object.keys(updateConfig.layout)) {
@@ -50,7 +46,6 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
         const html = []
 
         for (let propertyId of section) {
-            console.log(propertyId)
             const property = properties[propertyId]
             const options = property.options
             const label = (options.labels) ? context.localize(options.labels) : context.localize(property.labels)
@@ -352,7 +347,7 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
 
     return `<div class="my-3"><form class="was-validated" id="tabForm">
 
-        <input type="hidden" id="formJwt" name="formJwt" value="${formJwt}" />
+        <input type="hidden" id="formJwt" name="formJwt" value="${ formJwt }" />
 
         <!-- Form status messages -->
 
@@ -413,8 +408,4 @@ const renderUpdate = (context, entity, view, id, properties, row, isDeletable, w
             </div>
         </div>
     </form></div>`
-}
-
-module.exports = {
-    renderUpdate
 }

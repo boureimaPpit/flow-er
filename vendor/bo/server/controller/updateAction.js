@@ -4,7 +4,6 @@ const { update } = require("../model/update")
 const { insert } = require("../model/insert")
 const { updateCase } = require("../model/updateCase")
 const { getProperties } = require("./getProperties")
-const { renderUpdate } = require("../view/renderUpdate")
 
 const updateAction = async ({ req }, context, db) => {
     const entity = assert.notEmpty(req.params, "entity")
@@ -82,7 +81,9 @@ const updateAction = async ({ req }, context, db) => {
         row = (await db.execute(select(context, entity, columns, { "id": id }, null, null, model)))[0][0]
     }
     
-    return renderUpdate(context, entity, view, id, properties, row, false, where, "formJwt à construire")
+    const data = { id, updateConfig, properties, row, isDeletable: false, where, formJwt: "formJwt à construire" }
+    return JSON.stringify(data)
+    //return renderUpdate(context, entity, view, id, properties, row, false, where, "formJwt à construire")
 }
 
 const dataHasEvolved = (properties, form, data) => {

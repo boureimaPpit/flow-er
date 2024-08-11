@@ -33,7 +33,7 @@ const getSelect = (propertyId) => {
                 }
 
                 $("#updateSelectDiv-" + propertyId).html(xhttp.responseText)
-                $(".updateSelectpicker-" + propertyId).selectpicker()
+                //$(".updateSelectpicker-" + propertyId).selectpicker()
                 if (propertyId == "place_id") $(`#${propertyId}`).change(function () { selectDynamic("owner_id", "") })
             }
             else toastr.error("A technical error has occured. PLease try again later")
@@ -42,7 +42,7 @@ const getSelect = (propertyId) => {
     xhttp.send()
 }
 
-const postTab = async (tab, id, searchParams) => {
+const postTab = async ({ context, entity, view }, tab, id, searchParams) => {
     const form = document.getElementById("tabForm")
     if (form) {
         form.onsubmit = async function (event) {
@@ -201,18 +201,18 @@ const postTab = async (tab, id, searchParams) => {
                     }
 
                     if (id == 0) id = xhttp.body
-                    getTab(tab, id, "ok", searchParams)
+                    getTab({ context, entity, view }, tab, id, "ok", searchParams)
                 }
                 else if (xhttp.status == 401) getTab(tab, id, "expired", searchParams)
                 else if (xhttp.status == 409) getTab(tab, id, xhttp.statusText, searchParams)
-                else getTab(tab, id, "serverError", searchParams)
+                else getTab({ context, entity, view }, tab, id, "serverError", searchParams)
             }
             else return false
         }
     }
 }
 
-const submitDelete = (id) => {
+const submitDelete = ({ context, entity, view }, id) => {
     const formData = new FormData()
     formData.append("formJwt", $("#formJwt").val())
     formData.append("touched_at", $("#touched_at").val())
@@ -231,15 +231,15 @@ const submitDelete = (id) => {
                 $(".modal-body").html("")
                 $("#listDetailModalForm").modal("hide")
             }
-            else if (xhttp.status == 401) getTab(tab, id, "expired", searchParams)
-            else if (xhttp.status == 409) getTab(tab, id, "consistency", searchParams)
+            else if (xhttp.status == 401) getTab({ context, entity, view }, tab, id, "expired", searchParams)
+            else if (xhttp.status == 409) getTab({ context, entity, view }, tab, id, "consistency", searchParams)
             else getTab(tab, id, "serverError")
         }
     }
     xhttp.send(formData)
 }
 
-const getTab = (tab, id, message, searchParams) => {
+const getTab = ({ context, entity, view }, tab, id, message, searchParams) => {
 
     let route = $(`#detailTabRoute-${tab}`).val()
     const xhttp = new XMLHttpRequest()
@@ -271,7 +271,8 @@ const getTab = (tab, id, message, searchParams) => {
                     document.cookie = `JWT-${$("#instanceCaption").val()}${xhttp.statusText.substring(4)};path=/`
                 }
 
-                $("#detailPanel").html(xhttp.responseText)
+                const data = JSON.parse(xhttp.responseText)
+                $("#detailPanel").html(renderUpdate({ context, entity, view }, data))
                 
                 $(".document-cancel-btn").hide()
 
@@ -300,7 +301,7 @@ const getTab = (tab, id, message, searchParams) => {
                 $("#deleteButton").click(function () {
                     $("#deleteButton").removeClass("btn-outline-primary").addClass("btn-danger")
                     $("#deleteButton").click(function () {
-                        submitDelete(id)
+                        submitDelete({ context, entity, view }, id)
                     })
                 })
 
@@ -335,7 +336,7 @@ const getTab = (tab, id, message, searchParams) => {
                 $(".updateDatetimeDate").datepicker()
                 $(".updateTime").timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
                 $(".updateDatetimeTime").timepicker({ "timeFormat":"H:i:s", "step": 15, "scrollDefault": "now" })
-                $(".updateSelectpicker").selectpicker()
+                //$(".updateSelectpicker").selectpicker()
 
                 $(".updateHistory").each(function () {
                     const propertyId = $(this).attr("id").split("-")[1]
@@ -347,7 +348,7 @@ const getTab = (tab, id, message, searchParams) => {
                     getSelect(propertyId)
                 })
 
-                postTab(tab, id, searchParams)
+                postTab({ context, entity, view }, tab, id, searchParams)
 
                 $(".detailPanel").each(function () {
                     const panel = $(this).attr("id")
@@ -416,16 +417,17 @@ const getDetail = (context, entity, view, id, searchParams) => {
                 $(".updateTime").unbind()
 
                 $(".modal-body").html("")
-                $("#listDetailModal").html(xhttp.responseText)
+                const data = JSON.parse(xhttp.responseText)
+                $("#listDetailModal").html(renderDetail({ context, entity, view}, data))
 
                 $(".detailTab").click(function () {
                     const tabId = $(this).attr("id").split("-")[1]
                     $(".detailTab").removeClass("active")
                     $(this).addClass("active")
-                    getTab(tabId, id, "", searchParams)
+                    getTab({ context, entity, view }, tabId, id, "", searchParams)
                 })
 
-                getTab($("#defaultTab").val(), id, "", searchParams)
+                getTab({ context, entity, view }, $("#defaultTab").val(), id, "", searchParams)
             }
             else toastr.error("A technical error has occured. PLease try again later")
         }

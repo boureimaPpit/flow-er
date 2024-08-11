@@ -183,7 +183,7 @@ const getListRows = (context, entity, view, searchParams) => {
                     const id = $(this).attr("id").split("-")[1]
                     $(this).removeClass("btn-outline-primary").addClass("btn-primary")
                     $("#listDetailModal").html("")
-                    //$("#listDetailModalForm").modal("show")
+                    $("#listDetailModalForm").modal("show")
                     getDetail(context, entity, view, id, searchParams)
                 })
             }

@@ -1,16 +1,14 @@
-const renderDetail = (context, entity, view, id) => {
-    const detailConfig = context.config[`${entity}/detail/${view}`]
-
+const renderDetail = ({ context, entity, view }, { id, detailConfig }) => {
     return `<div class="container">
         <ul class="nav nav-tabs">
-            ${renderMenu(context, detailConfig, id)}
+            ${renderDetailMenu(context, detailConfig, id)}
         </ul>
-        ${renderRoutes(context, detailConfig, id)}
+        ${renderDetailRoutes(context, detailConfig, id)}
         <div id="detailPanel"></div>
     </div>`
 }
 
-const renderMenu = function (context, detailConfig, id) {
+const renderDetailMenu = function (context, detailConfig, id) {
     let defaultTab = false
     const html = []
     for (let tabId of Object.keys(detailConfig.tabs)) {
@@ -24,7 +22,7 @@ const renderMenu = function (context, detailConfig, id) {
     return html.join("\n")
 }
 
-const renderRoutes = (context, detailConfig, id) => {
+const renderDetailRoutes = (context, detailConfig, id) => {
     const html = []
     for (let tabId of Object.keys(detailConfig.tabs)) {
         const tab = detailConfig.tabs[tabId]
@@ -43,8 +41,4 @@ const renderRoutes = (context, detailConfig, id) => {
         //}
     }
     return html.join("\n")
-}
-
-module.exports = {
-    renderDetail
 }

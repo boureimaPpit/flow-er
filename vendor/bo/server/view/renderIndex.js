@@ -137,13 +137,15 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderBody12.js"></script>
     <script src="/bo/cli/bootstrap/renderCalendar.js"></script>
     <script src="/bo/cli/bootstrap/renderChart.js"></script>
-    <script src="/bo/cli/bootstrap/renderMenu.js"></script>
+    <script src="/bo/cli/bootstrap/renderColumns.js"></script>
+    <script src="/bo/cli/bootstrap/renderDetail.js"></script>
     <script src="/bo/cli/bootstrap/renderFooter.js"></script>
+    <script src="/bo/cli/bootstrap/renderList.js"></script>
+    <script src="/bo/cli/bootstrap/renderListHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderMenu.js"></script>
+    <script src="/bo/cli/bootstrap/renderUpdate.js"></script>
     <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
     <script src="/bo/cli/bootstrap/renderSearch.js"></script>
-    <script src="/bo/cli/bootstrap/renderListHeader.js"></script>
-    <script src="/bo/cli/bootstrap/renderList.js"></script>
-    <script src="/bo/cli/bootstrap/renderColumns.js"></script>
 
     <!-- Alternative renderers by design block -->
 

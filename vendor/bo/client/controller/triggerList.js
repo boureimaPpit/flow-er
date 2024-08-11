@@ -171,6 +171,7 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
 
     // Connect the detail anchors
     $(".listDetailButton").click(function () {
+        console.log("ici")
         const id = $(this).attr("id").split("-")[1]
         $(this).removeClass("btn-outline-primary").addClass("btn-primary")
         $("#listDetailModal").html("")

@@ -164,18 +164,6 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
 
     // Connect the grouped actions anchors
     $(".listGroupButton").click(function () {
-        $("#listGroupModal").html("")
-        $("#groupModalForm").modal("show")
         getGroup()
     });
-
-    // Connect the detail anchors
-    $(".listDetailButton").click(function () {
-        console.log("ici")
-        const id = $(this).attr("id").split("-")[1]
-        $(this).removeClass("btn-outline-primary").addClass("btn-primary")
-        $("#listDetailModal").html("")
-        $("#listDetailModalForm").modal("show")
-        getDetail(context, entity, view, id, searchParams)
-    })
 }

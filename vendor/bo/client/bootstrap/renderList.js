@@ -65,7 +65,7 @@ const renderRows = (context, listConfig, properties, rows) => {
             </td>
 
             <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
+                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" data-bs-toggle="modal" data-bs-target="#listDetailModalForm" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
                   <i class="fas fa-search"></i>
                 </button>
             </td>

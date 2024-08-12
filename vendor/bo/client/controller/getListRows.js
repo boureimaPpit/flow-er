@@ -173,8 +173,7 @@ const getListRows = (context, entity, view, searchParams) => {
 
                 // Connect the grouped actions anchors
                 $(".listGroupButton").click(function () {
-                    $("#listGroupModal").html("")
-                    $("#groupModalForm").modal("show")
+                    $("#modalBody").html("")
                     getGroup()
                 });
 
@@ -182,8 +181,7 @@ const getListRows = (context, entity, view, searchParams) => {
                 $(".listDetailButton").click(function () {
                     const id = $(this).attr("id").split("-")[1]
                     $(this).removeClass("btn-outline-primary").addClass("btn-primary")
-                    $("#listDetailModal").html("")
-                    $("#listDetailModalForm").modal("show")
+                    $("#modalBody").html("")
                     getDetail(context, entity, view, id, searchParams)
                 })
             }

@@ -203,8 +203,8 @@ const postTab = async ({ context, entity, view }, tab, id, searchParams) => {
                     if (id == 0) id = xhttp.body
                     getTab({ context, entity, view }, tab, id, "ok", searchParams)
                 }
-                else if (xhttp.status == 401) getTab(tab, id, "expired", searchParams)
-                else if (xhttp.status == 409) getTab(tab, id, xhttp.statusText, searchParams)
+                else if (xhttp.status == 401) getTab({ context, entity, view }, tab, id, "expired", searchParams)
+                else if (xhttp.status == 409) getTab({ context, entity, view }, tab, id, xhttp.statusText, searchParams)
                 else getTab({ context, entity, view }, tab, id, "serverError", searchParams)
             }
             else return false
@@ -261,8 +261,6 @@ const getTab = ({ context, entity, view }, tab, id, message, searchParams) => {
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 401) {
-                $(".modal-body").html("")
-                $("#listDetailModalForm").modal("hide")
                 getLogin(loadPage)
             }
             else if (xhttp.status == 200) {

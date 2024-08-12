@@ -51,7 +51,7 @@ const renderBody12 = ({ context, entity, view }, data) => {
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="listDetailModalLabel"></h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" data-mdb-dismiss="modal" aria-label="Close" title="${context.localize("Cancel")}"></button>
           </div>
           <div class="modal-body" id="listDetailModal">
           </div>

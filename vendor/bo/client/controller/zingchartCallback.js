@@ -1,5 +1,18 @@
 
 const zingchartCallback = ({ context, entity, view }, data) => {
+    
+    const series = {}, distribution = data.config.distribution.variable
+    for (let row of data.rows) {
+        if (!series[row[distribution]]) {
+            series[row[distribution]] = { 
+                values: [0],
+                text: context.localize(data.properties[distribution].modalities[row[distribution]])
+            }
+        }
+        series[row[distribution]].values[0]++
+    }
+    console.log(series)
+
     zingchart.render({
         id: "chart",
         data: {
@@ -29,7 +42,7 @@ const zingchartCallback = ({ context, entity, view }, data) => {
             },
             title: {
               fontColor: "#8e99a9",
-              text: 'Candidats',
+              text: context.localize(data.config.title),
               align: "left",
               offsetX: 10,
               fontSize: 25
@@ -40,40 +53,13 @@ const zingchartCallback = ({ context, entity, view }, data) => {
               fontColor: "#8e99a9",
               fontFamily: "Open Sans",
               fontSize: "16",
-              text: 'Juillet 2024',
+              text: context.localize(data.config.subtitle),
               align: "left"
             },
             plotarea: {
               margin: "20 0 0 0"
             },
-            series: [{
-                values: [11.38],
-                text: "Salons",
-                backgroundColor: '#50ADF5',
-              },
-              {
-                values: [56.94],
-                text: "Google",
-                backgroundColor: '#FF7965',
-                detached: true
-              },
-              {
-                values: [14.52],
-                text: 'Facebook',
-                backgroundColor: '#FFCB45',
-                detached: true
-              },
-              {
-                text: 'JPOs',
-                values: [9.69],
-                backgroundColor: '#6877e5'
-              },
-              {
-                text: 'TikTok',
-                values: [7.48],
-                backgroundColor: '#6FB07F'
-              }
-            ]
+            series: Object.values(series)
           }
     })
 

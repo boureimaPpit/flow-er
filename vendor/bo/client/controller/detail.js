@@ -271,7 +271,8 @@ const getTab = ({ context, entity, view }, tab, id, message, searchParams) => {
 
                 const data = JSON.parse(xhttp.responseText)
                 $("#detailPanel").html(renderUpdate({ context, entity, view }, data))
-                
+                updateCallback({ context, entity, view }, data)
+
                 $(".document-cancel-btn").hide()
 
                 $(".updateMessage").hide()

@@ -159,6 +159,7 @@ const renderIndex = ({ context, entity, view }, data) => {
     const listCallback = ({ context, entity, view }) => {}
     const calendarCallback = fullcalendarCallback
     const chartCallback = zingchartCallback
+    const updateCallback = ({ context, entity, view }) => {}
     const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>

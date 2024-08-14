@@ -27,7 +27,7 @@ const getWhere = (properties, whereParam) => {
          * Tags
          */
         const property = properties[key]
-        if (property.type == "tag") {
+        if (property && property.type == "tag") {
             value = value.map((x) => { return parseInt(x) })
             const tags = {}
             for (let tagKey of Object.keys(property.tags)) {

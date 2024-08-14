@@ -270,8 +270,14 @@ const getTab = ({ context, entity, view }, tab, id, message, searchParams) => {
                 }
 
                 const data = JSON.parse(xhttp.responseText)
-                $("#detailPanel").html(renderUpdate({ context, entity, view }, data))
-                updateCallback({ context, entity, view }, data)
+                $(".renderUpdate").each(function () { 
+                    $("#detailPanel").html(renderUpdate({ context, entity, view }, data))
+                    updateCallback({ context, entity, view }, data)
+                })
+                $(".renderModalList").each(function () { 
+                    $("#detailPanel").html(renderModalList({ context, entity, view }, data)) 
+                    modalListCallback({ context, entity, view }, data)
+                })
 
                 $(".document-cancel-btn").hide()
 

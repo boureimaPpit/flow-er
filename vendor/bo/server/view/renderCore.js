@@ -7,6 +7,8 @@ const renderCore = ({ context, entity, view }, data) => {
     <script src="/bo/cli/controller/loadView.js"></script>
     <script src="/bo/cli/controller/triggerCount.js"></script>
     <script src="/bo/cli/controller/triggerList.js"></script>
+    <script src="/bo/cli/controller/triggerModalList.js"></script>
+    <script src="/bo/cli/controller/triggerModalListTab.js"></script>
     <script src="/bo/cli/controller/triggerOrder.js"></script>
     <script src="/bo/cli/controller/triggerSearch.js"></script>
     <script src="/bo/cli/controller/triggerShortcuts.js"></script>

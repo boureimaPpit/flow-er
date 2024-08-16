@@ -35,8 +35,11 @@ const renderDetailRoutes = (context, detailConfig, id) => {
                         query.push(`${key}=${value}`)
                     }    
                 }
-                html.push(`<input class="${ (tab.renderer) ? tab.renderer : "renderUpdate" }" type="hidden" id="detailTabRoute-${tabId}" value="${tab.route}${ (id != 0) ? `/${id}` : ""}?${query.join("&")}" />
-                <input type="hidden" id="detailTabQuery-${tabId}" value="${query}" />`)
+                html.push(`
+                    <input class="${ (tab.renderer) ? tab.renderer : "renderUpdate" }" type="hidden" id="detailTabRoute-${tabId}" value="${tab.route}${ (id != 0) ? `/${id}` : ""}?${query.join("&")}" />
+                    <input type="hidden" id="detailTabEntity-${tabId}" value="${tab.entity}" />
+                    <input type="hidden" id="detailTabQuery-${tabId}" value="${query}" />
+                `)
             }
         //}
     }

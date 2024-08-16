@@ -29,7 +29,7 @@ const renderModalList = ({ context, entity, view }, data) => {
                             </td>
                         </tr>
                     
-                        ${renderModalListRows({ context }, modalListConfig, properties, rows)}
+                        ${renderModalListRows({ context, entity: data.entity }, modalListConfig, properties, rows)}
                     
                         <tr class="listRow">
                             <td>
@@ -67,7 +67,7 @@ const renderModalListHeader = ({ context }, properties) => {
     return head.join("\n")
 }
 
-const renderModalListRows = ({ context }, modalListConfig, properties, rows) => {
+const renderModalListRows = ({ context, entity }, modalListConfig, properties, rows) => {
 
     const result = []
 
@@ -85,19 +85,21 @@ const renderModalListRows = ({ context }, modalListConfig, properties, rows) => 
         <tr class="listRow">
             <td>
                 <div class="text-center">
-                    <input type="checkbox" class="listCheck" id="listCheck-${row.id}-${i}"></input>
+                    <input type="checkbox" class="modalListCheck" id="modalListCheck-${row.id}-${i}"></input>
                     ${modalListCheckIds.join("\n")}
                 </div>
             </td>
 
             <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" data-bs-toggle="modal" data-bs-target="#listDetailModalForm" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
+                <input type="hidden" id="modalListTabsRoute-${row.id}" value="/bo/modalListTabs/${entity}/${row.id}" />
+                <button type="button" class="btn btn-sm btn-outline-primary index-btn modalListDetailButton" id="modalListDetailButton-${row.id}">
                   <i class="fas fa-search"></i>
                 </button>
             </td>
 
             ${renderModalListProperties({ context }, row, properties)}
-        </tr>`)
+        </tr>
+        <tr><td class="modalListTabsPanel" id="modalListTabsPanel-${row.id}" colspan="${ Object.keys(properties).length + 2 }"></td></tr`)
     }
 
     return result.join("\n")

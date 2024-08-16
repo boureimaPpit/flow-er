@@ -143,6 +143,8 @@ const renderIndex = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderList.js"></script>
     <script src="/bo/cli/bootstrap/renderListHeader.js"></script>
     <script src="/bo/cli/bootstrap/renderModalList.js"></script>
+    <script src="/bo/cli/bootstrap/renderModalListTabs.js"></script>
+    <script src="/bo/cli/bootstrap/renderModalListForm.js"></script>
     <script src="/bo/cli/bootstrap/renderMenu.js"></script>
     <script src="/bo/cli/bootstrap/renderUpdate.js"></script>
     <script src="/bo/cli/bootstrap/renderShortcuts.js"></script>
@@ -162,6 +164,8 @@ const renderIndex = ({ context, entity, view }, data) => {
     const chartCallback = zingchartCallback
     const updateCallback = ({ context, entity, view }) => {}
     const modalListCallback = ({ context, entity, view }) => {}
+    const modalListTabsCallback = ({ context, entity, view }) => {}
+    const modalListFormCallback = ({ context, entity, view }) => {}
     const listRenderer = ${ (indexConfig && indexConfig.listRenderer) ? indexConfig.listRenderer : "renderList" }
     loadPage({ entity: "${entity}", view: "${view}" })
     </script>

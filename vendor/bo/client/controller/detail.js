@@ -274,9 +274,10 @@ const getTab = ({ context, entity, view }, tab, id, message, searchParams) => {
                     $("#detailPanel").html(renderUpdate({ context, entity, view }, data))
                     updateCallback({ context, entity, view }, data)
                 })
-                $(".renderModalList").each(function () { 
+                $(".renderModalList").each(function () {
                     $("#detailPanel").html(renderModalList({ context, entity, view }, data)) 
                     modalListCallback({ context, entity, view }, data)
+                    triggerModalList({ context, entity, view }, data)
                 })
 
                 $(".document-cancel-btn").hide()

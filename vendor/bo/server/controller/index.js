@@ -24,6 +24,7 @@ const { modalListFormAction } = require("./modalListFormAction")
 const { historyAction } = require("./historyAction")
 const { apiAction } = require("./apiAction")
 const { formAction, postFormAction } = require("./formAction")
+const { publicFormAction } = require("./publicFormAction")
 const { configShortcutsAction, postConfigShortcutsAction } = require("./configShortcutsAction")
 
 const { loadViewAction } = require("./loadViewAction")
@@ -63,6 +64,7 @@ const registerBo = async ({ context, config, logger, app }) => {
     app.get(`${config.prefix}api/:entity`, execute(apiAction, context, db)) // Deprecated
     app.get(`${config.prefix}form/:entity`, execute(formAction, context, db))
     app.post(`${config.prefix}form/:entity`, execute(postFormAction, context, db))
+    app.get(`${config.prefix}publicForm/:entity`, execute(publicFormAction, context, db))
     app.get(`${config.prefix}configShortcuts/:entity/:id`, execute(configShortcutsAction, context, db))
     app.post(`${config.prefix}configShortcuts/:entity/:id`, execute(postConfigShortcutsAction, context, db))
 

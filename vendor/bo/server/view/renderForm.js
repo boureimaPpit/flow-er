@@ -1,6 +1,6 @@
 const moment = require("moment")
 
-const renderForm = (context, entity, view, properties, where, formJwt) => {
+const renderForm = ({ context, entity, view} , { properties, where, formJwt }) => {
 
     const renderSection = () => {
 

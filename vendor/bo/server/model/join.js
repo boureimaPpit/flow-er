@@ -5,6 +5,7 @@ const join = (table, columns, where, order, model) => {
     for (let column of columns) {
         const propertyId = (Array.isArray(column)) ? column[1] : column
         const property = model.properties[propertyId]
+        if (!property) continue
         if (property.type == "CONCAT") {
             const components = []
             for (let component of property.components) {

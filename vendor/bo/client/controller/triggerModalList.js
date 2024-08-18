@@ -2,7 +2,6 @@ const triggerModalList = ({ context, entity, view }, data) => {
     $(".modalListDetailButton").click(async function () {
         const id = $(this).attr("id").split("-")[1]
         const route = $(`#modalListTabsRoute-${id}`).val()
-        console.log(route)
         const response = await fetch(route)
         if (!response.ok) {
             switch (response.status) {

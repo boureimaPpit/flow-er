@@ -69,7 +69,7 @@ const formAction = async ({ req }, context, db) => {
         }
     }
     
-    return renderForm(context, entity, view, properties, where, "formJwt à construire")
+    return { properties, where, formJwt: "formJwt à construire" }
 }
 
 const dataToStore = async (properties, form) => {

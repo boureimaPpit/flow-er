@@ -77,7 +77,6 @@ const updateAction = async ({ req }, context, db) => {
     let row
     if (id) {
         const columns = Object.keys(propertyDefs).concat(["id"])
-        console.log(select(context, entity, columns, { "id": id }, null, null, model))
         row = (await db.execute(select(context, entity, columns, { "id": id }, null, null, model)))[0][0]
     }
     

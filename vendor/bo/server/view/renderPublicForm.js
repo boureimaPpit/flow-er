@@ -91,6 +91,7 @@ const renderPublicForm = ({ context, entity, view }, data) => {
     <script src="/bo/cli/bootstrap/renderForm.js"></script>
 
     <script>
+    formCallback = ({ context, entity, view }) => {}
     loadForm({ entity: "${entity}", view: "${view}" }, {})
     </script>
 

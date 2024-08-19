@@ -1,26 +1,19 @@
 
+const { renderHead } = require("../../../bo/server/view/renderHead")
+const { mdbRenderHead } = require("../../../mdb/server/view/mdbRenderHead")
+const { renderScripts } = require("../../../bo/server/view/renderScripts")
+const { mdbRenderScripts } = require("../../../mdb/server/view/mdbRenderScripts")
+
 const renderProtectedForm = ({ context, entity, view }, data) => {
 
-    const user = data.user, row = data.row
+    const user = data.user, row = data.row, renderer = (data.formConfig.renderer) ? data.formConfig.renderer : "bootstrap"
+    const headRenderer = (renderer == "mdb") ? mdbRenderHead : renderHead
+    const scriptsRenderer = (renderer == "mdb") ? mdbRenderScripts : renderScripts
 
     return `<!DOCTYPE html>
-    <html lang="fr" data-bs-theme="${ (data.formConfig.theme) ? data.formConfig.theme : "dark" }" }>
+    <html lang="fr" data-bs-theme="${ (data.formConfig.theme) ? data.formConfig.theme : "dark" }" } data-mdb-theme="${ (data.formConfig.theme) ? data.formConfig.theme : "dark" }" }>
     
-    <!-- Head -->
-    <head><title>Flow-ER</title>
-        <meta charset="utf-8">
-        <meta name="robots" content="noindex, nofollow">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <link href="/bo/cli/resources/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/bo/cli/resources/jquery-ui-1.13.2/jquery-ui.css">
-        <link rel="stylesheet" href="/bo/cli/resources/jquery.timepicker/jquery.timepicker.css">
-        <link rel="stylesheet" href="/bo/cli/resources/toastr/build/toastr.min.css" rel="stylesheet" />
-        <link rel='stylesheet' href="/bo/cli/resources/fullcalendar/fullcalendar.css" />
-        <link rel='stylesheet' href="/bo/cli/resources/fontawesome/css/fontawesome.css" />
-        <link rel='stylesheet' href="/bo/cli/resources/fontawesome/css/brands.css" />
-        <link rel='stylesheet' href="/bo/cli/resources/fontawesome/css/solid.css" />
-    </head>
+    ${headRenderer({ context, entity, view }, data)}
     
     <body>
         
@@ -41,62 +34,16 @@ const renderProtectedForm = ({ context, entity, view }, data) => {
         
     </body>
 
-    <!-- Scripts -->
-    <script src="/bo/cli/resources/jquery/jquery-3.6.3.min.js" ></script>
-    <script src="/bo/cli/resources/popper/popper.min.js"></script>
-    <script src="/bo/cli/resources/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/bo/cli/resources/jquery-ui-1.13.2/jquery-ui.js"></script>
-    <script src="/bo/cli/resources/jquery.timepicker/jquery.timepicker.js"></script>
-    <script src="/bo/cli/resources/toastr/build/toastr.min.js"></script>
-
-    <script>
-    $.datepicker.regional['fr'] = {
-        prevText: "${context.translate("Previous")}",
-        nextText: "${context.translate("Next")}",
-        monthNames: [
-            "${context.translate("January")}",
-            "${context.translate("February")}",
-            "${context.translate("March")}",
-            "${context.translate("April")}",
-            "${context.translate("May")}",
-            "${context.translate("June")}",
-            "${context.translate("July")}",
-            "${context.translate("August")}",
-            "${context.translate("September")}",
-            "${context.translate("October")}",
-            "${context.translate("November")}",
-            "${context.translate("December")}"
-        ],
-        dayNamesMin: [
-            "${context.translate("Su")}",
-            "${context.translate("Mo")}",
-            "${context.translate("Tu")}",
-            "${context.translate("We")}",
-            "${context.translate("Th")}",
-            "${context.translate("Fr")}",
-            "${context.translate("Sa")}"
-        ],
-        dateFormat: "dd/mm/yy",
-        firstDay: 1,
-        isRTL: false,
-        yearSuffix: ""
-    }
-    
-    ${(user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
-    </script>
-
-    <!-- FullCalendar -->
-    <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>
-    <script src="/bo/cli/resources/fullcalendar-6.1.15/dist/index.global.min.js"></script>
-
-    <!-- ZingChart -->
-    <script src="/bo/cli/resources/zingchart/zingchart.min.js"></script>
+    ${scriptsRenderer({ context, entity, view }, data)}
 
     <!-- Pluggable renderers by index config -->
     <script src="/my/cli/controller/loadForm.js"></script>
     <script src="/bo/cli/bootstrap/renderForm.js"></script>
 
+    <script src="/mdb/cli/controller/mdbFormCallback.js"></script>
+
     <script>
+    formCallback = ${ (renderer == "mdb") ? "mdbFormCallback" : "({ context, entity, view }) => {}" }
     loadForm({ entity: "${entity}", view: "${view}"}, { row: ${ JSON.stringify(row) } })
     </script>
 

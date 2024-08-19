@@ -39,10 +39,12 @@ const renderProtectedForm = ({ context, entity, view }, data) => {
     <!-- Pluggable renderers by index config -->
     <script src="/my/cli/controller/loadForm.js"></script>
     <script src="/bo/cli/bootstrap/renderForm.js"></script>
+    <script src="/mdb/cli/mdbootstrap/renderForm.js"></script>
 
     <script src="/mdb/cli/controller/mdbFormCallback.js"></script>
 
     <script>
+    formRenderer = ${ (renderer == "mdb") ? "mdbRenderForm" : "renderForm" }
     formCallback = ${ (renderer == "mdb") ? "mdbFormCallback" : "({ context, entity, view }) => {}" }
     loadForm({ entity: "${entity}", view: "${view}"}, { row: ${ JSON.stringify(row) } })
     </script>

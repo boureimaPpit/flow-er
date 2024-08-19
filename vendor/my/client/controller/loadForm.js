@@ -64,7 +64,7 @@ const loadForm = async ({ entity, view }, data) => {
 
     const formData = await response.json()
     formData.row = data.row
-    const form = renderForm({ context, entity, view }, formData)
+    const form = formRenderer({ context, entity, view }, formData)
     $("#form").html(form)
     formCallback({ context, entity, view })
 }

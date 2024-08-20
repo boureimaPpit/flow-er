@@ -16,8 +16,10 @@ const getProperties = async (db, context, entity, view, propertyDefs, whereParam
             if (property.definition != "inline") property = context.config[property.definition]    
         }
         else property = {}
-        if (options.type) property.type = options.type
-        if (options.labels) property.labels = options.labels
+        if (options) {
+            if (options.type) property.type = options.type
+            if (options.labels) property.labels = options.labels    
+        }
 
         /**
          * Tags

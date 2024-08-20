@@ -57,11 +57,13 @@ const renderModalListHeader = ({ context }, properties) => {
 
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
-        head.push(`<th>
-            <div id="modalListSortAnchor-${propertyId}">
-                <span class="modalListHeaderLabel" id="modalListHeaderLabel-${propertyId}">${ context.localize(property.labels) }</span>
-            </div>
-        </th>`)
+        if (Object.keys(property).length > 0) {
+            head.push(`<th>
+                <div id="modalListSortAnchor-${propertyId}">
+                    <span class="modalListHeaderLabel" id="modalListHeaderLabel-${propertyId}">${ context.localize(property.labels) }</span>
+                </div>
+            </th>`)    
+        }
     }
 
     return head.join("\n")
@@ -112,49 +114,52 @@ const renderModalListProperties = ({ context }, row, properties) => {
     for (let propertyId of Object.keys(properties)) {
         const property = properties[propertyId]
 
-        if (property.type == "select") {
-            html.push(`<td class="${(property.options.class) ? property.options.class[row[propertyId]] : ""}">
-                ${(row[propertyId]) ? context.localize(property.modalities[row[propertyId]]) : ""}
-            </td>`)
-        }
+        if (Object.keys(property).length > 0) {
+
+            if (property.type == "select") {
+                html.push(`<td class="${(property.options.class) ? property.options.class[row[propertyId]] : ""}">
+                    ${(row[propertyId]) ? context.localize(property.modalities[row[propertyId]]) : ""}
+                </td>`)
+            }
+            
+            else if (property.type == "multiselect") {
+                const captions = []
+                for (let modalityId of row[propertyId].split(",")) {
+                    captions.push(context.localize(property.modalities[modalityId]))
+                }
+                html.push(`<td>${captions.join(",")}</td>`)                  
+            }
+
+            else if (property.type == "date") {
+                html.push(`<td>${context.decodeDate(row[propertyId])}</td>`)
+            }
         
-        else if (property.type == "multiselect") {
-            const captions = []
-            for (let modalityId of row[propertyId].split(",")) {
-                captions.push(context.localize(property.modalities[modalityId]))
+            else if (property.type == "datetime") {
+                html.push(`<td>${context.decodeTime(row[propertyId])}</td>`)
             }
-            html.push(`<td>${captions.join(",")}</td>`)                  
-        }
 
-        else if (property.type == "date") {
-            html.push(`<td>${context.decodeDate(row[propertyId])}</td>`)
-        }
-      
-        else if (property.type == "datetime") {
-            html.push(`<td>${context.decodeTime(row[propertyId])}</td>`)
-        }
-
-        else if (property.type == "number") {
-            html.push(`<td class="text-right">${ parseFloat(row[propertyId]).toLocaleString("fr-FR", { minimumFractionDigits: 2 }) }</td>`)
-        }
-
-        else if (property.type == "email") {
-            html.push(`<td>${(row[propertyId]) ? `<a href="mailto:${row[propertyId]}">${row[propertyId]}</a>` : ""}</td>`)
-        }              
-
-        else if (property.type == "phone") {
-            html.push(`<td><a href="tel:${row[propertyId]}">${row[propertyId]}</a></td>`)
-        }
-
-        else if (property.type == "tags") {
-            html.push(`<td class="listTagsName" id="listTagsName-${propertyId}-${row.id}">${row[propertyId]}</td>`)
-        }
-
-        else {
-            if (property.options.detailCaption) {
-                html.push(`<input type="hidden" id="detailCaption-${row.id}" value="${row[propertyId]}" />`)
+            else if (property.type == "number") {
+                html.push(`<td class="text-right">${ parseFloat(row[propertyId]).toLocaleString("fr-FR", { minimumFractionDigits: 2 }) }</td>`)
             }
-            html.push(`<td>${(row[propertyId] !== null) ? row[propertyId] : ""}</td>`)                  
+
+            else if (property.type == "email") {
+                html.push(`<td>${(row[propertyId]) ? `<a href="mailto:${row[propertyId]}">${row[propertyId]}</a>` : ""}</td>`)
+            }              
+
+            else if (property.type == "phone") {
+                html.push(`<td><a href="tel:${row[propertyId]}">${row[propertyId]}</a></td>`)
+            }
+
+            else if (property.type == "tags") {
+                html.push(`<td class="listTagsName" id="listTagsName-${propertyId}-${row.id}">${row[propertyId]}</td>`)
+            }
+
+            else {
+                if (property.options.detailCaption) {
+                    html.push(`<input type="hidden" id="detailCaption-${row.id}" value="${row[propertyId]}" />`)
+                }
+                html.push(`<td>${(row[propertyId] !== null) ? row[propertyId] : ""}</td>`)                  
+            }
         }
     }
     return html.join("\n")

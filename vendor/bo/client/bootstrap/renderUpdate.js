@@ -322,11 +322,42 @@ const renderUpdate = ({ context, entity, view }, { id, updateConfig, properties,
             }
     
             else if (propertyType == "json") {
-                html.push(`<div class="form-group row mb-2">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
-                    <div class="col-sm-7">
+                html.push(`<div class="row mb-2">
+                    <label class="col-form-label col-form-label-sm">${(mandatory) ? "* " : ""}${label}</label>
+                </div>
+                <div class="form-group row mb-2">
+                    <div class="col-12">
+<nav class="navbar navbar-expand-lg form-control form-control-sm">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <form class="d-flex">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <button class="btn btn-outline-primary"><span class="fas fa-plus"></span></button>
+            </li>
+            <li class="nav-item">
+                <select class="form-control" required>
+                    <option>Key</option>
+                    <option value="definition">${ context.translate("Definition") }</option>
+                    <option value="type">${ context.translate("Type") }</option>
+                    <option value="labels">${ context.translate("Labels") }</option>
+                    <option value="modalities">${ context.translate("Modalities") }</option>
+                </select
+            </li>
+            <li class="nav-item">
+                <input class="form-control me-2" type="search" placeholder="inline" aria-label="Search">
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-outline-warning" type="submit">${ context.translate("Apply") }</button>
+            </li>
+          </ul>
+        </form>
+    </div>
+  </div>
+</nav>
+                    </div>
+                    <div>
                         <textarea class="form-control form-control-sm updateTextarea" rows="5" id="${propertyId}" ${(readonly) ? "disabled" : ""} ${(mandatory) ? "* " : ""}${label} maxlength="${(property.options.max_length) ? property.options.max_length : 2047}">${value}</textarea>
-                        <div class="invalid-feedback text-danger" id="inputError-${propertyId}">${context.translate("The input is too long")}</div>
                     </div>
                 </div>`)
             }

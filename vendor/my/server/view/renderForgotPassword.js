@@ -16,6 +16,33 @@ const renderForgotPassword = () => {
     <link rel="stylesheet" href="/my/cli/resources/mdb/css/mdb.min.css" />
     <!-- MDB PLUGINS -->
     <link rel="stylesheet" href="/my/cli/resources/mdb/plugins/css/all.min.css" />
+    <style>
+      body {
+  background-color: hsl(0, 0%, 97%);
+}
+  @media (min-width: 1400px) {
+        main,
+        header,
+        #main-navbar {
+          padding-left: 240px;
+        }
+      }
+      /* Styles for this page */
+      #sidenav-inner {
+        border-top-left-radius: .5rem;
+        border-bottom-left-radius: .5rem;
+      }
+
+      @media (min-width: 1000px) {
+        .inner-content {
+          padding-left: 240px;
+        }
+      }
+
+      .card .sidenav-backdrop {
+        z-index: 10;
+      }
+    </style>
 </head>
 <body>
     <!--Main Navigation-->
@@ -247,156 +274,26 @@ const renderForgotPassword = () => {
     <div class="row d-flex justify-content-center">
       <div class="col-xl-5 col-md-8">
         <div class="card shadow-4">
+          <div class="card-header py-4">
+            <h5 class="mb-0">Forgot Password</h4>
+          </div>
           <div class="card-body p-4">
-            <!-- Pills navs -->
-            <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-              <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="tab-login" data-mdb-pill-init href="#pills-login" role="tab"
-                   aria-controls="pills-login" aria-selected="true">Login</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="tab-register" data-mdb-pill-init href="#pills-register" role="tab"
-                   aria-controls="pills-register" aria-selected="false">Register</a>
-              </li>
-            </ul>
-            <!-- Pills navs -->
+            <p class="mb-4">Enter your email address and we’ll send a link to reset your password</p>
 
-            <!-- Pills content -->
-            <div class="tab-content">
-              <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-                <form>
-                  <div class="text-center mb-3">
-                    <p>Sign in with:</p>
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-facebook-f"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-google"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-twitter"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-github"></i>
-                    </button>
-                  </div>
-
-                  <p class="text-center">or:</p>
-
-                  <!-- Email input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="email" id="loginName" class="form-control" />
-                    <label class="form-label" for="loginName">Email or username</label>
-                  </div>
-
-                  <!-- Password input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="password" id="loginPassword" class="form-control" />
-                    <label class="form-label" for="loginPassword">Password</label>
-                  </div>
-
-                  <!-- 2 column grid layout -->
-                  <div class="row mb-4">
-                    <div class="col-md-6 d-flex justify-content-center">
-                      <!-- Checkbox -->
-                      <div class="form-check mb-3 mb-md-0">
-                        <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked />
-                        <label class="form-check-label" for="loginCheck">
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6 d-flex justify-content-center">
-                      <!-- Simple link -->
-                      <a href="#!">Forgot password?</a>
-                    </div>
-                  </div>
-
-                  <!-- Submit button -->
-                  <button type="submit" class="btn btn-primary btn-block mb-4" data-mdb-ripple-init>
-                    Sign in
-                  </button>
-
-                  <!-- Register buttons -->
-                  <div class="text-center">
-                    <p>Not a member? <a href="#!">Register</a></p>
-                  </div>
-                </form>
+            <form action="" class="mb-4">
+              <div class="form-outline mb-4" data-mdb-input-init>
+                <input type="email" id="emailInput" class="form-control" />
+                <label class="form-label" for="emailInput">Your e-mail address</label>
               </div>
-              <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-                <form>
-                  <div class="text-center mb-3">
-                    <p>Sign up with:</p>
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-facebook-f"></i>
-                    </button>
 
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-google"></i>
-                    </button>
+              <button type="button" class="btn btn-primary" data-mdb-ripple-init>Request password</button>
+            </form>
 
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-twitter"></i>
-                    </button>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <u><a href="">Back to Log In</a></u>
 
-                    <button type="button" class="btn btn-link btn-lg btn-floating mx-1" data-mdb-ripple-init data-ripple-color="primary">
-                      <i class="fab fa-github"></i>
-                    </button>
-                  </div>
-
-                  <p class="text-center">or:</p>
-
-                  <!-- Name input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="text" id="registerName" class="form-control" />
-                    <label class="form-label" for="registerName">Name</label>
-                  </div>
-
-                  <!-- Username input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="text" id="registerUsername" class="form-control" />
-                    <label class="form-label" for="registerUsername">Username</label>
-                  </div>
-
-                  <!-- Email input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="email" id="registerEmail" class="form-control" />
-                    <label class="form-label" for="registerEmail">Email</label>
-                  </div>
-
-                  <!-- Password input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="password" id="registerPassword" class="form-control" />
-                    <label class="form-label" for="registerPassword">Password</label>
-                  </div>
-
-                  <!-- Repeat Password input -->
-                  <div class="form-outline mb-4" data-mdb-input-init>
-                    <input type="password" id="registerRepeatPassword" class="form-control" />
-                    <label class="form-label" for="registerRepeatPassword">Repeat password</label>
-                  </div>
-
-                  <!-- Checkbox -->
-                  <div class="form-check d-flex justify-content-center mb-4">
-                    <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck" checked
-                           aria-describedby="registerCheckHelpText" />
-                    <label class="form-check-label" for="registerCheck">
-                      I have read and agree to the terms
-                    </label>
-                  </div>
-
-                  <!-- Submit button -->
-                  <button type="submit" class="btn btn-primary btn-block mb-3" data-mdb-ripple-init>
-                    Sign in
-                  </button>
-                </form>
-              </div>
+              <u><a href="">Register</a></u>
             </div>
-            <!-- Pills content -->
           </div>
         </div>
       </div>
@@ -414,6 +311,62 @@ const renderForgotPassword = () => {
     <script type="text/javascript" src="/my/cli/resources/mdb/js/mdb.umd.min.js"></script>
     <!-- MDB PLUGINS -->
     <script type="text/javascript" src="/my/cli/resources/mdb/plugins/js/all.min.js"></script>
+    <script>
+    const sidenav = document.getElementById("main-sidenav");
+const sidenavInstance = mdb.Sidenav.getInstance(sidenav);
+
+let innerWidth = null;
+
+const setMode = (e) => {
+  // Check necessary for Android devices
+  if (window.innerWidth === innerWidth) {
+    return;
+  }
+
+  innerWidth = window.innerWidth;
+
+  if (window.innerWidth < 1400) {
+    sidenavInstance.changeMode("over");
+    sidenavInstance.hide();
+  } else {
+    sidenavInstance.changeMode("side");
+    sidenavInstance.show();
+  }
+};
+
+setMode();
+
+// Event listeners
+window.addEventListener("resize", setMode);
+
+const searchFocus = document.getElementById('search-focus');
+const keys = [
+  { keyCode: 'AltLeft', isTriggered: false },
+  { keyCode: 'ControlLeft', isTriggered: false },
+];
+
+window.addEventListener('keydown', (e) => {
+  keys.forEach((obj) => {
+    if (obj.keyCode === e.code) {
+      obj.isTriggered = true;
+    }
+  });
+
+  const shortcutTriggered = keys.filter((obj) => obj.isTriggered).length === keys.length;
+
+  if (shortcutTriggered) {
+    searchFocus.focus();
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  keys.forEach((obj) => {
+    if (obj.keyCode === e.code) {
+      obj.isTriggered = false;
+    }
+  });
+});
+    </script>
 </body>
 </html>`
 }

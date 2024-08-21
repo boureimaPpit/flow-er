@@ -16,6 +16,33 @@ const renderChangePassword = () => {
     <link rel="stylesheet" href="/my/cli/resources/mdb/css/mdb.min.css" />
     <!-- MDB PLUGINS -->
     <link rel="stylesheet" href="/my/cli/resources/mdb/plugins/css/all.min.css" />
+    <style>
+      body {
+        background-color: hsl(0, 0%, 97%);
+      }
+      @media (min-width: 1400px) {
+        main,
+        header,
+        #main-navbar {
+          padding-left: 240px;
+        }
+      }
+      /* Styles for this page */
+      #sidenav-inner {
+        border-top-left-radius: .5rem;
+        border-bottom-left-radius: .5rem;
+      }
+
+      @media (min-width: 1000px) {
+        .inner-content {
+          padding-left: 240px;
+        }
+      }
+
+      .card .sidenav-backdrop {
+        z-index: 10;
+      }
+    </style>
 </head>
 <body>
     <!--Main Navigation-->
@@ -289,6 +316,62 @@ const renderChangePassword = () => {
     <script type="text/javascript" src="/my/cli/resources/mdb/js/mdb.umd.min.js"></script>
     <!-- MDB PLUGINS -->
     <script type="text/javascript" src="/my/cli/resources/mdb/plugins/js/all.min.js"></script>
+    <script>
+      const sidenav = document.getElementById("main-sidenav");
+const sidenavInstance = mdb.Sidenav.getInstance(sidenav);
+
+let innerWidth = null;
+
+const setMode = (e) => {
+  // Check necessary for Android devices
+  if (window.innerWidth === innerWidth) {
+    return;
+  }
+
+  innerWidth = window.innerWidth;
+
+  if (window.innerWidth < 1400) {
+    sidenavInstance.changeMode("over");
+    sidenavInstance.hide();
+  } else {
+    sidenavInstance.changeMode("side");
+    sidenavInstance.show();
+  }
+};
+
+setMode();
+
+// Event listeners
+window.addEventListener("resize", setMode);
+
+const searchFocus = document.getElementById('search-focus');
+const keys = [
+  { keyCode: 'AltLeft', isTriggered: false },
+  { keyCode: 'ControlLeft', isTriggered: false },
+];
+
+window.addEventListener('keydown', (e) => {
+  keys.forEach((obj) => {
+    if (obj.keyCode === e.code) {
+      obj.isTriggered = true;
+    }
+  });
+
+  const shortcutTriggered = keys.filter((obj) => obj.isTriggered).length === keys.length;
+
+  if (shortcutTriggered) {
+    searchFocus.focus();
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  keys.forEach((obj) => {
+    if (obj.keyCode === e.code) {
+      obj.isTriggered = false;
+    }
+  });
+});
+    </script>
 </body>
 </html>`
 }

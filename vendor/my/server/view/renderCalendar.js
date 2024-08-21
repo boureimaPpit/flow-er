@@ -16,6 +16,18 @@ const renderCalendar = () => {
     <link rel="stylesheet" href="/my/cli/resources/mdb/css/mdb.min.css" />
     <!-- MDB PLUGINS -->
     <link rel="stylesheet" href="/my/cli/resources/mdb/plugins/css/all.min.css" />
+    <style>
+      body {
+  background-color: hsl(0, 0%, 97%);
+}
+@media (min-width: 1400px) {
+  main,
+  header,
+  #main-navbar {
+    padding-left: 240px;
+  }
+}
+    </style>
 </head>
 <body>
     <!--Main Navigation-->
@@ -265,6 +277,154 @@ const renderCalendar = () => {
     <script type="text/javascript" src="/my/cli/resources/mdb/js/mdb.umd.min.js"></script>
     <!-- MDB PLUGINS -->
     <script type="text/javascript" src="/my/cli/resources/mdb/plugins/js/all.min.js"></script>
+    <script>
+    const sidenav = document.getElementById("main-sidenav");
+const sidenavInstance = mdb.Sidenav.getInstance(sidenav);
+
+let innerWidth = null;
+
+const setMode = (e) => {
+  // Check necessary for Android devices
+  if (window.innerWidth === innerWidth) {
+    return;
+  }
+
+  innerWidth = window.innerWidth;
+
+  if (window.innerWidth < 1400) {
+    sidenavInstance.changeMode("over");
+    sidenavInstance.hide();
+  } else {
+    sidenavInstance.changeMode("side");
+    sidenavInstance.show();
+  }
+};
+
+setMode();
+
+// Event listeners
+window.addEventListener("resize", setMode);
+
+const searchFocus = document.getElementById('search-focus');
+const keys = [
+  { keyCode: 'AltLeft', isTriggered: false },
+  { keyCode: 'ControlLeft', isTriggered: false },
+];
+
+window.addEventListener('keydown', (e) => {
+  keys.forEach((obj) => {
+    if (obj.keyCode === e.code) {
+      obj.isTriggered = true;
+    }
+  });
+
+  const shortcutTriggered = keys.filter((obj) => obj.isTriggered).length === keys.length;
+
+  if (shortcutTriggered) {
+    searchFocus.focus();
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  keys.forEach((obj) => {
+    if (obj.keyCode === e.code) {
+      obj.isTriggered = false;
+    }
+  });
+});
+
+const events = [
+  {
+    summary: 'JS Conference',
+    start: {
+      date: Calendar.dayjs().format('DD/MM/YYYY'),
+    },
+    end: {
+      date: Calendar.dayjs().format('DD/MM/YYYY'),
+    },
+    color: {
+      background: '#cfe0fc',
+      foreground: '#0a47a9',
+    },
+  },
+  {
+    summary: 'Vue Meetup',
+    start: {
+      date: Calendar.dayjs().add(1, 'day').format('DD/MM/YYYY'),
+    },
+    end: {
+      date: Calendar.dayjs().add(5, 'day').format('DD/MM/YYYY'),
+    },
+    color: {
+      background: '#ebcdfe',
+      foreground: '#6e02b1',
+    },
+  },
+  {
+    summary: 'Angular Meetup',
+    description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
+    start: {
+      date: Calendar.dayjs().subtract(3, 'day').format('DD/MM/YYYY'),
+      dateTime: Calendar.dayjs().subtract(3, 'day').format('DD/MM/YYYY') + ' 10:00',
+    },
+    end: {
+      date: Calendar.dayjs().add(3, 'day').format('DD/MM/YYYY'),
+      dateTime: Calendar.dayjs().add(3, 'day').format('DD/MM/YYYY') + ' 14:00',
+    },
+    color: {
+      background: '#c7f5d9',
+      foreground: '#0b4121',
+    },
+  },
+  {
+    summary: 'React Meetup',
+    start: {
+      date: Calendar.dayjs().add(5, 'day').format('DD/MM/YYYY'),
+    },
+    end: {
+      date: Calendar.dayjs().add(8, 'day').format('DD/MM/YYYY'),
+    },
+    color: {
+      background: '#fdd8de',
+      foreground: '#790619',
+    },
+  },
+  {
+    summary: 'Meeting',
+    start: {
+      date: Calendar.dayjs().add(1, 'day').format('DD/MM/YYYY'),
+      dateTime: Calendar.dayjs().add(1, 'day').format('DD/MM/YYYY') + ' 8:00',
+    },
+    end: {
+      date: Calendar.dayjs().add(1, 'day').format('DD/MM/YYYY'),
+      dateTime: Calendar.dayjs().add(1, 'day').format('DD/MM/YYYY') + ' 12:00',
+    },
+    color: {
+      background: '#cfe0fc',
+      foreground: '#0a47a9',
+    },
+  },
+  {
+    summary: 'Call',
+    start: {
+      date: Calendar.dayjs().add(2, 'day').format('DD/MM/YYYY'),
+      dateTime: Calendar.dayjs().add(2, 'day').format('DD/MM/YYYY') + ' 11:00',
+    },
+    end: {
+      date: Calendar.dayjs().add(2, 'day').format('DD/MM/YYYY'),
+      dateTime: Calendar.dayjs().add(2, 'day').format('DD/MM/YYYY') + ' 14:00',
+    },
+    color: {
+      background: '#292929',
+      foreground: '#f5f5f5',
+    },
+  }
+];
+
+const calendarElement = document.getElementById('calendar');
+const calendarInstance = Calendar.getInstance(calendarElement);
+calendarInstance.addEvents(events);
+    </script>
 </body>
 </html>`
 }

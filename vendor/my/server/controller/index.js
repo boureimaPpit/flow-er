@@ -26,7 +26,7 @@ const registerMy = async ({ context, config, logger, app }) => {
     app.get(`${config.prefix}invoice/:id`, execute(invoiceAction, context, db))
     app.get(`${config.prefix}mail/:id`, execute(mailAction, context, db))
     app.get(`${config.prefix}profile/:id`, execute(profileAction, context, db))
-    app.get(`${config.prefix}protectedForm/:id`, execute(protectedFormAction, context, db))
+    app.get(`${config.prefix}protectedForm/:entity/:id`, execute(protectedFormAction, context, db))
 }
 
 module.exports = {

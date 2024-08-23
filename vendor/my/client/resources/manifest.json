@@ -1,0 +1,19 @@
+{
+  "name": "Flow-er",
+  "short_name": "Flow-er",
+  "icons": [{
+      "src": "flow-er.png",
+        "sizes": "76x76",
+        "type": "image/png"
+      }, {
+      "src": "Flow-er2.png",
+        "sizes": "691x668",
+        "type": "image/png"
+      }],
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "black",
+  "theme_color": "black",
+  "orientation": "portrait-primary"
+}

@@ -13,7 +13,7 @@
 
     "tab/configView": {
         "menu": "menu/studio",
-        "route": "/mdb/index/config_property",
+        "route": "/bo/index/config_property",
         "urlParams": "view=configView",
         "labels": { "default": "Paramétrage" },
         "darkMode": true

@@ -2,14 +2,42 @@
   "name": "Flow-er",
   "short_name": "Flow-er",
   "icons": [{
-      "src": "flow-er.png",
-        "sizes": "76x76",
-        "type": "image/png"
-      }, {
-      "src": "Flow-er2.png",
-        "sizes": "691x668",
-        "type": "image/png"
-      }],
+        "src": "icons/musifind-white-72.png",
+          "sizes": "72x72",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-128.png",
+          "sizes": "128x128",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-144.png",
+          "sizes": "144x144",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-152.png",
+          "sizes": "152x152",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-256.png",
+          "sizes": "256x256",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-384.png",
+          "sizes": "384x384",
+          "type": "image/png"
+        }, {
+        "src": "icons/musifind-white-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }],
   "lang": "en-US",
   "start_url": "/",
   "display": "standalone",

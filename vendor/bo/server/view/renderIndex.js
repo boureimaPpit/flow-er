@@ -4,7 +4,7 @@ const { renderScripts } = require("./renderScripts")
 
 const renderIndex = ({ context, entity, view }, data) => {
 
-    const user = data.user, tab = data.tab, indexConfig = data.indexConfig
+    const tab = data.tab, indexConfig = data.indexConfig
 
     return `<!DOCTYPE html>
     <html lang="fr" ${ (tab.darkMode) ? "data-bs-theme=\"dark\"" : "" }>
@@ -17,6 +17,7 @@ const renderIndex = ({ context, entity, view }, data) => {
 
     <!-- Pluggable renderers by index config -->
     <script src="/bo/cli/bootstrap/renderHeader.js"></script>
+    <script src="/bo/cli/bootstrap/renderHiddenRoutes.js"></script>
     <script src="/bo/cli/bootstrap/renderBody10.js"></script>
     <script src="/bo/cli/bootstrap/renderBody12.js"></script>
     <script src="/bo/cli/bootstrap/renderCalendar.js"></script>

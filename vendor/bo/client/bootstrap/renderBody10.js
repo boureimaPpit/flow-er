@@ -2,6 +2,8 @@ const renderBody10 = ({ context, entity, view }, data) => {
 
     return `
     
+      ${renderHiddenRoutes({ context, entity, view }, data)}
+
       <!-- Header -->
       <div id="headerDiv">
           ${renderHeader({ context, entity, view }, data)}
@@ -16,38 +18,15 @@ const renderBody10 = ({ context, entity, view }, data) => {
       </div>
 
       <div class="row">
-
-        <input type="hidden" id="instanceCaption" value="${data.instance.caption}" />
-
-    <!-- Indicators section-->
     
-        <input type="hidden" id="shortcutsRoute" value="/bo/shortcuts/${entity}?view=${view}" />
-        <input type="hidden" id="countRoute" value="/bo/v1/${entity}/count" />
-        <div class="section" id="shortcutsPanel"></div>
-    
-    <!-- Search section-->
-        
-        <input type="hidden" id="searchRoute" value="${ (data.indexConfig && data.indexConfig.searchView) ? data.indexConfig.searchView : "/bo/search" }/${entity}?view=${view}" />
-    
-    <!-- List section-->
-        
-        <input type="hidden" id="listRoute" value="${ (data.indexConfig && data.indexConfig.listView) ? data.indexConfig.listView : "/bo/list" }/${entity}?view=${view}" />
-        <input type="hidden" id="listGroupRoute" value="generic/${entity}/groupUpdate?view=${view}" />
-      
-        <input type="hidden" id="listWhereHidden" value="${data.where}" />
-        <input type="hidden" id="listOrderHidden" value="${data.order}" />
-        <input type="hidden" id="listLimitHidden" value="${data.limit}" />
+        <div class="section mt-3" id="shortcutsPanel"></div>
     
         <div class="section">
           <div class="row">
             <div class="col-10" id="listParent"></div>
             <div class="col-2" id="dataview"></div>
           </div>
-        </div>
-    
-        <input type="hidden" id="detailRoute" value="/bo/detail/${entity}" />
-        <input type="hidden" id="groupRoute" value="bo/group/${entity}" />
-    
+        </div>    
       </div>
     </div>
     

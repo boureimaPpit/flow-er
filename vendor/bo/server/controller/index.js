@@ -100,6 +100,7 @@ const index = async ({ req }, context, db) => {
 
     const data = {
         user: context.user, 
+        instance: context.instance,
         tab: menu[`tab/${view}`], 
         indexConfig: context.config[`${entity}/index/${view}`]
     }

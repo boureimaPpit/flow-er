@@ -1,11 +1,5 @@
-var cacheName = 'musifind';
-var filesToCache = [
-  '/',
-  '/css/style.css',
-  '/css/mdb.min.css',
-  '/js/mdb.min.js',
-  '/js/mdb.min.js.map'
-];
+var cacheName = 'flow-er';
+var filesToCache = [];
 
 /* Start the service worker and cache all of the app's content */
 self.addEventListener('install', function(e) {

@@ -19,6 +19,7 @@ const registerMy = async ({ context, config, logger, app }) => {
     const execute = executeService(config, logger)
     const upload = multer()
     app.use(upload.array())
+    app.get("/", execute(homeAction, context, db))
     app.get(`${config.prefix}calendar/:id`, execute(calendarAction, context, db))
     app.get(`${config.prefix}changePassword/:id`, execute(changePasswordAction, context, db))
     app.get(`${config.prefix}forgotPassword/:id`, execute(forgotPasswordAction, context, db))

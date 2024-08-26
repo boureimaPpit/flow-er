@@ -16,6 +16,8 @@ const renderHome = () => {
     <link rel="stylesheet" href="/my/cli/resources/mdb/css/mdb.min.css" />
     <!-- MDB PLUGINS -->
     <link rel="stylesheet" href="/my/cli/resources/mdb/plugins/css/all.min.css" />
+
+    <link rel="manifest" href="/my/cli/resources/manifest.json" />
     <style>
     body {
   background-color: hsl(0, 0%, 97%);

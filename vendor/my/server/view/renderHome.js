@@ -170,6 +170,7 @@ const renderHome = () => {
             <li>
               <a class="dropdown-item" href="#">Something else here</a>
             </li>
+            <li><p class="dropdown-item" id="notificationsBell">activate notification</p></li>
           </ul>
         </li>
 
@@ -552,6 +553,38 @@ new mdb.Chart(
   dataChartMarketingSources,
   chartMarketingSourcesOption
 );
+
+const button = document.getElementById("notificationsBell");
+button.addEventListener("click", () => {
+  Notification.requestPermission().then((result) => {
+    if (result === "granted") {
+      console.log(1)
+      const notification = new Notification("Hi there!");
+      console.log(2)
+    }
+  });
+});
+
+function createNotification(notifTitle, notifBody) {
+  const notifImg = "/my/cli/resources/icons/flow-er.png";
+  const options = {
+    body: notifBody,
+    icon: notifImg,
+  };
+  new Notification(notifTitle, options);
+  setTimeout(randomNotification, 30000);
+}
+
+navigator.serviceWorker.register("/my/cli/resources/sw.js").then((registration) => {
+  return registration.pushManager.getSubscription().then((sub) => {
+    console.log(sub)});
+});
+
+self.addEventListener("push", (e) => {
+  /* … */
+});
+
+
     </script>
 </body>
 </html>`

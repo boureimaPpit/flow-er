@@ -82,7 +82,6 @@ const updateAction = async ({ req }, context, db) => {
     
     const data = { id, updateConfig, properties, row, isDeletable: false, where, formJwt: "formJwt à construire" }
     return JSON.stringify(data)
-    //return renderUpdate(context, entity, view, id, properties, row, false, where, "formJwt à construire")
 }
 
 const dataHasEvolved = (properties, form, data) => {

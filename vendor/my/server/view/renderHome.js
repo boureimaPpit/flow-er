@@ -559,7 +559,7 @@ button.addEventListener("click", () => {
   Notification.requestPermission().then((result) => {
     if (result === "granted") {
       console.log(1)
-      const notification = new Notification("Hi there!");
+      const notification = new Notification("Hi there!", { body: "Hi there!" });
       console.log(2)
     }
   });

@@ -2,11 +2,10 @@ const { assert } = require("../../../../core/api-utils")
 const { getProperties } = require("../../../bo/server/controller/getProperties")
 const { renderIndex } = require("../view/renderIndex")
 
-const formGet = async ({ req }, context, db) => {
+const formGet = async ({ req }, context, config, db) => {
     const entity = assert.notEmpty(req.params, "entity")
     const view = (req.query.view) ? req.query.view : "default"
     const user = { locale: "fr-FR" }
-
     const formConfig = context.config[`${entity}/form/${view}`]
 
     const propertyDefs = formConfig.properties
@@ -59,7 +58,7 @@ const formGet = async ({ req }, context, db) => {
         }
     }
 
-    return renderIndex( { context, entity, view }, { user: user, formConfig, properties } )
+    return renderIndex( { context, entity, view }, { user: user, recaptchaToken: config.recaptchaToken, formConfig, properties } )
 }
 
 module.exports = {

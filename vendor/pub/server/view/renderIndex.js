@@ -37,31 +37,34 @@ const renderIndex = ({ context, entity, view }, data) => {
         form.onsubmit = async function (event) {
             event.preventDefault()
 
-            const data = {}
+            grecaptcha.enterprise.ready(async () => {
+                const data = {}
+                data.token = await grecaptcha.enterprise.execute('6LewVNcpAAAAAI1Wo8s3o2SlmnPuCVoBu5w-rSaz', {action: 'LOGIN'});
 
-            for (let property of document.getElementsByClassName("property")) {
-                const propertyId = property.getAttribute("id")
-                data[propertyId] = property.value
-            }
-
-            const route = "/pub/${entity}"
-
-            const http = await fetch(route, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-
-            if (http.status == 200) {
-                const body = await http.json()
-                if (body && body.redirect) {
-                    window.parent.location = body.redirect
+                for (let property of document.getElementsByClassName("property")) {
+                    const propertyId = property.getAttribute("id")
+                    data[propertyId] = property.value
                 }
-                $(".property").prop("disabled", true)
-                $("#updateMessageOk").show()
-            }
+
+                const route = "/pub/${entity}"
+
+                const http = await fetch(route, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+
+                if (http.status == 200) {
+                    const body = await http.json()
+                    if (body && body.redirect) {
+                        window.parent.location = body.redirect
+                    }
+                    $(".property").prop("disabled", true)
+                    $("#updateMessageOk").show()
+                }
+            });
         }
     }
     </script>

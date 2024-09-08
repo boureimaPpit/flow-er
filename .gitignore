@@ -11,6 +11,7 @@
 !/vendor/dashboard/
 !/vendor/document/
 !/vendor/my/
+!/vendor/pub/
 !/vendor/studio/
 !/vendor/user/
 !/vendor/utils/

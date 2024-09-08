@@ -9,11 +9,13 @@ const renderList = ({ context, entity, view }, data) => {
             </div>
         </td>
 
-        <td class="text-center">
+        <td class="text-center"}">
             <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" title="${context.translate("Add")}" id="listDetailButton-0">
                 <span class="fas fa-plus"></span>
             </button>
         </td>
+
+        <td colspan="${Object.keys(properties).length}" />
     </tr>
 
     ${renderRows(context, listConfig, properties, rows)}
@@ -29,15 +31,14 @@ const renderList = ({ context, entity, view }, data) => {
             <button type="button" class="btn btn-sm btn-outline-primary index-btn listGroupButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Grouped actions")}" id="listGroupButton-1">
                 <span class="fas fa-list"></span>
             </button>
+            ${(rows.length == limit) ? `
+                <button type="button" class="btn btn-sm btn-outline-primary listMoreButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Display the entire list")}">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>`
+                : ""}
         </td>
 
-        ${(rows.length == limit) ?`<td class="text-center">
-            <button type="button" class="btn btn-sm btn-outline-primary listMoreButton" data-toggle="tooltip" data-placement="top" title="${context.translate("Display the entire list")}">
-                <i class="fas fa-ellipsis-h"></i>
-            </button>
-        </td>` : "<td>&nbsp;</td>"}
-
-        <td colspan="${Object.keys(properties).length}" />
+        <td colspan="${Object.keys(properties).length - 1}" />
     </tr>`
 }
 
@@ -49,7 +50,7 @@ const renderRows = (context, listConfig, properties, rows) => {
         const row = rows[i]
 
         const listCheckIds = []
-        if (listConfig.checkIds) {
+        if (listConfig && listConfig.checkIds) {
             for (let checkId of listConfig.checkIds) {
                 listCheckIds.push(`<input type="hidden" class="listCheckId-${row.id}" id="listCheckId-${row.id}-${checkId}" value="${row[checkId]}"></input>`)
             }
@@ -65,7 +66,7 @@ const renderRows = (context, listConfig, properties, rows) => {
             </td>
 
             <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" data-bs-toggle="modal" data-bs-target="#listDetailModalForm" title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
+                <button type="button" class="btn btn-sm btn-outline-primary index-btn listDetailButton" data-bs-toggle="modal" data-bs-target="#listDetailModalForm" data-mdb-ripple-init data-mdb-target="#listDetailModalForm" data-mdb-modal-init title="${context.translate("Detail")}" id="listDetailButton-${row.id}">
                   <i class="fas fa-search"></i>
                 </button>
             </td>

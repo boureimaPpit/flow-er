@@ -8,11 +8,12 @@ const registerDocument = async ({ context, config, logger, app, renderer }) => {
     const model = await getModel(config, context)
     const db = model.db
     const execute = executeService(config, logger)
-    app.get(`${config.prefix}json/:folder/:name/:version`, execute(getAction, context, db))
-    app.get(`${config.prefix}json/:folder/:name`, execute(getAction, context, db))
-    app.get(`${config.prefix}json/:folder`, execute(getAction, context, db))
+    app.get(`${config.prefix}json/:entity/:name/:version`, execute(getAction, context, db))
+    //app.get(`${config.prefix}json/:entity/:name`, execute(getAction, context, db))
+    app.get(`${config.prefix}json/:entity/:id`, execute(getAction, context, db))
+    app.get(`${config.prefix}json/:entity`, execute(getAction, context, db))
     app.get(`${config.prefix}json`, execute(getAction, context, db))
-    app.post(`${config.prefix}json/:folder/:name`, execute(postJsonAction, context, db))
+    app.post(`${config.prefix}json/:entity/:name`, execute(postJsonAction, context, db))
 }
 
 module.exports = {

@@ -2,7 +2,7 @@ const getListRows = (context, entity, view, searchParams) => {
 
     // Execute the ajax request
     const xhttp = new XMLHttpRequest()
-    let route = `/bo/list/${entity}?view=${view}`
+    let route = $("#listRoute").val()
 
     let params = []
     for (const key of Object.keys(searchParams)) {
@@ -36,8 +36,11 @@ const getListRows = (context, entity, view, searchParams) => {
                 const data = JSON.parse(xhttp.responseText)
                 $("#listParent").html(listRenderer({ context, entity, view }, data))
                 listCallback({ context, entity, view })
-                $("#calendar").each(function () { calendarCallback({ context, entity, view }, data) })
+
+                $("#chart1").html(renderChart({ context, entity, view }, data))
                 $("#chart").each(function () { chartCallback({ context, entity, view }, data) })
+
+                $("#calendar").each(function () { calendarCallback({ context, entity, view }, data) })
 
                 $("#listGroupButton-0").hide()
                 $("#listGroupButton-1").prop("disabled", true)

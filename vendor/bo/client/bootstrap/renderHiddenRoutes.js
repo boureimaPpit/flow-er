@@ -1,5 +1,4 @@
 const renderHiddenRoutes = ({ context, entity, view }, data) => {
-
     return `
     <input type="hidden" id="instanceCaption" value="${data.instance.caption}" />
     <input type="hidden" id="shortcutsRoute" value="/bo/shortcuts/${entity}?view=${view}" />

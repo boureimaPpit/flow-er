@@ -45,6 +45,7 @@ const triggerList = async ({ context, entity, view }, searchParams) => {
     searchCallback({ context, entity, view })
 
     getListRows(context, entity, view, getSearchParams())
+    $("#chartContainer2").each(() => { getDeltaRows(context, entity, view, getSearchParams()) })
 
     // Trigger search request
 

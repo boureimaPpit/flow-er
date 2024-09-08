@@ -1,6 +1,6 @@
 const renderListHeader = ({ context, entity, view }, data) => {
 
-    const measure = data.measure, properties = data.properties
+    const measure = data.rows, properties = data.properties
 
     return `<style>
     table td { 

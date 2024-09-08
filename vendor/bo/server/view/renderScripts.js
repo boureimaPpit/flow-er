@@ -49,9 +49,6 @@ const renderScripts = ({ context, entity, view }, data) => {
     
     ${(user.locale.substring(0, 2) == "fr") ? "$.datepicker.setDefaults($.datepicker.regional[\"fr\"])" : ""}
     </script>
-    
-    <!-- Flow-ER -->
-    ${ renderCore({ context, entity, view }, data) }
 
     <!-- FullCalendar -->
     <script src="/bo/cli/resources/moment/moment-with-locales.min.js"></script>

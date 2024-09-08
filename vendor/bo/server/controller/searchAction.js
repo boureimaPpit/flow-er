@@ -18,7 +18,9 @@ const searchAction = async ({ req }, context, db) => {
     /**
      * Properties definition
      */
-    let listConfig = context.config[`${entity}/list/${view}`]
+    let listConfig = context.config[`${entity}/search/${view}`]
+    if (!listConfig) listConfig = context.config[`${entity}/search/default`]
+    if (!listConfig) listConfig = context.config[`${entity}/list/${view}`]
     if (!listConfig) listConfig = context.config[`${entity}/list/default`]
     const propertyDefs = listConfig.properties
     const properties = await getProperties(db, context, entity, view, propertyDefs, whereParam)
@@ -47,7 +49,6 @@ const searchAction = async ({ req }, context, db) => {
         config: listConfig,
         properties: properties
     }
-
     return result
 }
 

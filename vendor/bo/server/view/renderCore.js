@@ -13,6 +13,7 @@ const renderCore = ({ context, entity, view }, data) => {
     <script src="/bo/cli/controller/triggerSearch.js"></script>
     <script src="/bo/cli/controller/triggerShortcuts.js"></script>
     <script src="/bo/cli/controller/getListRows.js"></script>
+    <script src="/bo/cli/controller/getDeltaRows.js"></script>
     <script src="/bo/cli/controller/detail.js"></script>
     <script src="/bo/cli/view/search.js"></script>
 

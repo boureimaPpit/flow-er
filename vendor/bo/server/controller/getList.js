@@ -63,7 +63,7 @@ const getList = async (db, context, entity, view, columns, properties, wherePara
                                     for (let param of property.format[1].split(",")) {
                                         arguments.push(tag[param])
                                     }
-                                    row[propertyId].push(vsprintf(property.format[0], arguments))
+                                    row[propertyId].push(/*vsprintf(*/property.format[0]/*, arguments)*/)
                                     if (orderTags[propertyId]) {
                                         tag.rowCache.push(row)
                                     }

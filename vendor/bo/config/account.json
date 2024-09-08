@@ -133,6 +133,17 @@
         }
     },
 
+    "account/property/contacts": {
+		"definition": "inline",
+		"type": "history",
+        "entity": "contact",
+        "key": "candidat_id",
+		"labels": {
+			"default": "History",
+			"fr_FR": "Historique"
+		}
+    },
+
     "account/index/account": {
         "body": "/bo/cli/bootstrap/renderBody10.js",
         "search": "/dashboard/cli/mdbootstrap/renderSearch.js",
@@ -229,6 +240,34 @@
 				"route": "generic/export/account",
 				"labels": { "default": "Export", "fr_FR": "Exporter" },
 				"glyph": "fa-cloud-download-alt"
+            }
+        }
+    },
+
+	"account/form/default": {
+        "layout": {
+            "account": {
+                "properties": [
+                    "n_first", "n_last",
+                    "email", "tel_cell"
+                ]
+            },
+            "comments": {
+                "labels": { "en_US": "Comments", "fr_FR": "Commentaires" },
+                "properties": ["contacts", "contact_agreement"]
+            }
+        },
+        "properties": {
+            "n_last": { "class": "col-md-6 mb-3", "required": true },
+            "n_first": { "class": "col-md-6 mb-3", "required": true },
+            "email": { "class": "col-md-6 mb-3", "required": true },
+            "tel_cell": { "class": "col-md-6 mb-3", "required": true },
+            "contacts": { "class": "col-md-12 mb-3" },
+            "contact_agreement": {
+                "type": "checkbox", 
+                "labels": { "default": "I aggree to be contacted again", "fr_FR": "J’accepte d’être recontacté" }, 
+                "class": "col-md-12 mb-3",
+                "required": true
             }
         }
     }

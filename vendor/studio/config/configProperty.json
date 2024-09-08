@@ -88,7 +88,7 @@
                 "definition": "inline",
                 "route": "/bo/update/config_property",
                 "key": "id",
-                "labels": {"en_US": "Config"}
+                "labels": { "default": "Detail", "fr_FR": "Détail" }
             }
         }
     },

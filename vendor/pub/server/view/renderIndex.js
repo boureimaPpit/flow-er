@@ -33,7 +33,7 @@ const renderIndex = ({ context, entity, view }, data) => {
 
             grecaptcha.enterprise.ready(async () => {
                 const data = {}
-                data.token = await grecaptcha.enterprise.execute('6LewVNcpAAAAAI1Wo8s3o2SlmnPuCVoBu5w-rSaz', {action: 'LOGIN'});
+                data.token = await grecaptcha.enterprise.execute('${ data.recaptchaToken }', {action: 'LOGIN'});
 
                 for (let property of document.getElementsByClassName("property")) {
                     const propertyId = property.getAttribute("id")

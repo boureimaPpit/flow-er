@@ -1,6 +1,7 @@
 const { assert } = require("../../../../core/api-utils")
 const { getProperties } = require("../../../bo/server/controller/getProperties")
 const { renderIndex } = require("../view/renderIndex")
+const { renderIndexMdb } = require("../view/renderIndexMdb")
 
 const formGet = async ({ req }, context, config, db) => {
     const entity = assert.notEmpty(req.params, "entity")
@@ -58,7 +59,8 @@ const formGet = async ({ req }, context, config, db) => {
         }
     }
 
-    return renderIndex( { context, entity, view }, { user: user, recaptchaToken: config.recaptchaToken, formConfig, properties } )
+    const renderer = (formConfig.renderer && formConfig.renderer == "mdb") ? renderIndexMdb : renderIndex
+    return renderer( { context, entity, view }, { user: user, recaptchaToken: config.recaptchaToken, formConfig, properties } )
 }
 
 module.exports = {

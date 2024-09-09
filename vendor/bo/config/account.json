@@ -269,6 +269,7 @@
                 "class": "col-md-12 mb-3",
                 "required": true
             }
-        }
+        },
+        "renderer": "mdb"
     }
 }

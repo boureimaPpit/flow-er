@@ -8,7 +8,7 @@
 /module/
 /vendor/*
 !/vendor/bo/
-!/vendor/dashboard/
+!/vendor/doc/
 !/vendor/document/
 !/vendor/my/
 !/vendor/pub/
@@ -16,4 +16,3 @@
 !/vendor/user/
 !/vendor/utils/
 /vendor/mdb/
-/vendor/doc/

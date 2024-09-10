@@ -55,7 +55,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             if (propertyId == "bank_identifier") {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="text" class="form-control property updateInput updateIban" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
+                    <input type="text" class="form-control form-control-sm property updateInput updateIban" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
                     <label class="form-label" for="form12">${ (required) ? "* " : "" } ${label}</label>
                 </div>`)
             }
@@ -63,7 +63,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "input") {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="text" class="form-control property updateInput" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } ${ (readonly) ? "disabled" : "" } maxlength="255">
+                    <input type="text" class="form-control form-control-sm property updateInput" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } ${ (readonly) ? "disabled" : "" } maxlength="255">
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)
             }
@@ -71,7 +71,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "email") {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="email" class="form-control property updateInput updateEmail" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
+                    <input type="email" class="form-control form-control-sm property updateInput updateEmail" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)
             }
@@ -79,7 +79,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "phone") {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="tel" class="form-control property updateInput updatePhone" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
+                    <input type="tel" class="form-control form-control-sm property updateInput updatePhone" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)              
             }
@@ -87,7 +87,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (["date", "datetime", "closing_date"].includes(propertyType)) {
                 html.push(`
                 <div class="form-outline mb-2" ${propertyType == "datetime" ? "data-mdb-datetimepicker-init" : "data-mdb-datepicker-init"} data-mdb-input-init>
-                    <input type="text" class="form-control property updateInput updateDate" name="${propertyId}" id="${propertyId}" value="$${value}" ${ (required) ? "required" : "" } maxlength="255">
+                    <input type="text" class="form-control form-control-sm property updateInput updateDate" name="${propertyId}" id="${propertyId}" value="$${value}" ${ (required) ? "required" : "" } maxlength="255">
                     <label for="datetimepickerExample" class="form-label">${ (required) ? "* " : "" } ${label}</label>
                 </div>`)
             }
@@ -96,7 +96,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
                 html.push(`
                 <div class="form-group">
                     <label class="form-label">${(required) ? "* " : ""}${label}</label>
-                    <select class="form-control property updateSelect updateBirthYear" id="${propertyId}" ${(required) ? "required" : ""}>
+                    <select class="form-control form-control-sm property updateSelect updateBirthYear" id="${propertyId}" ${(required) ? "required" : ""}>
                         <option />
                         ${() => { for (let year = 1950; year < new Date.getFullYear(); year++) `<option value="${year}" ${(value == year) ? "selected=\"selected\"" : ""}>${year}</option>` }}
                     </select>
@@ -106,7 +106,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "time") {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="text" class="form-control property updateInput updateTime" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } ${ (readonly) ? "disabled" : "" } maxlength="255">
+                    <input type="text" class="form-control form-control-sm property updateInput updateTime" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } ${ (readonly) ? "disabled" : "" } maxlength="255">
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)              
             }
@@ -114,7 +114,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "number") {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="number" class="form-control property updateInput updateNumber" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
+                    <input type="number" class="form-control form-control-sm property updateInput updateNumber" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } maxlength="255">
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)
             }
@@ -122,7 +122,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "textarea") {
                 html.push(`
                 <div class="form-outline" data-mdb-input-init>
-                    <textarea class="form-control property updateTextarea" rows="5" name="${propertyId}" id="${propertyId}" maxlength="${(property.options.max_length) ? property.options.max_length : 2047}">${value}</textarea>
+                    <textarea class="form-control form-control-sm property updateTextarea" rows="5" name="${propertyId}" id="${propertyId}" maxlength="${(property.options.max_length) ? property.options.max_length : 2047}">${value}</textarea>
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)
             }
@@ -132,7 +132,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
                 const values = (value) ? value.split(",") : []
                 html.push(`
                 <div class="mb-2">
-                    <select class="property updateSelect" data-mdb-select-init required name="${propertyId}" id="${propertyId}" ${(multiple) ? "multiple" : ""}>
+                    <select class="form-control form-control-sm property updateSelect" data-mdb-select-init required name="${propertyId}" id="${propertyId}" ${(multiple) ? "multiple" : ""}>
                         <option />
                         ${function () {
                             const restriction = (property.options.restriction) ? property.options.restriction : {}
@@ -164,7 +164,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
                 html.push(`
                 <div class="form-group" id="updateSelectDiv-${propertyId}">
                     <label class="form-label">${(required) ? "* " : ""}${label}</label>
-                    ${`<select class="form-control property updateSelect" name="${propertyId}" id="${propertyId}" multiple>
+                    ${`<select class="form-control form-control-sm property updateSelect" name="${propertyId}" id="${propertyId}" multiple>
                         <option />
                         ${function () {
                             const html = []
@@ -184,7 +184,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else if (propertyType == "source") {
                 html.push(`<div class="form-group" id="updateSelectDiv-${propertyId}">
                     <label class="form-label">${(required) ? "* " : ""}${label}</label>
-                    ${`<select class="form-control property updateSelect" name="${propertyId}" id="${propertyId}">
+                    ${`<select class="form-control form-control-sm property updateSelect" name="${propertyId}" id="${propertyId}">
                         <option />
                         ${function () {
                             const restriction = (property.options.restriction) ? property.options.restriction : {}
@@ -213,7 +213,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
 
                 html.push(`
                 <div class="form-outline" data-mdb-input-init>
-                    <textarea class="form-control property updateTextarea" name="${propertyId}" id="${propertyId}" ${(required) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
+                    <textarea class="form-control form-control-sm property updateTextarea" name="${propertyId}" id="${propertyId}" ${(required) ? "required" : ""} maxlength="${(property.options.max_length) ? property.options.max_length : 65535}"></textarea>
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)
             }
@@ -230,7 +230,7 @@ const renderFormMdb = ({ context, entity, view} , { properties, formJwt }) => {
             else {
                 html.push(`
                 <div class="form-outline mb-2" data-mdb-input-init>
-                    <input type="text" class="form-control property updateInput" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } ${ (readonly) ? "disabled" : "" } maxlength="255">
+                    <input type="text" class="form-control form-control-sm property updateInput" name="${propertyId}" id="${propertyId}" value="${value}" ${ (required) ? "required" : "" } ${ (readonly) ? "disabled" : "" } maxlength="255">
                     <label class="form-label" for="form12">${(required) ? '*  ' : ''}${label}</label>
                 </div>`)
             }

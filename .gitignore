@@ -8,6 +8,7 @@
 /module/
 /vendor/*
 !/vendor/bo/
+!/vendor/core/
 !/vendor/doc/
 !/vendor/document/
 !/vendor/my/
